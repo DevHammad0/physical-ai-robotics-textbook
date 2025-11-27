@@ -8,7 +8,7 @@ Gazebo is a powerful, open-source physics simulator for robotics. This module te
 
 ## Module Overview
 
-- **Duration**: 9-10 lessons
+- **Duration**: 5 lessons
 - **Prerequisites**: Module 1 (ROS 2 Fundamentals)
 - **Skills**: Physics simulation, digital twin creation, sensor simulation
 

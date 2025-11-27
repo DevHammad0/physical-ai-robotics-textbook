@@ -8,7 +8,7 @@ Vision-Language-Action (VLA) models represent the frontier of embodied AI, enabl
 
 ## Module Overview
 
-- **Duration**: 9-10 lessons
+- **Duration**: 5 lessons
 - **Prerequisites**: Modules 1-3 (ROS 2, Gazebo, Isaac Sim)
 - **Skills**: Multimodal AI, foundation models, embodied reasoning
 

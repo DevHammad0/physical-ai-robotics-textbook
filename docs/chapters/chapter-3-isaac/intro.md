@@ -8,7 +8,7 @@ NVIDIA Isaac Sim is a robotics simulation and synthetic data generation platform
 
 ## Module Overview
 
-- **Duration**: 9-10 lessons
+- **Duration**: 5 lessons
 - **Prerequisites**: Modules 1-2 (ROS 2 and Gazebo)
 - **Skills**: Advanced simulation, RTX rendering, synthetic data, Isaac Gym
 

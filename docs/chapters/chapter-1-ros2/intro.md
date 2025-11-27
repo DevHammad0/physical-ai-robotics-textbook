@@ -8,7 +8,7 @@ ROS 2 (Robot Operating System 2) is the modern middleware framework for building
 
 ## Chapter Overview
 
-- **Duration**: 9-10 lessons
+- **Duration**: 5 lessons
 - **Prerequisites**: Basic programming knowledge
 - **Skills**: Distributed systems, message passing, robot programming
 
