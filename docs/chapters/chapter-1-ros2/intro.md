@@ -2,11 +2,11 @@
 sidebar_position: 1
 ---
 
-# Module 1: ROS 2 Fundamentals
+# Chapter 1: ROS 2 Fundamentals
 
-ROS 2 (Robot Operating System 2) is the modern middleware framework for building robotic applications. This module covers the essential concepts and tools needed to develop distributed robotic systems.
+ROS 2 (Robot Operating System 2) is the modern middleware framework for building robotic applications. This chapter covers the essential concepts and tools needed to develop distributed robotic systems.
 
-## Module Overview
+## Chapter Overview
 
 - **Duration**: 9-10 lessons
 - **Prerequisites**: Basic programming knowledge
@@ -23,7 +23,7 @@ ROS 2 (Robot Operating System 2) is the modern middleware framework for building
 
 ## Learning Outcomes
 
-By the end of this module, you will be able to:
+By the end of this chapter, you will be able to:
 - Set up a ROS 2 development environment
 - Create publishers and subscribers
 - Implement ROS services and actions

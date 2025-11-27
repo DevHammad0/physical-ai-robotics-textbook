@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Module 4: Vision-Language-Action Models
+# Chapter 4: Vision-Language-Action Models
 
 Vision-Language-Action (VLA) models represent the frontier of embodied AI, enabling robots to understand visual scenes and natural language instructions to take physical actions.
 
@@ -23,7 +23,7 @@ Vision-Language-Action (VLA) models represent the frontier of embodied AI, enabl
 
 ## Learning Outcomes
 
-By the end of this module, you will be able to:
+By the end of this chapter, you will be able to:
 - Understand VLA model architectures
 - Use pre-trained vision-language models
 - Fine-tune models for robotic tasks

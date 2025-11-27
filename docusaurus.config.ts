@@ -7,16 +7,16 @@ const config: Config = {
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://github.com',
+  url: 'https://devhammad0.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/physical-ai-robotics-textbook/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'hammad',
+  organizationName: 'devhammad0',
   projectName: 'physical-ai-robotics-textbook',
-
+  trailingSlash: false,
   onBrokenLinks: 'warn',
 
   markdown: {
@@ -58,16 +58,16 @@ const config: Config = {
     },
     navbar: {
       title: 'Physical AI Textbook',
-      logo: {
-        alt: 'Physical AI Logo',
-        src: 'img/logo.svg',
-      },
+      // logo: {
+      //   alt: 'Physical AI Logo',
+      //   src: 'img/logo.svg',
+      // },
       items: [
         {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Modules',
+          label: 'Chapters',
         },
         {
           href: 'https://github.com/hammad/physical-ai-robotics-textbook',
@@ -80,23 +80,23 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Modules',
+          title: 'Chapters',
           items: [
             {
               label: 'ROS 2',
-              to: '/docs/modules/ros2',
+              to: '/docs/chapters/chapter-1-ros2',
             },
             {
               label: 'Gazebo',
-              to: '/docs/modules/gazebo',
+              to: '/docs/chapters/chapter-2-gazebo',
             },
             {
               label: 'NVIDIA Isaac',
-              to: '/docs/modules/isaac',
+              to: '/docs/chapters/chapter-3-isaac',
             },
             {
               label: 'Vision-Language-Action',
-              to: '/docs/modules/vla',
+              to: '/docs/chapters/chapter-4-vla',
             },
           ],
         },
@@ -105,7 +105,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/hammad/physical-ai-robotics-textbook',
+              href: 'https://github.com/devhammad0/physical-ai-robotics-textbook',
             },
           ],
         },

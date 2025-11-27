@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Module 3: NVIDIA Isaac Sim
+# Chapter 3: NVIDIA Isaac Sim
 
 NVIDIA Isaac Sim is a robotics simulation and synthetic data generation platform built on Omniverse. It provides cutting-edge physics, rendering, and AI capabilities for digital twin development.
 
@@ -23,7 +23,7 @@ NVIDIA Isaac Sim is a robotics simulation and synthetic data generation platform
 
 ## Learning Outcomes
 
-By the end of this module, you will be able to:
+By the end of this chapter, you will be able to:
 - Set up NVIDIA Isaac Sim environments
 - Create high-fidelity digital twins
 - Generate synthetic datasets

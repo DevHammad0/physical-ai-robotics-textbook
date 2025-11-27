@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Module 2: Gazebo & Digital Twins
+# Chapter 2: Gazebo & Digital Twins
 
 Gazebo is a powerful, open-source physics simulator for robotics. This module teaches you how to create realistic digital twins of robots and environments.
 
@@ -23,7 +23,7 @@ Gazebo is a powerful, open-source physics simulator for robotics. This module te
 
 ## Learning Outcomes
 
-By the end of this module, you will be able to:
+By the end of this chapter, you will be able to:
 - Set up Gazebo environments
 - Create robot models with proper physics
 - Simulate various sensors
