@@ -1,0 +1,45 @@
+# dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# build
+/build
+/dist
+*.tsbuildinfo
+
+# env files
+.env
+.env.local
+.env.production.local
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Docusaurus
+/website/build
+/website/.docusaurus
+.docusaurus
+/packages/*/build
+
+# npm
+package-lock.json
+
+# pnpm
+pnpm-lock.yaml
+
+# yarn
+yarn.lock
+
+# Temporary files
+.tmp
+*.tmp
+.cache
