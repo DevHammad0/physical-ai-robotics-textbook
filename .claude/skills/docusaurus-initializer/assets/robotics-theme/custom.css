@@ -1,0 +1,474 @@
+/* Robotics Textbook Custom Theme */
+
+/* ============================================================================
+   Color Palette - Optimized for Dark Mode and Technical Content
+   ============================================================================ */
+
+:root {
+  /* Primary Colors */
+  --primary-color: #3b82f6;      /* Bright blue */
+  --primary-dark: #1e40af;       /* Dark blue */
+  --primary-light: #60a5fa;      /* Light blue */
+
+  /* Accent Colors */
+  --accent-success: #10b981;     /* Green */
+  --accent-warning: #f59e0b;     /* Amber */
+  --accent-error: #ef4444;       /* Red */
+  --accent-info: #06b6d4;        /* Cyan */
+
+  /* Background Colors */
+  --bg-primary: #0f172a;         /* Very dark blue */
+  --bg-secondary: #1e293b;       /* Dark slate */
+  --bg-tertiary: #334155;        /* Slate */
+
+  /* Text Colors */
+  --text-primary: #f1f5f9;       /* Light gray */
+  --text-secondary: #cbd5e1;     /* Medium gray */
+  --text-muted: #94a3b8;         /* Muted gray */
+
+  /* Code/Technical */
+  --code-bg: #1e293b;            /* Code background */
+  --code-text: #e2e8f0;          /* Code text */
+  --code-keyword: #7c3aed;       /* Purple keywords */
+  --code-string: #10b981;        /* Green strings */
+  --code-number: #f59e0b;        /* Amber numbers */
+}
+
+/* Dark mode colors (default) */
+html[data-theme="dark"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+}
+
+/* Light mode colors */
+html[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --code-bg: #f1f5f9;
+  --code-text: #1e293b;
+}
+
+/* ============================================================================
+   Typography - Optimized for Technical Content
+   ============================================================================ */
+
+/* Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  border-bottom: 3px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-top: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--primary-light);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+code {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9em;
+  background-color: var(--code-bg);
+  color: var(--code-text);
+  padding: 0.2em 0.4em;
+  border-radius: 0.3em;
+  font-weight: 500;
+}
+
+/* ============================================================================
+   Code Blocks - Enhanced for Robotics Examples
+   ============================================================================ */
+
+.docusaurus-highlight {
+  background-color: var(--code-bg) !important;
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.docusaurus-highlight pre {
+  background: transparent !important;
+  color: var(--code-text);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.95em;
+  line-height: 1.5;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.docusaurus-highlight code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* Code syntax highlighting */
+.token.keyword {
+  color: var(--code-keyword);
+  font-weight: 600;
+}
+
+.token.string {
+  color: var(--code-string);
+}
+
+.token.number {
+  color: var(--code-number);
+}
+
+.token.operator {
+  color: var(--primary-light);
+}
+
+.token.comment {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Code block copy button */
+.codeBlockTitle {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: 8px 8px 0 0;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9em;
+  border-bottom: 1px solid var(--bg-tertiary);
+}
+
+/* ============================================================================
+   Tables - For Lab Data and Reference Material
+   ============================================================================ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead {
+  background-color: var(--primary-dark);
+  color: var(--text-primary);
+}
+
+th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid var(--bg-tertiary);
+}
+
+td {
+  padding: 0.75rem 1rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--bg-tertiary);
+}
+
+tbody tr:hover {
+  background-color: var(--bg-tertiary);
+}
+
+/* ============================================================================
+   Admonitions - Lab, Exercise, and Tip Callouts
+   ============================================================================ */
+
+.admonition {
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  border-left: 4px solid;
+  background-color: var(--bg-secondary);
+}
+
+.admonition.note {
+  border-color: var(--primary-color);
+}
+
+.admonition.tip {
+  border-color: var(--accent-success);
+}
+
+.admonition.warning {
+  border-color: var(--accent-warning);
+}
+
+.admonition.danger {
+  border-color: var(--accent-error);
+}
+
+.admonition.info {
+  border-color: var(--accent-info);
+}
+
+.admonition-heading {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.admonition p {
+  margin: 0.5rem 0;
+}
+
+/* ============================================================================
+   Lab Exercise Cards
+   ============================================================================ */
+
+.lab-exercise {
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--accent-info);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.lab-exercise-title {
+  color: var(--accent-info);
+  font-size: 1.2em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.lab-exercise-duration {
+  color: var(--text-muted);
+  font-size: 0.9em;
+  margin-bottom: 1rem;
+}
+
+/* ============================================================================
+   Buttons and Interactive Elements
+   ============================================================================ */
+
+button, .button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover, .button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================================================
+   Lists - For Learning Objectives and Procedures
+   ============================================================================ */
+
+ul, ol {
+  color: var(--text-secondary);
+  margin: 1rem 0;
+  padding-left: 2rem;
+}
+
+li {
+  margin: 0.5rem 0;
+  line-height: 1.7;
+}
+
+ul > li::marker {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+ol > li::marker {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* ============================================================================
+   Images - Diagrams and Screenshots
+   ============================================================================ */
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border: 1px solid var(--bg-tertiary);
+}
+
+img:hover {
+  border-color: var(--primary-color);
+}
+
+.figure {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.figure-caption {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9em;
+  margin-top: 0.5rem;
+}
+
+/* ============================================================================
+   Sidebar and Navigation
+   ============================================================================ */
+
+.sidebar {
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--bg-tertiary);
+}
+
+.menu__list-item-collapsible--active > .menu__link {
+  background-color: var(--bg-tertiary);
+  border-left: 3px solid var(--primary-color);
+}
+
+.menu__link {
+  color: var(--text-secondary);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.menu__link:hover {
+  color: var(--primary-light);
+  background-color: var(--bg-tertiary);
+}
+
+.menu__link--active {
+  color: var(--primary-color);
+  background-color: var(--bg-tertiary);
+  border-left: 3px solid var(--primary-color);
+  font-weight: 600;
+}
+
+/* ============================================================================
+   Navbar
+   ============================================================================ */
+
+.navbar {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--bg-tertiary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.navbar__item, .navbar__link {
+  color: var(--text-secondary);
+}
+
+.navbar__link:hover, .navbar__item:hover {
+  color: var(--primary-light);
+}
+
+.navbar__link--active {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+/* ============================================================================
+   Footer
+   ============================================================================ */
+
+footer {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-top: 1px solid var(--bg-tertiary);
+}
+
+/* ============================================================================
+   Responsive Design
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .docusaurus-highlight pre {
+    font-size: 0.85em;
+    padding: 0.75rem;
+  }
+
+  table {
+    font-size: 0.9em;
+  }
+
+  th, td {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* ============================================================================
+   Print Styles
+   ============================================================================ */
+
+@media print {
+  :root {
+    --bg-primary: white;
+    --bg-secondary: #f5f5f5;
+    --text-primary: black;
+    --text-secondary: #333;
+    --code-bg: #f5f5f5;
+    --code-text: black;
+  }
+
+  body {
+    background-color: white;
+    color: black;
+  }
+
+  a {
+    color: #0066cc;
+  }
+
+  .admonition {
+    border: 1px solid #ccc;
+  }
+}
