@@ -390,7 +390,7 @@ killall -9 gzserver gzclient
 ps aux | grep gazebo  # Should be empty
 ```
 
-### Issue: Slow frame rate (<30 fps)
+### Issue: Slow frame rate (less than 30 fps)
 **Cause**: Rendering too complex or system underpowered
 **Solution**:
 - Reduce number of objects in world
