@@ -86,27 +86,6 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: 'Chapters',
-          items: [
-            {
-              label: 'ROS 2',
-              to: '/docs/chapters/chapter-1-ros2',
-            },
-            {
-              label: 'Gazebo',
-              to: '/docs/chapters/chapter-2-gazebo',
-            },
-            {
-              label: 'NVIDIA Isaac',
-              to: '/docs/chapters/chapter-3-isaac',
-            },
-            {
-              label: 'Vision-Language-Action',
-              to: '/docs/chapters/chapter-4-vla',
-            },
-          ],
-        },
-        {
           title: 'Community',
           items: [
             {

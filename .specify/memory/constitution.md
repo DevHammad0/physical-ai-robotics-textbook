@@ -26,6 +26,23 @@ Bonus features implemented only AFTER base requirements fully functional. Implem
 ### VIII. Deployment & Performance Excellence
 Book MUST deploy successfully to GitHub Pages or Vercel. Target performance: Page loads under 3 seconds (Lighthouse Performance >90). Mobile-responsive design (tested on mobile). No broken links, missing images, or 404 errors. CI/CD automation validates deployment on every commit.
 
+### IX. Physical AI Safety Framework (Simulation-First Mandate)
+All robotics content MUST follow simulation-first teaching progression:
+- **A2 (Beginner)**: Simulation-only exercises (Turtlesim, basic ROS 2 nodes). Zero physical hardware required.
+- **B1 (Intermediate)**: Gazebo physics simulation (URDF, sensors, actuators). Introduction to sim-to-real concepts.
+- **C2 (Advanced)**: Isaac Sim synthetic data generation, real hardware deployment with safety protocols.
+
+**Physical Safety Protocols** (mandatory for any autonomous movement):
+- Kill switch implementation documented before autonomous code introduced
+- Movement boundaries explicitly defined (no unbounded motion)
+- Hardware damage prevention (what stops the system if code fails?)
+- Progressive autonomy (simulation → tethered → autonomous, never skip steps)
+- Supervision requirements clear at each stage
+
+**Code Example Validation**: All ROS 2 code examples MUST specify their simulation environment (Turtlesim, Gazebo, Isaac Sim, MuJoCo). Static validation: syntax, imports, ROS 2 patterns correct. No forward references to future hardware concepts.
+
+**Anti-Pattern Prohibition**: Never suggest deploying untested code to physical hardware. Never expose hardware damage scenarios to students. Always provide troubleshooting for common ROS 2 errors, Gazebo physics issues, and sensor problems.
+
 ## Non-Goals (Explicitly Excluded)
 
 - Complex custom authentication flows (use better-auth defaults)
