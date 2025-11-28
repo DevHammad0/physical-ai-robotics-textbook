@@ -21,6 +21,7 @@ const config: Config = {
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'devhammad0',
   projectName: 'physical-ai-robotics-textbook',
+  deploymentBranch: 'gh-pages',
   trailingSlash: false,
   onBrokenLinks: 'warn',
 
@@ -43,7 +44,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           editUrl:
-            'https://github.com/hammad/physical-ai-robotics-textbook/tree/main/',
+            'https://github.com/devhammad0/physical-ai-robotics-textbook/tree/main/',
         },
         blog: false,
         theme: {
@@ -75,7 +76,7 @@ const config: Config = {
           label: 'Chapters',
         },
         {
-          href: 'https://github.com/hammad/physical-ai-robotics-textbook',
+          href: 'https://github.com/devhammad0/physical-ai-robotics-textbook',
           label: 'GitHub',
           position: 'right',
         },
