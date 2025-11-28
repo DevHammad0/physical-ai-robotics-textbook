@@ -33,8 +33,7 @@ node_modules
 # npm
 package-lock.json
 
-# pnpm
-pnpm-lock.yaml
+# pnpm lock files are committed for reproducible builds in CI/CD
 
 # yarn
 yarn.lock
