@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "book-source/**"
+      - ".github/workflows/deploy.yml"
 
 permissions:
   contents: read
@@ -33,31 +36,35 @@ jobs:
           run_install: false
 
       - name: Get pnpm store directory
+        id: pnpm-cache
         shell: bash
         run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
         uses: actions/cache@v4
         with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('book-source/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
+        working-directory: book-source
         run: pnpm install
 
       - name: Run TypeScript type check
+        working-directory: book-source
         run: pnpm typecheck
 
       - name: Build website
+        working-directory: book-source
         run: pnpm build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './build'
+          path: './book-source/build'
 
   deploy:
     environment:
