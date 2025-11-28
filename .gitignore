@@ -39,6 +39,7 @@ package-lock.json
 yarn.lock
 
 # Temporary files
-.tmp
+.tmp/
 *.tmp
 .cache
+.temp/
