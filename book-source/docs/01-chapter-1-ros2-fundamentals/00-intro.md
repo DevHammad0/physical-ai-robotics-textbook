@@ -385,4 +385,4 @@ Ready? Let's go!
 
 **Chapter 1 Introduction Complete**
 
-Next: [Lesson 1 — What is ROS 2?](./lesson-01-what-is-ros2.md)
+Next: [Lesson 1 — What is ROS 2?](./01-what-is-ros2.md)

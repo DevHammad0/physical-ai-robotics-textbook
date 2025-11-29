@@ -441,7 +441,7 @@ ros2 service call /delete_entity gazebo_msgs/DeleteEntity "{name: 'my_robot'}"
 
 In Lesson 4, you'll fine-tune physics parameters to make your robot behave exactly as designed.
 
-[Go to Lesson 4: Physics Simulation Tuning →](./lesson-04-physics-simulation.md)
+[Go to Lesson 4: Physics Simulation Tuning →](./04-physics-simulation.md)
 
 ---
 

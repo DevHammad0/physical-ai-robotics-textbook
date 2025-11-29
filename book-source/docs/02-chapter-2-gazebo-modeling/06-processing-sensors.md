@@ -521,7 +521,7 @@ ros2 topic hz /camera/image_raw
 
 In Lesson 7, you'll close the loop by commanding robot motion based on processed sensor data.
 
-[Go to Lesson 7: Gazebo-ROS 2 Integration →](./lesson-07-gazebo-ros2-integration.md)
+[Go to Lesson 7: Gazebo-ROS 2 Integration →](./07-gazebo-ros2-integration.md)
 
 ---
 

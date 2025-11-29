@@ -1,0 +1,146 @@
+/**
+ * ChatWidget Styles
+ * Floating chat widget with dark mode support
+ */
+
+.chatWidget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  font-family: var(--ifm-font-family-base);
+}
+
+.chatButton {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.chatButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.chatButton:active {
+  transform: scale(0.95);
+}
+
+.chatWindow {
+  width: 400px;
+  height: 600px;
+  max-width: calc(100vw - 48px);
+  max-height: calc(100vh - 48px);
+  background: var(--ifm-background-color);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
+}
+
+.chatTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--ifm-color-content);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+  padding: 0;
+}
+
+.closeButton:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.chatContent {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatKitContainer {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .chatWidget {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  .chatWindow {
+    width: calc(100vw - 32px);
+    height: calc(100vh - 32px);
+    max-width: none;
+    max-height: none;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .chatButton {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* Dark mode adjustments */
+[data-theme='dark'] .chatWindow {
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .chatHeader {
+  background: var(--ifm-background-surface-color);
+  border-bottom-color: var(--ifm-color-emphasis-300);
+}
+

@@ -403,7 +403,7 @@ Claude explains:
 
 In Lesson 5, you'll add sensors to your robot so it can perceive its environment.
 
-[Go to Lesson 5: Adding Sensors →](./lesson-05-adding-sensors.md)
+[Go to Lesson 5: Adding Sensors →](./05-adding-sensors.md)
 
 ---
 

@@ -437,7 +437,7 @@ gzserver
 
 Ready to build robots? In Lesson 2, you'll create your first URDF robot model and spawn it in Gazebo.
 
-[Go to Lesson 2: URDF Basics →](./lesson-02-urdf-basics.md)
+[Go to Lesson 2: URDF Basics →](./02-urdf-basics.md)
 
 ---
 

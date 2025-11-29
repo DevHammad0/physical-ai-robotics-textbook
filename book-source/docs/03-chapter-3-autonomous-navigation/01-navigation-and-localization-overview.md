@@ -300,7 +300,7 @@ Check your understanding:
 - [ ] Do you know why loop closure detection is important?
 - [ ] Can you describe the map → odom → base_link frame hierarchy?
 
-**Full assessment**: See [SLAM Comprehension Checklist](../checklists/slam-comprehension.md)
+**Full assessment**: See SLAM Comprehension Checklist (coming soon)
 
 ## Code Examples
 
