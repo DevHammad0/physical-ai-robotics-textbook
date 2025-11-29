@@ -25,21 +25,14 @@ node_modules
 .DS_Store
 
 # Docusaurus
-/website/build
-/website/.docusaurus
+/book-source/build
+/book-source/.docusaurus
 .docusaurus
-/packages/*/build
-
-# npm
-package-lock.json
-
-# pnpm lock files are committed for reproducible builds in CI/CD
-
-# yarn
-yarn.lock
+/book-source/packages/*/build
 
 # Temporary files
 .tmp/
+tmp/
 *.tmp
 .cache
 .temp/

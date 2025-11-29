@@ -1,0 +1,8 @@
+string task_id
+TaskPlan plan
+---
+bool success
+string error_message
+ExecutionStatus final_status
+---
+ExecutionStatus status_update

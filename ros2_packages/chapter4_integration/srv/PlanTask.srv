@@ -1,0 +1,6 @@
+string task_description
+DetectionResult[] detected_objects
+---
+TaskPlan plan
+bool success
+string error_message

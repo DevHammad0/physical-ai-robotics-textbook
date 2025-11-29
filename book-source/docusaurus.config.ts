@@ -62,6 +62,11 @@ const config: Config = {
       disableSwitch: false,
       respectPrefersColorScheme: true,
     },
+    docs: {
+      sidebar: {
+        hideable: true,
+      },
+    },
     navbar: {
       title: 'Physical AI Textbook',
       // logo: {
