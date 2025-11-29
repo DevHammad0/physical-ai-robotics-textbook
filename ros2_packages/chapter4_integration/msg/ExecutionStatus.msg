@@ -1,0 +1,9 @@
+string execution_id
+string task_id
+string status
+string current_subtask
+float32 progress_percent
+string error_message
+bool is_complete
+bool is_error
+builtin_interfaces/Time timestamp

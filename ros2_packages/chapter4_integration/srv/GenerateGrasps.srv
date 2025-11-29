@@ -1,0 +1,7 @@
+DetectionResult detection
+float32[] object_3d_position
+float32[] object_3d_size
+---
+GraspCandidate[] grasp_candidates
+bool success
+string error_message

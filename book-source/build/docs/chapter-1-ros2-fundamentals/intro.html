@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-current docs-doc-page docs-doc-id-chapter-1-ros2-fundamentals/intro" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.9.2">
+<title data-rh="true">Chapter 1: ROS 2 Fundamentals &amp; Communication | Physical AI &amp; Humanoid Robotics Textbook</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://devhammad0.github.io/physical-ai-robotics-textbook/img/logo.svg"><meta data-rh="true" name="twitter:image" content="https://devhammad0.github.io/physical-ai-robotics-textbook/img/logo.svg"><meta data-rh="true" property="og:url" content="https://devhammad0.github.io/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/intro"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Chapter 1: ROS 2 Fundamentals &amp; Communication | Physical AI &amp; Humanoid Robotics Textbook"><meta data-rh="true" name="description" content="Welcome to Chapter 1: ROS 2 Fundamentals"><meta data-rh="true" property="og:description" content="Welcome to Chapter 1: ROS 2 Fundamentals"><link data-rh="true" rel="icon" href="/physical-ai-robotics-textbook/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://devhammad0.github.io/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/intro"><link data-rh="true" rel="alternate" href="https://devhammad0.github.io/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/intro" hreflang="en"><link data-rh="true" rel="alternate" href="https://devhammad0.github.io/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/intro" hreflang="x-default"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Chapter 1: ROS 2 Fundamentals & Communication","item":"https://devhammad0.github.io/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/intro"}]}</script><link rel="stylesheet" href="/physical-ai-robotics-textbook/assets/css/styles.d6b2e6d5.css">
+<script src="/physical-ai-robotics-textbook/assets/js/runtime~main.be8513a2.js" defer="defer"></script>
+<script src="/physical-ai-robotics-textbook/assets/js/main.242897b3.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard">
+<svg style="display: none;"><defs>
+<symbol id="theme-svg-external-link" viewBox="0 0 24 24"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"/></symbol>
+</defs></svg>
+<script>!function(){var t=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return window.localStorage.getItem("theme")}catch(t){}}();document.documentElement.setAttribute("data-theme",t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")),document.documentElement.setAttribute("data-theme-choice",t||"system")}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_orSL" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="theme-layout-navbar navbar navbar--fixed-top"><div class="navbar__inner"><div class="theme-layout-navbar-left navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a class="navbar__brand" href="/physical-ai-robotics-textbook/"><b class="navbar__title text--truncate">Physical AI Textbook</b></a><a aria-current="page" class="navbar__item navbar__link navbar__link--active" href="/physical-ai-robotics-textbook/docs/intro">Chapters</a></div><div class="theme-layout-navbar-right navbar__items navbar__items--right"><a href="https://github.com/devhammad0/physical-ai-robotics-textbook" target="_blank" rel="noopener noreferrer" class="navbar__item navbar__link">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_V7NB"><use href="#theme-svg-external-link"></use></svg></a><div class="toggle_pNwX colorModeToggle__Wa0"><button class="clean-btn toggleButton_ZRv8 toggleButtonDisabled_syBO" type="button" disabled="" title="system mode" aria-label="Switch between dark and light mode (currently system mode)"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_J5XR lightToggleIcon_wYOu"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_J5XR darkToggleIcon_uxlR"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" class="toggleIcon_J5XR systemToggleIcon_MqPO"><path fill="currentColor" d="m12 21c4.971 0 9-4.029 9-9s-4.029-9-9-9-9 4.029-9 9 4.029 9 9 9zm4.95-13.95c1.313 1.313 2.05 3.093 2.05 4.95s-0.738 3.637-2.05 4.95c-1.313 1.313-3.093 2.05-4.95 2.05v-14c1.857 0 3.637 0.737 4.95 2.05z"></path></svg></button></div><div class="navbarSearchContainer_QHbi"><div class="navbar__search searchBarContainer_siU6" dir="ltr"><input placeholder="Search" aria-label="Search" class="navbar__search-input" value=""><div class="loadingRing_zCZW searchBarLoadingRing_E4XE"><div></div><div></div><div></div><div></div></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="theme-layout-main main-wrapper mainWrapper_ZVfG"><div class="docsWrapper_gDsi"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_spFY" type="button"></button><div class="docRoot_y_nM"><aside class="theme-doc-sidebar-container docSidebarContainer_i6qY"><div class="sidebarViewport_kXBD"><div class="sidebar_uaF8"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_dL2o"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/physical-ai-robotics-textbook/docs/intro"><span title="Physical AI &amp; Humanoid Robotics Textbook" class="linkLabel_bSk2">Physical AI &amp; Humanoid Robotics Textbook</span></a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="categoryLink_lsHi menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" role="button" aria-expanded="true" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/intro"><span title="chapter-1-ros2-fundamentals" class="categoryLinkLabel_Xdtf">chapter-1-ros2-fundamentals</span></a></div><ul class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/intro"><span title="Chapter 1: ROS 2 Fundamentals &amp; Communication" class="linkLabel_bSk2">Chapter 1: ROS 2 Fundamentals &amp; Communication</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/what-is-ros2"><span title="What is ROS 2?" class="linkLabel_bSk2">What is ROS 2?</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/setup"><span title="Setting Up Your ROS 2 Environment" class="linkLabel_bSk2">Setting Up Your ROS 2 Environment</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/nodes-communication"><span title="Nodes and Communication Patterns" class="linkLabel_bSk2">Nodes and Communication Patterns</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/publisher"><span title="Your First ROS 2 Publisher" class="linkLabel_bSk2">Your First ROS 2 Publisher</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/subscriber"><span title="Your First ROS 2 Subscriber" class="linkLabel_bSk2">Your First ROS 2 Subscriber</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/services-actions"><span title="Services and Actions: Synchronous &amp; Long-Running Communication" class="linkLabel_bSk2">Services and Actions: Synchronous &amp; Long-Running Communication</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/launch-files"><span title="Building Multi-Node Systems &amp; Launch Files" class="linkLabel_bSk2">Building Multi-Node Systems &amp; Launch Files</span></a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/capstone"><span title="Chapter 1 Capstone Project: Autonomous Turtle Navigation System" class="linkLabel_bSk2">Chapter 1 Capstone Project: Autonomous Turtle Navigation System</span></a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_lsHi menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/physical-ai-robotics-textbook/docs/chapter-2-gazebo-modeling/intro"><span title="chapter-2-gazebo-modeling" class="categoryLinkLabel_Xdtf">chapter-2-gazebo-modeling</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_lsHi menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/physical-ai-robotics-textbook/docs/chapter-3-autonomous-navigation/intro"><span title="chapter-3-autonomous-navigation" class="categoryLinkLabel_Xdtf">chapter-3-autonomous-navigation</span></a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="categoryLink_lsHi menu__link menu__link--sublist menu__link--sublist-caret" role="button" aria-expanded="false" href="/physical-ai-robotics-textbook/docs/chapter-4-ai-integration/intro"><span title="chapter-4-ai-integration" class="categoryLinkLabel_Xdtf">chapter-4-ai-integration</span></a></div></li></ul></nav><button type="button" title="Collapse sidebar" aria-label="Collapse sidebar" class="button button--secondary button--outline collapseSidebarButton_txS8"><svg width="20" height="20" aria-hidden="true" class="collapseSidebarButtonIcon_sOIM"><g fill="#7a7a7a"><path d="M9.992 10.023c0 .2-.062.399-.172.547l-4.996 7.492a.982.982 0 01-.828.454H1c-.55 0-1-.453-1-1 0-.2.059-.403.168-.551l4.629-6.942L.168 3.078A.939.939 0 010 2.528c0-.548.45-.997 1-.997h2.996c.352 0 .649.18.828.45L9.82 9.472c.11.148.172.347.172.55zm0 0"></path><path d="M19.98 10.023c0 .2-.058.399-.168.547l-4.996 7.492a.987.987 0 01-.828.454h-3c-.547 0-.996-.453-.996-1 0-.2.059-.403.168-.551l4.625-6.942-4.625-6.945a.939.939 0 01-.168-.55 1 1 0 01.996-.997h3c.348 0 .649.18.828.45l4.996 7.492c.11.148.168.347.168.55zm0 0"></path></g></svg></button></div></div></aside><main class="docMainContainer_nbm6"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_c1nn"><div class="docItemContainer_M_fE"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_u5ZB" aria-label="Breadcrumbs"><ul class="breadcrumbs"><li class="breadcrumbs__item"><span class="breadcrumbs__link">chapter-1-ros2-fundamentals</span></li><li class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link">Chapter 1: ROS 2 Fundamentals &amp; Communication</span></li></ul></nav><div class="tocCollapsible_WqLH theme-doc-toc-mobile tocMobile__mh9"><button type="button" class="clean-btn tocCollapsibleButton_RZKv">On this page</button></div><div class="theme-doc-markdown markdown"><header><h1>Chapter 1: ROS 2 Fundamentals &amp; Communication</h1></header><h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="welcome-to-chapter-1-ros-2-fundamentals">Welcome to Chapter 1: ROS 2 Fundamentals<a href="#welcome-to-chapter-1-ros-2-fundamentals" class="hash-link" aria-label="Direct link to Welcome to Chapter 1: ROS 2 Fundamentals" title="Direct link to Welcome to Chapter 1: ROS 2 Fundamentals" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="what-youll-learn-in-this-chapter">What You&#x27;ll Learn in This Chapter<a href="#what-youll-learn-in-this-chapter" class="hash-link" aria-label="Direct link to What You&#x27;ll Learn in This Chapter" title="Direct link to What You&#x27;ll Learn in This Chapter" translate="no">​</a></h3>
+<p>The Robot Operating System 2 (ROS 2) is the <strong>de facto standard for robotics development</strong>. Companies like Waymo, Boston Dynamics, and NVIDIA all use ROS 2 as their robotics middleware.</p>
+<p>In this chapter, you&#x27;ll build a <strong>complete mental model</strong> of how ROS 2 systems work:</p>
+<ul>
+<li class=""><strong>Lesson 1</strong>: What is ROS 2? (concepts, architecture, why it matters)</li>
+<li class=""><strong>Lesson 2</strong>: Setting up your environment (Ubuntu 22.04, installation, Turtlesim)</li>
+<li class=""><strong>Lesson 3</strong>: Nodes and communication patterns (pub/sub vs. services)</li>
+<li class=""><strong>Lesson 4</strong>: Your first publisher (write code, make the turtle move)</li>
+<li class=""><strong>Lesson 5</strong>: Your first subscriber (receive and react to messages) — <em>[Planned]</em></li>
+<li class=""><strong>Lesson 6</strong>: Services and request-response (synchronous communication) — <em>[Planned]</em></li>
+<li class=""><strong>Lesson 7</strong>: Building integrated systems (multiple nodes working together) — <em>[Planned]</em></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="chapter-progress">Chapter Progress<a href="#chapter-progress" class="hash-link" aria-label="Direct link to Chapter Progress" title="Direct link to Chapter Progress" translate="no">​</a></h3>
+<p><strong>Completed (MVP)</strong>: Lessons 1-4 (U.S. 1-2, estimated 3 hours)</p>
+<ul>
+<li class="">Understanding ROS 2 architecture ✓</li>
+<li class="">Setting up your development environment ✓</li>
+<li class="">Creating your first publisher ✓</li>
+</ul>
+<p><strong>Planned</strong>: Lessons 5-7 (U.S. 3, estimated 2.5 hours)</p>
+<ul>
+<li class="">Subscribers and callbacks</li>
+<li class="">Services and RPCs</li>
+<li class="">Multi-node systems</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="why-start-here">Why Start Here?<a href="#why-start-here" class="hash-link" aria-label="Direct link to Why Start Here?" title="Direct link to Why Start Here?" translate="no">​</a></h2>
+<p>ROS 2 is the <strong>foundation for everything</strong> in physical AI and robotics:</p>
+<ol>
+<li class=""><strong>Industry Standard</strong>: 70%+ of robotics companies use ROS 2</li>
+<li class=""><strong>Hardware Agnostic</strong>: Write code once, run on any robot</li>
+<li class=""><strong>Scalable</strong>: From single Turtlebot to swarms of 100+ robots</li>
+<li class=""><strong>Production-Ready</strong>: Used in deployed autonomous systems (Waymo, Cruise, etc.)</li>
+</ol>
+<p><strong>Without understanding ROS 2</strong>, you can&#x27;t:</p>
+<ul>
+<li class="">Deploy code to real robots</li>
+<li class="">Work with production robotics systems</li>
+<li class="">Integrate with Gazebo simulation (Chapter 2)</li>
+<li class="">Use perception pipelines (computer vision)</li>
+<li class="">Orchestrate multi-robot systems</li>
+</ul>
+<p><strong>With ROS 2 fundamentals</strong>, you&#x27;ll be ready for:</p>
+<ul>
+<li class="">Chapter 2: Physics simulation with Gazebo</li>
+<li class="">Chapter 3: Autonomous navigation with SLAM</li>
+<li class="">Chapter 4: Vision-language-action pipelines for robotics</li>
+<li class="">Advanced topics: Manipulation, perception, and real robot deployment</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="simulation-first-approach">Simulation-First Approach<a href="#simulation-first-approach" class="hash-link" aria-label="Direct link to Simulation-First Approach" title="Direct link to Simulation-First Approach" translate="no">​</a></h2>
+<p>All lessons in this chapter use <strong>Turtlesim</strong>, a lightweight 2D robot simulator:</p>
+<div class="language-text codeBlockContainer_NP_j theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_TOz0"><pre tabindex="0" class="prism-code language-text codeBlock_AKQj thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_NBAA"><span class="token-line" style="color:#393A34"><span class="token plain">Why Turtlesim?</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├─ Zero hardware cost (free, open-source)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├─ Fast iteration (no robot startup time)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├─ Safe experimentation (can&#x27;t damage anything)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">├─ Clear diagnostics (easy to see what&#x27;s happening)</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">└─ Focus on concepts (not distracted by physics)</span><br></span></code></pre></div></div>
+<p><strong>Later chapters</strong> (Chapter 2+) progress to more advanced robotics:</p>
+<ul>
+<li class=""><strong>Chapter 2</strong>: Gazebo (physics simulation, URDF robots, sensors)</li>
+<li class=""><strong>Chapter 3</strong>: SLAM and autonomous navigation (real-world path planning and localization)</li>
+<li class=""><strong>Chapter 4</strong>: Vision-language-action systems (AI-driven autonomy)</li>
+<li class=""><strong>Real hardware</strong>: Deploy with confidence (simulation mastery as prerequisite)</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="prerequisites">Prerequisites<a href="#prerequisites" class="hash-link" aria-label="Direct link to Prerequisites" title="Direct link to Prerequisites" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="required-knowledge">Required Knowledge<a href="#required-knowledge" class="hash-link" aria-label="Direct link to Required Knowledge" title="Direct link to Required Knowledge" translate="no">​</a></h3>
+<ul>
+<li class=""><strong>Python 3</strong>: Basic syntax (functions, classes, loops)</li>
+<li class=""><strong>Terminal/Command-line</strong>: Comfortable with <code>cd</code>, <code>ls</code>, <code>mkdir</code></li>
+<li class=""><strong>Text editor</strong>: Can edit and save files (VS Code, gedit, nano)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="required-software">Required Software<a href="#required-software" class="hash-link" aria-label="Direct link to Required Software" title="Direct link to Required Software" translate="no">​</a></h3>
+<ul>
+<li class=""><strong>Ubuntu 22.04 LTS</strong> (or VM/WSL2)</li>
+<li class=""><strong>3 GB free disk space</strong></li>
+<li class=""><strong>Internet connection</strong></li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="optional-but-helpful">Optional But Helpful<a href="#optional-but-helpful" class="hash-link" aria-label="Direct link to Optional But Helpful" title="Direct link to Optional But Helpful" translate="no">​</a></h3>
+<ul>
+<li class="">Git (for version control) — not required for this chapter</li>
+<li class="">VS Code with Python extension — makes coding easier</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="how-to-use-this-chapter">How to Use This Chapter<a href="#how-to-use-this-chapter" class="hash-link" aria-label="Direct link to How to Use This Chapter" title="Direct link to How to Use This Chapter" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="option-a-linear-recommended-for-beginners">Option A: Linear (Recommended for Beginners)<a href="#option-a-linear-recommended-for-beginners" class="hash-link" aria-label="Direct link to Option A: Linear (Recommended for Beginners)" title="Direct link to Option A: Linear (Recommended for Beginners)" translate="no">​</a></h3>
+<p>Read and complete lessons sequentially:</p>
+<ol>
+<li class="">Lesson 1 (30 min) → Understand ROS 2 concepts</li>
+<li class="">Lesson 2 (45 min) → Install and verify setup</li>
+<li class="">Lesson 3 (60 min) → Learn architecture and tools</li>
+<li class="">Lesson 4 (60 min) → Write your first code</li>
+<li class=""><em>[Lessons 5-7 when published]</em></li>
+</ol>
+<p><strong>Time investment</strong>: 3 hours to complete MVP, understand core concepts</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="option-b-accelerated-for-experienced-programmers">Option B: Accelerated (For Experienced Programmers)<a href="#option-b-accelerated-for-experienced-programmers" class="hash-link" aria-label="Direct link to Option B: Accelerated (For Experienced Programmers)" title="Direct link to Option B: Accelerated (For Experienced Programmers)" translate="no">​</a></h3>
+<p>If you already know distributed systems:</p>
+<ul>
+<li class="">Skim Lesson 1 (10 min)</li>
+<li class="">Skim Lesson 2 if ROS 2 already installed (5 min)</li>
+<li class="">Study Lesson 3 carefully (20 min) for conceptual model</li>
+<li class="">Jump to Lesson 4 coding (30 min)</li>
+</ul>
+<p><strong>Time investment</strong>: 1 hour to get running</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="option-c-self-paced-maximum-flexibility">Option C: Self-Paced (Maximum Flexibility)<a href="#option-c-self-paced-maximum-flexibility" class="hash-link" aria-label="Direct link to Option C: Self-Paced (Maximum Flexibility)" title="Direct link to Option C: Self-Paced (Maximum Flexibility)" translate="no">​</a></h3>
+<p>Work through each lesson when you have time. Lessons 1-3 are independent (concepts); Lesson 4 requires Lessons 1-3 understanding.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="learning-outcomes-by-lesson">Learning Outcomes by Lesson<a href="#learning-outcomes-by-lesson" class="hash-link" aria-label="Direct link to Learning Outcomes by Lesson" title="Direct link to Learning Outcomes by Lesson" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="lesson-1-what-is-ros-2-30-min">Lesson 1: What is ROS 2? (30 min)<a href="#lesson-1-what-is-ros-2-30-min" class="hash-link" aria-label="Direct link to Lesson 1: What is ROS 2? (30 min)" title="Direct link to Lesson 1: What is ROS 2? (30 min)" translate="no">​</a></h3>
+<p><strong>You&#x27;ll understand</strong>:</p>
+<ul>
+<li class="">ROS 2 definition and history (why ROS 2 replaced ROS 1)</li>
+<li class="">Middleware architecture (nodes, topics, messages)</li>
+<li class="">Three communication patterns (pub/sub, services, actions)</li>
+<li class="">Why simulation-first is essential</li>
+<li class="">Real-world robotics companies using ROS 2</li>
+</ul>
+<p><strong>CEFR Target</strong>: A2 (Beginner) — Conceptual foundations</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="lesson-2-setting-up-your-ros-2-environment-45-min">Lesson 2: Setting Up Your ROS 2 Environment (45 min)<a href="#lesson-2-setting-up-your-ros-2-environment-45-min" class="hash-link" aria-label="Direct link to Lesson 2: Setting Up Your ROS 2 Environment (45 min)" title="Direct link to Lesson 2: Setting Up Your ROS 2 Environment (45 min)" translate="no">​</a></h3>
+<p><strong>You&#x27;ll achieve</strong>:</p>
+<ul>
+<li class="">Install ROS 2 Humble on Ubuntu 22.04</li>
+<li class="">Verify installation with <code>ros2 --version</code></li>
+<li class="">Launch Turtlesim simulator</li>
+<li class="">Control the turtle with keyboard</li>
+<li class="">Understand environment variables (ROS_DISTRO, ROS_DOMAIN_ID)</li>
+</ul>
+<p><strong>CEFR Target</strong>: A2 (Beginner) — Procedural setup</p>
+<p><strong>Success criteria</strong>: Turtle moves when you press &#x27;w/a/s/d&#x27;</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="lesson-3-nodes-and-communication-patterns-60-min">Lesson 3: Nodes and Communication Patterns (60 min)<a href="#lesson-3-nodes-and-communication-patterns-60-min" class="hash-link" aria-label="Direct link to Lesson 3: Nodes and Communication Patterns (60 min)" title="Direct link to Lesson 3: Nodes and Communication Patterns (60 min)" translate="no">​</a></h3>
+<p><strong>You&#x27;ll learn</strong>:</p>
+<ul>
+<li class="">Node lifecycle: created → initialized → running → shutdown</li>
+<li class="">Publish-subscribe (asynchronous, many-to-many)</li>
+<li class="">Services (synchronous, request-response)</li>
+<li class="">Message types and strong typing</li>
+<li class="">ROS 2 naming conventions</li>
+<li class="">CLI tools: <code>ros2 node</code>, <code>ros2 topic</code>, <code>ros2 topic echo</code>, <code>rqt_graph</code></li>
+</ul>
+<p><strong>CEFR Target</strong>: A2 (Beginner) — Architectural concepts</p>
+<p><strong>Hands-on</strong>: Inspect live Turtlesim system, understand data flows</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="lesson-4-your-first-ros-2-publisher-60-min">Lesson 4: Your First ROS 2 Publisher (60 min)<a href="#lesson-4-your-first-ros-2-publisher-60-min" class="hash-link" aria-label="Direct link to Lesson 4: Your First ROS 2 Publisher (60 min)" title="Direct link to Lesson 4: Your First ROS 2 Publisher (60 min)" translate="no">​</a></h3>
+<p><strong>You&#x27;ll build</strong>:</p>
+<ul>
+<li class="">A Python ROS 2 node that publishes velocity commands</li>
+<li class="">Publishers with <code>create_publisher()</code></li>
+<li class="">Timer callbacks for periodic messages</li>
+<li class="">Error handling and logging</li>
+<li class="">Package structure (package.xml, setup.py)</li>
+</ul>
+<p><strong>CEFR Target</strong>: B1 (Elementary) — Hands-on coding</p>
+<p><strong>Success criteria</strong>: Write code that makes the turtle move</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="lesson-5-your-first-ros-2-subscriber-60-min--planned">Lesson 5: Your First ROS 2 Subscriber (60 min) — <em>[Planned]</em><a href="#lesson-5-your-first-ros-2-subscriber-60-min--planned" class="hash-link" aria-label="Direct link to lesson-5-your-first-ros-2-subscriber-60-min--planned" title="Direct link to lesson-5-your-first-ros-2-subscriber-60-min--planned" translate="no">​</a></h3>
+<p><strong>You&#x27;ll build</strong>:</p>
+<ul>
+<li class="">A Python ROS 2 subscriber node</li>
+<li class="">Subscription callbacks</li>
+<li class="">Message synchronization</li>
+<li class="">Complete pub/sub systems (publisher + subscriber)</li>
+</ul>
+<p><strong>CEFR Target</strong>: B1 (Elementary)</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="lesson-6-services-and-request-response-60-min--planned">Lesson 6: Services and Request-Response (60 min) — <em>[Planned]</em><a href="#lesson-6-services-and-request-response-60-min--planned" class="hash-link" aria-label="Direct link to lesson-6-services-and-request-response-60-min--planned" title="Direct link to lesson-6-services-and-request-response-60-min--planned" translate="no">​</a></h3>
+<p><strong>You&#x27;ll learn</strong>:</p>
+<ul>
+<li class="">Service servers and clients</li>
+<li class="">Synchronous vs. asynchronous communication</li>
+<li class="">When to use services vs. pub/sub</li>
+<li class="">Implementing and calling services in Python</li>
+</ul>
+<p><strong>CEFR Target</strong>: B1 (Elementary)</p>
+<hr>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="lesson-7-building-integrated-systems-60-min--planned">Lesson 7: Building Integrated Systems (60 min) — <em>[Planned]</em><a href="#lesson-7-building-integrated-systems-60-min--planned" class="hash-link" aria-label="Direct link to lesson-7-building-integrated-systems-60-min--planned" title="Direct link to lesson-7-building-integrated-systems-60-min--planned" translate="no">​</a></h3>
+<p><strong>You&#x27;ll build</strong>:</p>
+<ul>
+<li class="">A multi-node robotics system</li>
+<li class="">Coordinating publishers, subscribers, and services</li>
+<li class="">Monitoring system health with <code>ros2 node</code> and <code>rqt_graph</code></li>
+<li class="">Debugging communication failures</li>
+</ul>
+<p><strong>CEFR Target</strong>: B1 (Elementary) → Integrated understanding</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="constitutional-compliance">Constitutional Compliance<a href="#constitutional-compliance" class="hash-link" aria-label="Direct link to Constitutional Compliance" title="Direct link to Constitutional Compliance" translate="no">​</a></h2>
+<p>This chapter adheres to the <strong>Physical AI Safety Framework</strong> (Section IX of constitution):</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="simulation-first-mandate">Simulation-First Mandate<a href="#simulation-first-mandate" class="hash-link" aria-label="Direct link to Simulation-First Mandate" title="Direct link to Simulation-First Mandate" translate="no">​</a></h3>
+<ul>
+<li class="">✓ All code examples use Turtlesim only (no hardware)</li>
+<li class="">✓ Zero physical damage risk (simulation environment)</li>
+<li class="">✓ Safety protocols not needed (no autonomous movement yet)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="code-validation">Code Validation<a href="#code-validation" class="hash-link" aria-label="Direct link to Code Validation" title="Direct link to Code Validation" translate="no">​</a></h3>
+<ul>
+<li class="">✓ All code examples are syntactically valid Python 3.10+</li>
+<li class="">✓ All code is tested and runnable in ROS 2 Humble</li>
+<li class="">✓ Expected output documented for every code block</li>
+<li class="">✓ Common errors and debugging included</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="4-layer-pedagogy">4-Layer Pedagogy<a href="#4-layer-pedagogy" class="hash-link" aria-label="Direct link to 4-Layer Pedagogy" title="Direct link to 4-Layer Pedagogy" translate="no">​</a></h3>
+<ul>
+<li class="">✓ <strong>Layer 1</strong>: Manual foundation (Lesson 3: CLI tools, observing systems)</li>
+<li class="">✓ <strong>Layer 2</strong>: AI collaboration prompts (suggestions for Claude questions)</li>
+<li class="">✓ <strong>Layers 3-4</strong>: Deferred to advanced chapters (Gazebo, Isaac Sim)</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="no-forward-references">No Forward References<a href="#no-forward-references" class="hash-link" aria-label="Direct link to No Forward References" title="Direct link to No Forward References" translate="no">​</a></h3>
+<ul>
+<li class="">✓ No mentions of Gazebo physics (Chapter 2)</li>
+<li class="">✓ No mentions of Isaac Sim (Chapter 3)</li>
+<li class="">✓ No mentions of hardware deployment safety</li>
+<li class="">✓ Simulation-only focus throughout</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="how-to-get-help">How to Get Help<a href="#how-to-get-help" class="hash-link" aria-label="Direct link to How to Get Help" title="Direct link to How to Get Help" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="self-contained-troubleshooting">Self-Contained Troubleshooting<a href="#self-contained-troubleshooting" class="hash-link" aria-label="Direct link to Self-Contained Troubleshooting" title="Direct link to Self-Contained Troubleshooting" translate="no">​</a></h3>
+<p>Each lesson includes a comprehensive <strong>Troubleshooting</strong> section with 5-10 common errors and solutions.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="ai-collaboration-layer-2">AI Collaboration (Layer 2)<a href="#ai-collaboration-layer-2" class="hash-link" aria-label="Direct link to AI Collaboration (Layer 2)" title="Direct link to AI Collaboration (Layer 2)" translate="no">​</a></h3>
+<p>Each lesson includes <strong>Layer 2: AI Collaboration Prompts</strong> you can use with Claude or another AI assistant:</p>
+<blockquote>
+<p>&quot;I just learned about ROS 2 nodes. Ask Claude: &#x27;Why are nodes independent processes instead of threads in a single process?&#x27;&quot;</p>
+</blockquote>
+<p>This teaches you to ask good technical questions.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="official-resources">Official Resources<a href="#official-resources" class="hash-link" aria-label="Direct link to Official Resources" title="Direct link to Official Resources" translate="no">​</a></h3>
+<ul>
+<li class="">ROS 2 Humble Documentation: <a href="https://docs.ros.org/en/humble/" target="_blank" rel="noopener noreferrer" class="">https://docs.ros.org/en/humble/</a></li>
+<li class="">ROS 2 Discourse (community): <a href="https://discourse.ros.org/" target="_blank" rel="noopener noreferrer" class="">https://discourse.ros.org/</a></li>
+<li class="">Robotics Stack Exchange: <a href="https://robotics.stackexchange.com/" target="_blank" rel="noopener noreferrer" class="">https://robotics.stackexchange.com/</a></li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="estimated-time-commitment">Estimated Time Commitment<a href="#estimated-time-commitment" class="hash-link" aria-label="Direct link to Estimated Time Commitment" title="Direct link to Estimated Time Commitment" translate="no">​</a></h2>
+<table><thead><tr><th>Lesson</th><th>Duration</th><th>Difficulty</th><th>Hands-On</th></tr></thead><tbody><tr><td>1: What is ROS 2?</td><td>30 min</td><td>Easy</td><td>None (concepts)</td></tr><tr><td>2: Setup</td><td>45 min</td><td>Moderate</td><td>Installation, verification</td></tr><tr><td>3: Nodes &amp; Communication</td><td>60 min</td><td>Moderate</td><td>CLI tools, observation</td></tr><tr><td>4: Your First Publisher</td><td>60 min</td><td>Moderate</td><td>Write code, debug</td></tr><tr><td>5: Your First Subscriber</td><td>60 min</td><td>Moderate</td><td>Write code, test</td></tr><tr><td>6: Services</td><td>60 min</td><td>Moderate</td><td>Write code, request/response</td></tr><tr><td>7: Integrated Systems</td><td>60 min</td><td>Moderate</td><td>Multi-node project</td></tr><tr><td><strong>Total (Full Chapter)</strong></td><td><strong>375 min</strong> (6.25 hrs)</td><td><strong>Beginner→Elementary</strong></td><td><strong>Yes</strong></td></tr><tr><td><strong>MVP (Lessons 1-4)</strong></td><td><strong>195 min</strong> (3.25 hrs)</td><td><strong>Beginner</strong></td><td><strong>Yes</strong></td></tr></tbody></table>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="frequently-asked-questions">Frequently Asked Questions<a href="#frequently-asked-questions" class="hash-link" aria-label="Direct link to Frequently Asked Questions" title="Direct link to Frequently Asked Questions" translate="no">​</a></h2>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="q-do-i-need-a-physical-robot">Q: Do I need a physical robot?<a href="#q-do-i-need-a-physical-robot" class="hash-link" aria-label="Direct link to Q: Do I need a physical robot?" title="Direct link to Q: Do I need a physical robot?" translate="no">​</a></h3>
+<p><strong>A</strong>: No! All lessons use Turtlesim (simulation only). Physical robots come in Chapter 4+.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="q-what-if-im-not-a-linux-expert">Q: What if I&#x27;m not a Linux expert?<a href="#q-what-if-im-not-a-linux-expert" class="hash-link" aria-label="Direct link to Q: What if I&#x27;m not a Linux expert?" title="Direct link to Q: What if I&#x27;m not a Linux expert?" translate="no">​</a></h3>
+<p><strong>A</strong>: That&#x27;s fine. Lesson 2 guides you step-by-step. If stuck, Troubleshooting section has common fixes.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="q-can-i-skip-ahead-to-lesson-5-or-6">Q: Can I skip ahead to Lesson 5 or 6?<a href="#q-can-i-skip-ahead-to-lesson-5-or-6" class="hash-link" aria-label="Direct link to Q: Can I skip ahead to Lesson 5 or 6?" title="Direct link to Q: Can I skip ahead to Lesson 5 or 6?" translate="no">​</a></h3>
+<p><strong>A</strong>: Not recommended. Lessons build on each other (1 → 2 → 3 → 4). Start with Lesson 1.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="q-what-if-turtlesim-crashes">Q: What if Turtlesim crashes?<a href="#q-what-if-turtlesim-crashes" class="hash-link" aria-label="Direct link to Q: What if Turtlesim crashes?" title="Direct link to Q: What if Turtlesim crashes?" translate="no">​</a></h3>
+<p><strong>A</strong>: It&#x27;s a lightweight simulator; crashes are rare. Lesson 2 troubleshooting covers &quot;Turtlesim won&#x27;t launch.&quot;</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="q-is-python-knowledge-required">Q: Is Python knowledge required?<a href="#q-is-python-knowledge-required" class="hash-link" aria-label="Direct link to Q: Is Python knowledge required?" title="Direct link to Q: Is Python knowledge required?" translate="no">​</a></h3>
+<p><strong>A</strong>: Yes, basic Python 3 (functions, classes, loops). If you&#x27;re rusty, review Python basics first.</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="q-how-long-until-i-can-deploy-to-a-real-robot">Q: How long until I can deploy to a real robot?<a href="#q-how-long-until-i-can-deploy-to-a-real-robot" class="hash-link" aria-label="Direct link to Q: How long until I can deploy to a real robot?" title="Direct link to Q: How long until I can deploy to a real robot?" translate="no">​</a></h3>
+<p><strong>A</strong>: Complete Chapter 1 (3 hrs) + Chapter 2 (5 hrs) + Chapter 4 (5 hrs) = ~13 hours to basics. Real deployment requires safety training beyond scope.</p>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="what-comes-next">What Comes Next?<a href="#what-comes-next" class="hash-link" aria-label="Direct link to What Comes Next?" title="Direct link to What Comes Next?" translate="no">​</a></h2>
+<p>After completing this chapter, you&#x27;ll be ready for:</p>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="chapter-2-gazebo-simulation--robot-modeling">Chapter 2: Gazebo Simulation &amp; Robot Modeling<a href="#chapter-2-gazebo-simulation--robot-modeling" class="hash-link" aria-label="Direct link to Chapter 2: Gazebo Simulation &amp; Robot Modeling" title="Direct link to Chapter 2: Gazebo Simulation &amp; Robot Modeling" translate="no">​</a></h3>
+<ul>
+<li class="">Physics-based simulation (realistic gravity, collisions, friction)</li>
+<li class="">URDF robot descriptions and kinematics</li>
+<li class="">Sensors (cameras, lidar, IMU) in simulation</li>
+<li class="">Multi-robot coordination</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="chapter-3-autonomous-navigation--slam">Chapter 3: Autonomous Navigation &amp; SLAM<a href="#chapter-3-autonomous-navigation--slam" class="hash-link" aria-label="Direct link to Chapter 3: Autonomous Navigation &amp; SLAM" title="Direct link to Chapter 3: Autonomous Navigation &amp; SLAM" translate="no">​</a></h3>
+<ul>
+<li class="">Simultaneous Localization and Mapping</li>
+<li class="">Nav2 path planning stack</li>
+<li class="">Obstacle avoidance and dynamic environments</li>
+<li class="">Humanoid-specific navigation challenges</li>
+</ul>
+<h3 class="anchor anchorTargetStickyNavbar_Cpnu" id="chapter-4-vision-language-action-pipelines">Chapter 4: Vision-Language-Action Pipelines<a href="#chapter-4-vision-language-action-pipelines" class="hash-link" aria-label="Direct link to Chapter 4: Vision-Language-Action Pipelines" title="Direct link to Chapter 4: Vision-Language-Action Pipelines" translate="no">​</a></h3>
+<ul>
+<li class="">Speech recognition with Whisper</li>
+<li class="">Vision systems (YOLO, segmentation)</li>
+<li class="">LLM-driven planning with GPT-4</li>
+<li class="">Complete end-to-end autonomous systems</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="success-metrics">Success Metrics<a href="#success-metrics" class="hash-link" aria-label="Direct link to Success Metrics" title="Direct link to Success Metrics" translate="no">​</a></h2>
+<p>You&#x27;ll know you&#x27;ve mastered Chapter 1 when you can:</p>
+<p><strong>Conceptual Understanding</strong>:</p>
+<ul class="contains-task-list containsTaskList_rUzv">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Explain what a ROS 2 node is in one sentence</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Draw a diagram showing nodes, topics, and message flow</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Distinguish between pub/sub and services</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Explain why simulation-first development is safer</li>
+</ul>
+<p><strong>Practical Skills</strong>:</p>
+<ul class="contains-task-list containsTaskList_rUzv">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Install ROS 2 and launch Turtlesim</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Use <code>ros2 topic</code> and <code>ros2 node</code> commands</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Write a publisher node from scratch</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Debug communication issues using ROS 2 tools</li>
+</ul>
+<p><strong>Ready for Chapter 2</strong>:</p>
+<ul class="contains-task-list containsTaskList_rUzv">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->You can write a complete, working ROS 2 node in Python</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->You understand message types and type safety</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->You&#x27;ve observed a distributed system in action (Turtlesim pub/sub)</li>
+</ul>
+<hr>
+<h2 class="anchor anchorTargetStickyNavbar_Cpnu" id="start-here">Start Here<a href="#start-here" class="hash-link" aria-label="Direct link to Start Here" title="Direct link to Start Here" translate="no">​</a></h2>
+<p>Begin with <strong>Lesson 1: What is ROS 2?</strong> (30 minutes)</p>
+<p>No installation needed yet—just concepts. After that lesson, you&#x27;ll understand why ROS 2 matters and what you&#x27;re building.</p>
+<p>Ready? Let&#x27;s go!</p>
+<hr>
+<p><strong>Chapter 1 Introduction Complete</strong></p>
+<p>Next: <a class="" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/lesson-01-what-is-ros2.md">Lesson 1 — What is ROS 2?</a></p></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col noPrint_lBYy"><a href="https://github.com/devhammad0/physical-ai-robotics-textbook/tree/main/docs/01-chapter-1-ros2-fundamentals/00-intro.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_cw5B" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_dohm"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/physical-ai-robotics-textbook/docs/intro"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Physical AI &amp; Humanoid Robotics Textbook</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/physical-ai-robotics-textbook/docs/chapter-1-ros2-fundamentals/what-is-ros2"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">What is ROS 2?</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_SQAA thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#welcome-to-chapter-1-ros-2-fundamentals" class="table-of-contents__link toc-highlight">Welcome to Chapter 1: ROS 2 Fundamentals</a><ul><li><a href="#what-youll-learn-in-this-chapter" class="table-of-contents__link toc-highlight">What You&#39;ll Learn in This Chapter</a></li><li><a href="#chapter-progress" class="table-of-contents__link toc-highlight">Chapter Progress</a></li></ul></li><li><a href="#why-start-here" class="table-of-contents__link toc-highlight">Why Start Here?</a></li><li><a href="#simulation-first-approach" class="table-of-contents__link toc-highlight">Simulation-First Approach</a></li><li><a href="#prerequisites" class="table-of-contents__link toc-highlight">Prerequisites</a><ul><li><a href="#required-knowledge" class="table-of-contents__link toc-highlight">Required Knowledge</a></li><li><a href="#required-software" class="table-of-contents__link toc-highlight">Required Software</a></li><li><a href="#optional-but-helpful" class="table-of-contents__link toc-highlight">Optional But Helpful</a></li></ul></li><li><a href="#how-to-use-this-chapter" class="table-of-contents__link toc-highlight">How to Use This Chapter</a><ul><li><a href="#option-a-linear-recommended-for-beginners" class="table-of-contents__link toc-highlight">Option A: Linear (Recommended for Beginners)</a></li><li><a href="#option-b-accelerated-for-experienced-programmers" class="table-of-contents__link toc-highlight">Option B: Accelerated (For Experienced Programmers)</a></li><li><a href="#option-c-self-paced-maximum-flexibility" class="table-of-contents__link toc-highlight">Option C: Self-Paced (Maximum Flexibility)</a></li></ul></li><li><a href="#learning-outcomes-by-lesson" class="table-of-contents__link toc-highlight">Learning Outcomes by Lesson</a><ul><li><a href="#lesson-1-what-is-ros-2-30-min" class="table-of-contents__link toc-highlight">Lesson 1: What is ROS 2? (30 min)</a></li><li><a href="#lesson-2-setting-up-your-ros-2-environment-45-min" class="table-of-contents__link toc-highlight">Lesson 2: Setting Up Your ROS 2 Environment (45 min)</a></li><li><a href="#lesson-3-nodes-and-communication-patterns-60-min" class="table-of-contents__link toc-highlight">Lesson 3: Nodes and Communication Patterns (60 min)</a></li><li><a href="#lesson-4-your-first-ros-2-publisher-60-min" class="table-of-contents__link toc-highlight">Lesson 4: Your First ROS 2 Publisher (60 min)</a></li><li><a href="#lesson-5-your-first-ros-2-subscriber-60-min--planned" class="table-of-contents__link toc-highlight">Lesson 5: Your First ROS 2 Subscriber (60 min) — <em>[Planned]</em></a></li><li><a href="#lesson-6-services-and-request-response-60-min--planned" class="table-of-contents__link toc-highlight">Lesson 6: Services and Request-Response (60 min) — <em>[Planned]</em></a></li><li><a href="#lesson-7-building-integrated-systems-60-min--planned" class="table-of-contents__link toc-highlight">Lesson 7: Building Integrated Systems (60 min) — <em>[Planned]</em></a></li></ul></li><li><a href="#constitutional-compliance" class="table-of-contents__link toc-highlight">Constitutional Compliance</a><ul><li><a href="#simulation-first-mandate" class="table-of-contents__link toc-highlight">Simulation-First Mandate</a></li><li><a href="#code-validation" class="table-of-contents__link toc-highlight">Code Validation</a></li><li><a href="#4-layer-pedagogy" class="table-of-contents__link toc-highlight">4-Layer Pedagogy</a></li><li><a href="#no-forward-references" class="table-of-contents__link toc-highlight">No Forward References</a></li></ul></li><li><a href="#how-to-get-help" class="table-of-contents__link toc-highlight">How to Get Help</a><ul><li><a href="#self-contained-troubleshooting" class="table-of-contents__link toc-highlight">Self-Contained Troubleshooting</a></li><li><a href="#ai-collaboration-layer-2" class="table-of-contents__link toc-highlight">AI Collaboration (Layer 2)</a></li><li><a href="#official-resources" class="table-of-contents__link toc-highlight">Official Resources</a></li></ul></li><li><a href="#estimated-time-commitment" class="table-of-contents__link toc-highlight">Estimated Time Commitment</a></li><li><a href="#frequently-asked-questions" class="table-of-contents__link toc-highlight">Frequently Asked Questions</a><ul><li><a href="#q-do-i-need-a-physical-robot" class="table-of-contents__link toc-highlight">Q: Do I need a physical robot?</a></li><li><a href="#q-what-if-im-not-a-linux-expert" class="table-of-contents__link toc-highlight">Q: What if I&#39;m not a Linux expert?</a></li><li><a href="#q-can-i-skip-ahead-to-lesson-5-or-6" class="table-of-contents__link toc-highlight">Q: Can I skip ahead to Lesson 5 or 6?</a></li><li><a href="#q-what-if-turtlesim-crashes" class="table-of-contents__link toc-highlight">Q: What if Turtlesim crashes?</a></li><li><a href="#q-is-python-knowledge-required" class="table-of-contents__link toc-highlight">Q: Is Python knowledge required?</a></li><li><a href="#q-how-long-until-i-can-deploy-to-a-real-robot" class="table-of-contents__link toc-highlight">Q: How long until I can deploy to a real robot?</a></li></ul></li><li><a href="#what-comes-next" class="table-of-contents__link toc-highlight">What Comes Next?</a><ul><li><a href="#chapter-2-gazebo-simulation--robot-modeling" class="table-of-contents__link toc-highlight">Chapter 2: Gazebo Simulation &amp; Robot Modeling</a></li><li><a href="#chapter-3-autonomous-navigation--slam" class="table-of-contents__link toc-highlight">Chapter 3: Autonomous Navigation &amp; SLAM</a></li><li><a href="#chapter-4-vision-language-action-pipelines" class="table-of-contents__link toc-highlight">Chapter 4: Vision-Language-Action Pipelines</a></li></ul></li><li><a href="#success-metrics" class="table-of-contents__link toc-highlight">Success Metrics</a></li><li><a href="#start-here" class="table-of-contents__link toc-highlight">Start Here</a></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Community</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/devhammad0/physical-ai-robotics-textbook" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-label="(opens in new tab)" class="iconExternalLink_V7NB"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025 Physical AI Robotics Textbook. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>
