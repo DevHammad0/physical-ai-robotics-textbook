@@ -1,15 +1,12 @@
 /**
- * ChatWidget - Floating chat widget for Docusaurus site
- * Uses OpenAI ChatKit React SDK
+ * ChatWidget - Custom chat widget for Docusaurus site
+ * Integrates with RAG agent backend and supports text selection
  */
-import React, { useState, useEffect, useRef } from 'react';
-import { ChatKit, useChatKit } from '@openai/chatkit-react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './styles.module.css';
-
-// Backend API URL - default to local development server
-// In production, this can be set via window.__BACKEND_URL__
-const BACKEND_URL = (typeof window !== 'undefined' && (window as any).__BACKEND_URL__)
-  || 'http://localhost:8000';
+import { sendMessageStream } from './utils/api';
+import { createTextSelectionHandler } from './utils/textSelection';
+import type { Message, TextSelection } from './types';
 
 interface ChatWidgetProps {
   className?: string;
@@ -17,48 +14,28 @@ interface ChatWidgetProps {
 
 export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
-  const [sessionId, setSessionId] = useState<string>('');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [colorMode, setColorMode] = useState<'light' | 'dark'>('light');
-  const [isReady, setIsReady] = useState(false);
-  const initTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string>('');
+  const [selectedText, setSelectedText] = useState<string | null>(null);
+  const [textSelection, setTextSelection] = useState<TextSelection | null>(null);
+  const [showAskButton, setShowAskButton] = useState(false);
+  const [askButtonPosition, setAskButtonPosition] = useState({ x: 0, y: 0 });
 
-  // Get color mode from DOM (works even when ColorModeProvider isn't available)
-  useEffect(() => {
-    const getColorMode = (): 'light' | 'dark' => {
-      if (typeof window === 'undefined') return 'light';
-      const htmlElement = document.documentElement;
-      const theme = htmlElement.getAttribute('data-theme');
-      return theme === 'dark' ? 'dark' : 'light';
-    };
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const askButtonRef = useRef<HTMLDivElement>(null);
 
-    // Set initial color mode
-    setColorMode(getColorMode());
-
-    // Watch for theme changes using MutationObserver
-    const observer = new MutationObserver(() => {
-      setColorMode(getColorMode());
-    });
-
-    if (typeof window !== 'undefined') {
-      observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['data-theme'],
-      });
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  // Generate or retrieve session ID from localStorage
+  // Initialize session ID from localStorage
   useEffect(() => {
     try {
-      let storedSessionId = localStorage.getItem('chatkit_session_id');
+      let storedSessionId = localStorage.getItem('chat_session_id');
       if (!storedSessionId) {
         storedSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        localStorage.setItem('chatkit_session_id', storedSessionId);
+        localStorage.setItem('chat_session_id', storedSessionId);
       }
       setSessionId(storedSessionId);
     } catch (e) {
@@ -67,205 +44,440 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
     }
   }, []);
 
-  // Initialize ChatKit hook (must be called unconditionally per React rules)
-  const chatKitConfig = useChatKit({
-    api: {
-      domainKey: 'domain_pk_local_dev',
-      url: `${BACKEND_URL}/api/chatkit`,
-    },
-    theme: {
-      colorScheme: colorMode === 'dark' ? 'dark' : 'light',
-      color: {
-        accent: {
-          primary: '#25c2a0', // Docusaurus primary color
-          level: 2,
-        },
-      },
-      radius: 'round',
-      density: 'normal',
-    },
-    composer: {
-      placeholder: 'Ask anything about Physical AI & Robotics...',
-    },
-    startScreen: {
-      greeting: 'Welcome! I\'m your Physical AI & Robotics teaching assistant. How can I help you today?',
-      prompts: [
-        {
-          label: 'ROS 2 Basics',
-          prompt: 'Tell me about ROS 2 fundamentals',
-        },
-        {
-          label: 'Gazebo Simulation',
-          prompt: 'How do I set up Gazebo simulation?',
-        },
-        {
-          label: 'Navigation Stack',
-          prompt: 'Explain the Nav2 navigation stack',
-        },
-      ],
-    },
-    onError: ({ error }) => {
-      console.error('[ChatKit] === ERROR EVENT ===');
-      console.error('[ChatKit] Error object:', error);
-      console.error('[ChatKit] Error message:', error?.message);
-      console.error('[ChatKit] Error stack:', error?.stack);
-
-      // Check for specific error types
-      if (error?.message?.includes('Failed to fetch')) {
-        console.error('[ChatKit] Network error - cannot reach backend');
-        setError(`Cannot reach backend at ${BACKEND_URL}/api/chatkit`);
-      } else if (error?.message?.includes('CORS')) {
-        console.error('[ChatKit] CORS error detected');
-        setError('CORS configuration error');
-      } else {
-        setError(error?.message || 'Unknown initialization error');
-      }
-      setIsReady(false);
-    },
-    onReady: () => {
-      console.log('[ChatKit] === READY EVENT ===');
-      console.log('[ChatKit] Successfully initialized!');
-      console.log('[ChatKit] Backend:', BACKEND_URL);
-      console.log('[ChatKit] Session ID:', sessionId);
-      setError(null);
-      setIsReady(true);
-      // Clear timeout since we're ready
-      if (initTimeoutRef.current) {
-        clearTimeout(initTimeoutRef.current);
-        initTimeoutRef.current = null;
-      }
-    },
-  });
-
-  // Timeout handler for initialization
+  // Load conversation history from localStorage
   useEffect(() => {
-    // Clear any existing timeout first
-    if (initTimeoutRef.current) {
-      clearTimeout(initTimeoutRef.current);
-      initTimeoutRef.current = null;
-    }
-
-    if (isOpen && !isReady && !error) {
-      // Set a timeout to detect if ChatKit is stuck
-      const timeout = setTimeout(() => {
-        console.warn('[ChatKit] Initialization timeout after 15 seconds');
-        console.warn('[ChatKit] This usually means:');
-        console.warn('  1. getClientSecret was never called, OR');
-        console.warn('  2. ChatKit rejected the client_secret silently, OR');
-        console.warn('  3. Backend returned an invalid token');
-        setError('Chat initialization is taking longer than expected. Please check the browser console for details.');
-        setIsReady(false);
-        initTimeoutRef.current = null;
-      }, 15000); // 15 second timeout
-
-      initTimeoutRef.current = timeout;
-
-      return () => {
-        if (initTimeoutRef.current) {
-          clearTimeout(initTimeoutRef.current);
-          initTimeoutRef.current = null;
+    if (sessionId) {
+      try {
+        const stored = localStorage.getItem(`chat_messages_${sessionId}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          setMessages(parsed.messages || []);
+          setConversationId(parsed.conversationId || null);
         }
-      };
-    }
-
-    return undefined;
-  }, [isOpen, isReady, error]);
-
-  const toggleChat = () => {
-    if (!isOpen) {
-      // Reset ready state when opening to ensure fresh initialization
-      setIsReady(false);
-      setError(null);
-      // Clear any existing timeout
-      if (initTimeoutRef.current) {
-        clearTimeout(initTimeoutRef.current);
-        initTimeoutRef.current = null;
+      } catch (e) {
+        console.warn('Failed to load conversation history:', e);
       }
     }
-    setIsOpen(!isOpen);
+  }, [sessionId]);
+
+  // Save conversation history to localStorage
+  useEffect(() => {
+    if (sessionId && messages.length > 0) {
+      try {
+        localStorage.setItem(
+          `chat_messages_${sessionId}`,
+          JSON.stringify({
+            messages,
+            conversationId,
+          })
+        );
+      } catch (e) {
+        console.warn('Failed to save conversation history:', e);
+      }
+    }
+  }, [messages, conversationId, sessionId]);
+
+  // Scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
+
+  // Focus input when chat opens
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen]);
+
+  // Text selection handler
+  useEffect(() => {
+    const handler = createTextSelectionHandler();
+    
+    const unsubscribe = handler.onSelectionChange((selection) => {
+      if (selection) {
+        setTextSelection(selection);
+        setAskButtonPosition(selection.position);
+        setShowAskButton(true);
+      } else {
+        setShowAskButton(false);
+        setTextSelection(null);
+      }
+    });
+
+    // Handle clicks outside to hide button
+    const handleClick = (e: MouseEvent) => {
+      if (
+        askButtonRef.current &&
+        !askButtonRef.current.contains(e.target as Node) &&
+        !window.getSelection()?.toString().trim()
+      ) {
+        setShowAskButton(false);
+      }
+    };
+
+    document.addEventListener('click', handleClick);
+
+    return () => {
+      unsubscribe();
+      document.removeEventListener('click', handleClick);
+    };
+  }, []);
+
+  // Handle "Ask with AI" button click
+  const handleAskWithAI = useCallback(() => {
+    if (textSelection) {
+      setSelectedText(textSelection.text);
+      setShowAskButton(false);
+      setIsOpen(true);
+      // Clear selection
+      window.getSelection()?.removeAllRanges();
+      // Focus input after a short delay
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [textSelection]);
+
+  // Send message with streaming
+  const handleSendMessage = async () => {
+    const query = inputValue.trim();
+    if (!query || isLoading || !sessionId) {
+      return;
+    }
+
+    // Add user message to UI immediately
+    const userMessage: Message = {
+      role: 'user',
+      content: query,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue('');
+    setError(null);
+    setIsLoading(true);
+
+    // Clear selected text after sending (it's now in the message)
+    const textToSend = selectedText;
+    if (selectedText) {
+      setSelectedText(null);
+    }
+
+    // Create a placeholder assistant message that we'll update as we stream
+    let accumulatedText = '';
+
+    try {
+      // Add placeholder assistant message
+      const placeholderMessage: Message = {
+        role: 'assistant',
+        content: '',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, placeholderMessage]);
+
+      // Stream responses
+      for await (const event of sendMessageStream(
+        query,
+        sessionId,
+        conversationId,
+        textToSend
+      )) {
+        if (event.type === 'text') {
+          // Accumulate text deltas
+          accumulatedText += event.data.delta;
+          
+          // Update the last message (which should be the assistant message) in real-time
+          setMessages((prev) => {
+            const updated = [...prev];
+            const lastIndex = updated.length - 1;
+            if (lastIndex >= 0 && updated[lastIndex].role === 'assistant') {
+              updated[lastIndex] = {
+                ...updated[lastIndex],
+                content: accumulatedText,
+              };
+            }
+            return updated;
+          });
+        } else if (event.type === 'done') {
+          // Finalize the message with sources and conversation ID
+          setMessages((prev) => {
+            const updated = [...prev];
+            const lastIndex = updated.length - 1;
+            if (lastIndex >= 0 && updated[lastIndex].role === 'assistant') {
+              updated[lastIndex] = {
+                ...updated[lastIndex],
+                content: event.data.message,
+                sources: event.data.sources,
+              };
+            }
+            return updated;
+          });
+          setConversationId(event.data.conversation_id);
+        } else if (event.type === 'error') {
+          throw new Error(event.data.error);
+        }
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
+      setError(errorMessage);
+      // Remove both user and placeholder assistant messages on error
+      setMessages((prev) => prev.slice(0, -2));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Don't render if sessionId is not available yet
-  if (!sessionId) {
-    return <></>;
-  }
+  // Handle Enter key (with Shift for new line)
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
 
-  const { control } = chatKitConfig;
+  // Clear conversation
+  const handleClearConversation = () => {
+    if (confirm('Are you sure you want to clear the conversation?')) {
+      setMessages([]);
+      setConversationId(null);
+      setSelectedText(null);
+      if (sessionId) {
+        try {
+          localStorage.removeItem(`chat_messages_${sessionId}`);
+        } catch (e) {
+          console.warn('Failed to clear conversation history:', e);
+        }
+      }
+    }
+  };
 
-  // Safety check: ensure control exists
-  if (!control) {
-    return <></>;
-  }
+  // Copy message to clipboard
+  const handleCopyMessage = (content: string) => {
+    navigator.clipboard.writeText(content).then(() => {
+      // Could show a toast notification here
+    });
+  };
 
   return (
-    <div className={`${styles.chatWidget} ${className || ''}`}>
-      {isOpen ? (
-        <div className={styles.chatWindow}>
-          <div className={styles.chatHeader}>
-            <h3 className={styles.chatTitle}>AI Assistant</h3>
-            <button
-              className={styles.closeButton}
-              onClick={toggleChat}
-              aria-label="Close chat"
-            >
-              ×
-            </button>
-          </div>
-          <div className={styles.chatContent}>
-            {error ? (
-              <div style={{ padding: '20px', color: 'var(--ifm-color-danger)', textAlign: 'center' }}>
-                <p style={{ marginBottom: '12px' }}>Chat widget error: {error}</p>
+    <>
+      {/* Floating "Ask with AI" button for text selection */}
+      {showAskButton && textSelection && (
+        <div
+          ref={askButtonRef}
+          className={styles.askButton}
+          style={{
+            left: `${askButtonPosition.x}px`,
+            top: `${askButtonPosition.y}px`,
+          }}
+          onClick={handleAskWithAI}
+        >
+          <span>Ask with AI</span>
+        </div>
+      )}
+
+      {/* Main chat widget */}
+      <div className={`${styles.chatWidget} ${className || ''}`}>
+        {isOpen ? (
+          <div className={styles.chatWindow}>
+            <div className={styles.chatHeader}>
+              <div className={styles.chatHeaderLeft}>
+                <h3 className={styles.chatTitle}>AI Assistant</h3>
+                {selectedText && (
+                  <div className={styles.selectedTextBadge}>
+                    <span>Context: Selected text</span>
+                    <button
+                      className={styles.clearContextButton}
+                      onClick={() => setSelectedText(null)}
+                      aria-label="Clear selected text context"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className={styles.chatHeaderRight}>
                 <button
-                  onClick={() => {
-                    setError(null);
-                    setIsReady(false);
-                  }}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: 'var(--ifm-color-primary)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                  }}
+                  className={styles.clearButton}
+                  onClick={handleClearConversation}
+                  aria-label="Clear conversation"
+                  title="Clear conversation"
                 >
-                  Retry
+                  Clear
+                </button>
+                <button
+                  className={styles.closeButton}
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close chat"
+                >
+                  ×
                 </button>
               </div>
-            ) : !isReady ? (
-              <div style={{ padding: '20px', textAlign: 'center' }}>
-                <p>Initializing chat...</p>
-                <p style={{ fontSize: '12px', color: 'var(--ifm-color-secondary)' }}>
-                  Connecting to backend...
-                </p>
+            </div>
+
+            <div className={styles.chatContent}>
+              <div className={styles.messageList}>
+                {messages.length === 0 && (
+                  <div className={styles.welcomeMessage}>
+                    <p>Welcome! I'm your Physical AI & Robotics teaching assistant.</p>
+                    <p>How can I help you today?</p>
+                    {selectedText && (
+                      <div className={styles.contextInfo}>
+                        <strong>Context:</strong> You've selected text that will be included in your questions.
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    className={`${styles.message} ${
+                      message.role === 'user' ? styles.userMessage : styles.assistantMessage
+                    }`}
+                  >
+                    <div className={styles.messageContent}>
+                      {message.content}
+                    </div>
+                    {message.role === 'assistant' && message.sources && message.sources.length > 0 && (
+                      <div className={styles.sources}>
+                        <div className={styles.sourcesTitle}>Sources:</div>
+                        {message.sources.map((source, sourceIndex) => (
+                          <a
+                            key={sourceIndex}
+                            href={source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.sourceLink}
+                          >
+                            {source.chapter_name} - {source.lesson_title}
+                            {source.section_heading !== 'N/A' && ` (${source.section_heading})`}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                    {message.role === 'assistant' && (
+                      <button
+                        className={styles.copyButton}
+                        onClick={() => handleCopyMessage(message.content)}
+                        aria-label="Copy message"
+                        title="Copy message"
+                      >
+                        Copy
+                      </button>
+                    )}
+                  </div>
+                ))}
+
+                {isLoading && (
+                  <div className={`${styles.message} ${styles.assistantMessage} ${styles.loadingMessage}`}>
+                    <div className={styles.messageContent}>
+                      <div className={styles.typingIndicator}>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {error && (
+                  <div className={styles.errorMessage}>
+                    <p>{error}</p>
+                    <button
+                      className={styles.retryButton}
+                      onClick={() => {
+                        setError(null);
+                        if (messages.length > 0) {
+                          const lastUserMessage = [...messages].reverse().find(m => m.role === 'user');
+                          if (lastUserMessage) {
+                            setInputValue(lastUserMessage.content);
+                            handleSendMessage();
+                          }
+                        }
+                      }}
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
+
+                <div ref={messagesEndRef} />
               </div>
-            ) : (
-              // Render ChatKit only when ready
-              <ChatKit control={control} className={styles.chatKitContainer} />
-            )}
+
+              <div className={styles.chatInput}>
+                {selectedText && (
+                  <div className={styles.selectedTextIndicator}>
+                    <span>Using selected text as context</span>
+                    <button
+                      className={styles.clearContextButton}
+                      onClick={() => setSelectedText(null)}
+                      aria-label="Clear context"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+                <div className={styles.inputContainer}>
+                  <textarea
+                    ref={inputRef}
+                    className={styles.input}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder={
+                      selectedText
+                        ? 'Ask about the selected text...'
+                        : 'Ask anything about Physical AI & Robotics...'
+                    }
+                    rows={1}
+                    disabled={isLoading}
+                  />
+                  <button
+                    className={styles.sendButton}
+                    onClick={handleSendMessage}
+                    disabled={!inputValue.trim() || isLoading}
+                    aria-label="Send message"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      ) : (
-        <button
-          className={styles.chatButton}
-          onClick={toggleChat}
-          aria-label="Open chat"
-        >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        ) : (
+          <button
+            className={styles.chatButton}
+            onClick={() => setIsOpen(true)}
+            aria-label="Open chat"
           >
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          </svg>
-        </button>
-      )}
-    </div>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+          </button>
+        )}
+      </div>
+    </>
   );
 }
-

@@ -4,8 +4,10 @@ Defines the teaching assistant agent with search_textbook tool
 """
 
 import os
+import json
 from agents import Agent, function_tool, Runner, RunContextWrapper, set_tracing_disabled
-from typing import List, Dict, Any, Optional, TYPE_CHECKING
+from typing import List, Dict, Any, Optional, AsyncIterator, TYPE_CHECKING
+from openai.types.responses import ResponseTextDeltaEvent
 from services.vector_search import VectorSearchService
 from services.llm_service import LLMService
 from config import settings
@@ -135,17 +137,46 @@ class AgentService:
 
         # Load conversation history from session
         await session.load_history()
+        history_messages = session.get_messages()
 
-        # Build input with selected text if provided
+        # Build input with conversation history and selected text if provided
+        # Format conversation history for context
+        context_parts = []
+        
+        # Add conversation history if available
+        # Note: history_messages contains previous messages (current message not yet saved)
+        if history_messages and len(history_messages) > 0:
+            history_context = []
+            for msg in history_messages:
+                role = msg.get("role", "user")
+                content = msg.get("content", "")
+                if role == "user":
+                    history_context.append(f"User: {content}")
+                elif role == "assistant":
+                    history_context.append(f"Assistant: {content}")
+            
+            if history_context:
+                context_parts.append("=== Previous Conversation ===")
+                context_parts.append("\n".join(history_context))
+                context_parts.append("")  # Empty line separator
+
+        # Add selected text context if provided
         if selected_text:
-            full_input = f"Context (user-selected text): {selected_text}\n\nQuestion: {query}"
-        else:
-            full_input = query
+            context_parts.append(f"=== User-Selected Text Context ===")
+            context_parts.append(selected_text)
+            context_parts.append("")  # Empty line separator
 
-        # Save user message to session
+        # Add current question
+        context_parts.append(f"=== Current Question ===")
+        context_parts.append(query)
+
+        # Combine all context parts
+        full_input = "\n".join(context_parts)
+
+        # Save user message to session (before running agent)
         await session.save_message("user", query)
 
-        # Run the agent with session
+        # Run the agent with full context including conversation history
         result = await Runner.run(teaching_agent, input=full_input)
 
         # Save assistant message to session
@@ -185,5 +216,111 @@ class AgentService:
             "agent_metadata": {
                 "tools_used": tools_used,
                 "iterations": iterations
+            }
+        }
+
+    @staticmethod
+    async def run_agent_stream(
+        query: str,
+        session: 'PostgresSession',
+        selected_text: Optional[str] = None
+    ) -> AsyncIterator[Dict[str, Any]]:
+        """
+        Run the teaching agent with streaming support.
+
+        Args:
+            query: User's question
+            session: PostgresSession for conversation persistence
+            selected_text: Optional selected text from user
+
+        Yields:
+            Dictionary with event type and data:
+            - {"type": "text", "data": {"delta": "..."}} for text deltas
+            - {"type": "done", "data": {"message": "...", "sources": [...], "conversation_id": "..."}} when complete
+        """
+        global _last_search_results
+
+        # Clear previous search results
+        _last_search_results = []
+
+        # Load conversation history from session
+        await session.load_history()
+        history_messages = session.get_messages()
+
+        # Build input with conversation history and selected text if provided
+        context_parts = []
+        
+        # Add conversation history if available
+        if history_messages and len(history_messages) > 0:
+            history_context = []
+            for msg in history_messages:
+                role = msg.get("role", "user")
+                content = msg.get("content", "")
+                if role == "user":
+                    history_context.append(f"User: {content}")
+                elif role == "assistant":
+                    history_context.append(f"Assistant: {content}")
+            
+            if history_context:
+                context_parts.append("=== Previous Conversation ===")
+                context_parts.append("\n".join(history_context))
+                context_parts.append("")
+
+        # Add selected text context if provided
+        if selected_text:
+            context_parts.append(f"=== User-Selected Text Context ===")
+            context_parts.append(selected_text)
+            context_parts.append("")
+
+        # Add current question
+        context_parts.append(f"=== Current Question ===")
+        context_parts.append(query)
+
+        # Combine all context parts
+        full_input = "\n".join(context_parts)
+
+        # Save user message to session (before running agent)
+        await session.save_message("user", query)
+
+        # Run the agent with streaming
+        result = Runner.run_streamed(teaching_agent, input=full_input)
+
+        # Stream events from the result
+        async for event in result.stream_events():
+            # Stream text deltas
+            if event.type == "raw_response_event":
+                if isinstance(event.data, ResponseTextDeltaEvent):
+                    yield {
+                        "type": "text",
+                        "data": {"delta": event.data.delta}
+                    }
+            # Track tool calls for source extraction
+            elif event.type == "run_item_stream_event":
+                if hasattr(event, 'item') and event.item.type == "tool_call_output_item":
+                    # Tool was called, results are in _last_search_results
+                    pass
+
+        # Save assistant message to session
+        await session.save_message("assistant", result.final_output)
+
+        # Extract structured sources from search results
+        sources = []
+        if _last_search_results:
+            for result_item in _last_search_results:
+                sources.append({
+                    "chapter_name": result_item.get("chapter", "Unknown"),
+                    "lesson_title": result_item.get("lesson", "Unknown"),
+                    "section_heading": result_item.get("heading", "N/A"),
+                    "url": result_item.get("url", ""),
+                    "relevance_score": float(result_item.get("score", 0.0))
+                })
+
+        # Send final message with sources
+        yield {
+            "type": "done",
+            "data": {
+                "message": result.final_output,
+                "sources": sources,
+                "conversation_id": session.conversation_id
             }
         }

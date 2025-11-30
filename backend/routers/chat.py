@@ -2,9 +2,11 @@
 Chat router implementing agent-based RAG pipeline for question answering.
 """
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 import time
 import logging
 import asyncpg
+import json
 
 from models.schemas import ChatRequest, ChatResponse
 from services.db_service import get_pool, AnalyticsService
@@ -95,3 +97,87 @@ async def chat(
             status_code=500,
             detail="An error occurred processing your request. Please try again."
         )
+
+
+@router.post("/chat/stream")
+async def chat_stream(
+    request: ChatRequest,
+    pool: asyncpg.Pool = Depends(get_pool)
+):
+    """
+    Process chat query with streaming support using OpenAI Agents SDK.
+    
+    Returns Server-Sent Events (SSE) stream with:
+    - text events: {"delta": "..."} for incremental text
+    - done event: {"message": "...", "sources": [...], "conversation_id": "..."} when complete
+    """
+    start_time = time.time()
+    
+    async def generate_stream():
+        try:
+            # Create or load PostgresSession
+            session = PostgresSession(
+                conversation_id=request.conversation_id,
+                session_id=request.session_id
+            )
+            
+            # Stream agent responses
+            async for event in AgentService.run_agent_stream(
+                query=request.query,
+                session=session,
+                selected_text=request.selected_text
+            ):
+                # Format as Server-Sent Event
+                event_type = event.get("type", "text")
+                event_data = event.get("data", {})
+                
+                # Send SSE formatted event
+                yield f"event: {event_type}\n"
+                yield f"data: {json.dumps(event_data)}\n\n"
+            
+            # Calculate response time
+            response_time_ms = int((time.time() - start_time) * 1000)
+            
+            # Log analytics (non-blocking)
+            try:
+                analytics_service = AnalyticsService(pool)
+                await analytics_service.log_query(
+                    query=request.query,
+                    response_time_ms=response_time_ms,
+                    success=True,
+                    session_id=request.session_id,
+                    conversation_id=session.conversation_id
+                )
+            except Exception as e:
+                logger.warning(f"Failed to log analytics: {e}")
+                
+        except Exception as e:
+            logger.error(f"Streaming endpoint error: {e}", exc_info=True)
+            # Send error event
+            error_data = {"error": str(e)}
+            yield f"event: error\n"
+            yield f"data: {json.dumps(error_data)}\n\n"
+            
+            # Log failed query
+            response_time_ms = int((time.time() - start_time) * 1000)
+            try:
+                analytics_service = AnalyticsService(pool)
+                await analytics_service.log_query(
+                    query=request.query,
+                    response_time_ms=response_time_ms,
+                    success=False,
+                    session_id=request.session_id,
+                    error_message=str(e)
+                )
+            except:
+                pass
+    
+    return StreamingResponse(
+        generate_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        }
+    )
