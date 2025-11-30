@@ -34,8 +34,10 @@ export const BACKEND_URL = getBackendURL();
  * @returns Full URL to the endpoint
  */
 export function getApiUrl(endpoint: string): string {
-  // Remove leading slash if present to avoid double slashes
-  const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
-  return `${BACKEND_URL}/${cleanEndpoint}`;
+  // Remove trailing slash from BACKEND_URL to prevent double slashes
+  const baseUrl = BACKEND_URL.replace(/\/+$/, '');
+  // Remove leading slashes from endpoint and ensure it starts with /
+  const cleanEndpoint = '/' + endpoint.replace(/^\/+/, '');
+  return baseUrl + cleanEndpoint;
 }
 

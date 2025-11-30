@@ -71,5 +71,14 @@ export const auth = betterAuth({
       secure: true,
       partitioned: true, // New browser standards for cross-site cookies
     },
+    cookies: {
+      sessionToken: {
+        attributes: {
+          sameSite: "none",
+          secure: true,
+          path: "/",
+        },
+      },
+    },
   },
 });

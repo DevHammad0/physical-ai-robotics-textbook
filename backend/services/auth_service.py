@@ -55,8 +55,11 @@ async def get_user_id_from_better_auth_session(
             
             if response.status_code == 200:
                 data = response.json()
-                if data.get("user") and data.get("user").get("id"):
-                    return data["user"]["id"]
+                user = data.get("user")
+                if user and isinstance(user, dict) and user.get("id"):
+                    return user["id"]
+                else:
+                    logger.warning(f"Session response missing user or user.id: {data}")
     except Exception as e:
         logger.error(f"Error verifying session with better-auth: {e}")
     
