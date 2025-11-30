@@ -1,3 +1,4 @@
+/// <reference path="../types/better-auth.d.ts" />
 import { createAuthClient } from "better-auth/react";
 
 // Get base URL from environment or use default

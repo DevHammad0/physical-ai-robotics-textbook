@@ -42,7 +42,8 @@ export default function LessonWrapper({
             }
             // For React elements, try to extract text content
             if (React.isValidElement(child)) {
-              return React.Children.toArray(child.props?.children || [])
+              const props = child.props as { children?: React.ReactNode };
+              return React.Children.toArray(props?.children || [])
                 .map((c) => (typeof c === "string" ? c : ""))
                 .join("");
             }
