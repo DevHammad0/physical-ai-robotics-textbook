@@ -1,18 +1,24 @@
 /// <reference path="../types/better-auth.d.ts" />
 import { createAuthClient } from "better-auth/react";
+import { BACKEND_URL } from "./api-config";
 
 // Get base URL from environment or use default
 const getBaseURL = () => {
   if (typeof window !== "undefined") {
-    // Client-side: use current origin
+    // Check for window global (can be set in HTML) - same pattern as api-config.ts
+    if ((window as any).__BACKEND_URL__) {
+      return (window as any).__BACKEND_URL__;
+    }
+    
+    // For local development, use localhost:8000 (FastAPI proxies to auth server on 8001)
     const origin = window.location.origin;
-    // For GitHub Pages, the API might be on a different domain
-    // For local dev, use localhost:8000 (FastAPI proxies to auth server on 8001)
     if (origin.includes("localhost") || origin.includes("127.0.0.1")) {
       return "http://localhost:8000";
     }
-    // For production, better-auth should be on the same domain or configured separately
-    return origin;
+    
+    // For production, use the same backend URL as the API
+    // This will use BACKEND_URL which points to Vercel backend
+    return BACKEND_URL;
   }
   // Server-side: use environment variable or default
   return process.env.NEXT_PUBLIC_AUTH_URL || "http://localhost:8000";

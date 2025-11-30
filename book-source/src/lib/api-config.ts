@@ -18,9 +18,8 @@ const getBackendURL = (): string => {
       return "http://localhost:8000";
     }
     
-    // For production, assume backend is on same origin or use origin
-    // You can override this by setting window.__BACKEND_URL__ in your HTML
-    return origin;
+    // For production (GitHub Pages), use Vercel backend URL
+    return "https://backendhackathon.vercel.app";
   }
   
   // Server-side: use environment variable or default
