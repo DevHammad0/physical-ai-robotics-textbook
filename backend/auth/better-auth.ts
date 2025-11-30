@@ -43,7 +43,10 @@ export const auth = betterAuth({
   trustedOrigins: [
     "http://localhost:3000", // Docusaurus frontend
     "http://localhost:8000", // FastAPI backend (for proxy requests)
+    "https://devhammad0.github.io", // GitHub Pages production
+    "https://devhammado.github.io", // GitHub Pages (alternative spelling - check your actual domain)
     process.env.CORS_ORIGIN || "http://localhost:3000",
+    ...(process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(",").map((origin: string) => origin.trim()) : []),
     ...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
   ],
   user: {

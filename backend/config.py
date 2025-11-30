@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = 30
 
     # CORS Origins
-    cors_origins: str = "https://devhammad0.github.io,http://localhost:3000"
+    cors_origins: str = "https://devhammad0.github.io,https://devhammado.github.io,http://localhost:3000"
 
     # ChatKit Configuration
     chatkit_domain_key: str = "domain_pk_local_dev"
