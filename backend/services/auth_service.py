@@ -35,6 +35,17 @@ async def get_user_id_from_better_auth_session(
         if not auth_base_url.startswith("http"):
             auth_base_url = f"https://{auth_base_url}"
         
+        # Remove trailing slashes and whitespace to prevent double slashes in URL construction
+        # Strip all whitespace and trailing slashes
+        auth_base_url = auth_base_url.strip().rstrip('/')
+        
+        # Build the full URL - ensure single slash between base URL and path
+        # This handles all edge cases: trailing slashes, whitespace, etc.
+        session_url = f"{auth_base_url}/api/auth/get-session"
+        
+        # Log the URL for debugging (remove in production if too verbose)
+        logger.debug(f"Making session request to: {session_url}")
+        
         # Build cookie header
         cookie_header = "; ".join([f"{k}={v}" for k, v in cookies.items()])
         
@@ -47,7 +58,7 @@ async def get_user_id_from_better_auth_session(
                 headers["Authorization"] = authorization
             
             response = await client.get(
-                f"{auth_base_url}/api/auth/get-session",
+                session_url,
                 headers=headers,
                 timeout=5.0,
                 follow_redirects=True
