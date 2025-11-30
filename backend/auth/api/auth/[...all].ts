@@ -1,4 +1,4 @@
-import { auth } from "../../lib/auth";
+import { auth } from "../../lib/auth.js";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 // Allowed origins for CORS
@@ -23,12 +23,17 @@ const getAllowedOrigins = (): string[] => {
 
 // Convert Vercel request to Web API Request
 async function toWebRequest(req: VercelRequest): Promise<Request> {
+  // Get the full URL - Vercel provides these headers
   const protocol = req.headers["x-forwarded-proto"] || "https";
-  const host = req.headers.host || "";
+  const host = req.headers.host || req.headers["x-forwarded-host"] || "";
   const url = `${protocol}://${host}${req.url || ""}`;
   
+  // Build headers, excluding host as it's in the URL
   const headers = new Headers();
   Object.entries(req.headers).forEach(([key, value]) => {
+    // Skip host header as it's already in the URL
+    if (key.toLowerCase() === "host") return;
+    
     if (value) {
       if (Array.isArray(value)) {
         value.forEach(v => headers.append(key, v));
@@ -125,7 +130,18 @@ export default async function handler(
     // Convert Web API Response to Vercel response
     await sendResponse(res, response, origin, isAllowedOrigin);
   } catch (error) {
-    console.error("Auth handler error:", error);
+    // Enhanced error logging for debugging
+    console.error("=== Auth Handler Error ===");
+    console.error("Error:", error);
+    console.error("Error type:", error instanceof Error ? error.constructor.name : typeof error);
+    console.error("Error message:", error instanceof Error ? error.message : String(error));
+    if (error instanceof Error && error.stack) {
+      console.error("Stack trace:", error.stack);
+    }
+    console.error("Request method:", req.method);
+    console.error("Request URL:", req.url);
+    console.error("Request headers:", JSON.stringify(req.headers, null, 2));
+    console.error("=========================");
     
     // Set CORS headers even on error
     const origin = req.headers.origin;
@@ -141,7 +157,10 @@ export default async function handler(
     
     res.status(500).json({
       error: "Internal server error",
-      message: error instanceof Error ? error.message : "Unknown error"
+      message: error instanceof Error ? error.message : "Unknown error",
+      ...(process.env.NODE_ENV !== "production" && error instanceof Error && error.stack
+        ? { stack: error.stack.split("\n").slice(0, 10) }
+        : {})
     });
   }
 }

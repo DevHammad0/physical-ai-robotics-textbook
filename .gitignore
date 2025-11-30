@@ -116,3 +116,5 @@ pnpm-debug.log*
 
 # Disabled client modules (Docusaurus auto-loads .tsx files in client-modules/)
 book-source/src/client-modules/*.disabled
+
+DEPLOYMENT.md
