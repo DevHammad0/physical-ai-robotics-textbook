@@ -3,6 +3,14 @@ import React, { useState } from "react";
 import { signUp } from "@site/src/lib/auth-client";
 import styles from "./Auth.module.css";
 
+// Type for signUp.email input with custom field
+interface SignUpEmailInput {
+  email: string;
+  password: string;
+  name: string;
+  physical_ai_experience?: number;
+}
+
 interface SignUpFormProps {
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -22,12 +30,14 @@ export default function SignUpForm({ onSuccess, onCancel }: SignUpFormProps) {
     setError(null);
 
     try {
-      const result = await signUp.email({
+      const signUpData: SignUpEmailInput = {
         email,
         password,
         name,
         physical_ai_experience: experienceLevel,
-      });
+      };
+      // Type assertion to allow the custom field that's configured on the backend
+      const result = await signUp.email(signUpData as any);
 
       if (result.error) {
         setError(result.error.message || "Sign up failed");

@@ -1,6 +1,7 @@
 /// <reference path="../../types/better-auth.d.ts" />
 import React, { useState } from "react";
 import { useSession, signOut } from "@site/src/lib/auth-client";
+import type { ExtendedSession } from "@site/src/types/auth";
 import SignInForm from "./SignInForm";
 import SignUpForm from "./SignUpForm";
 import styles from "./Auth.module.css";
@@ -28,6 +29,10 @@ export default function AuthButton() {
   }
 
   if (session?.user) {
+    // Type assertion to include our custom field
+    const extendedSession = session as ExtendedSession;
+    const user = extendedSession.user;
+    
     return (
       <div className={styles.userMenu}>
         <button
@@ -35,7 +40,7 @@ export default function AuthButton() {
           onClick={() => setShowModal(true)}
           aria-label="Account menu"
         >
-          {session.user.name || session.user.email}
+          {user.name || user.email}
         </button>
         {showModal && (
           <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
@@ -50,13 +55,13 @@ export default function AuthButton() {
               <div className={styles.modalContent}>
                 <div className={styles.userInfo}>
                   <h3>Account</h3>
-                  <p><strong>Email:</strong> {session.user.email}</p>
-                  {session.user.name && (
-                    <p><strong>Name:</strong> {session.user.name}</p>
+                  <p><strong>Email:</strong> {user.email}</p>
+                  {user.name && (
+                    <p><strong>Name:</strong> {user.name}</p>
                   )}
-                  {session.user.physical_ai_experience !== null && (
+                  {user.physical_ai_experience !== null && user.physical_ai_experience !== undefined && (
                     <p>
-                      <strong>Experience Level:</strong> {session.user.physical_ai_experience}/10
+                      <strong>Experience Level:</strong> {user.physical_ai_experience}/10
                     </p>
                   )}
                 </div>
