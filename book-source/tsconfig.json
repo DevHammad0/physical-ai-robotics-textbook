@@ -23,7 +23,11 @@
     "strictBindCallApply": true,
     "strictPropertyInitialization": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@site/*": ["src/*"]
+    }
   },
   "include": ["**/*.ts", "**/*.tsx"]
 }
