@@ -18,13 +18,14 @@ const getBaseURL = () => {
   return process.env.NEXT_PUBLIC_AUTH_URL || "http://localhost:8000";
 };
 
-// Create auth client and infer the type to avoid TS2742 errors
-const _authClient = createAuthClient({
+// Use ReturnType to explicitly type the auth client and avoid TS2742 errors
+type AuthClient = ReturnType<typeof createAuthClient>;
+
+const _authClient: AuthClient = createAuthClient({
   baseURL: getBaseURL(),
 });
 
-// Use typeof to get the type without complex generic inference
-export type AuthClientType = typeof _authClient;
+export type AuthClientType = AuthClient;
 
 export const authClient: AuthClientType = _authClient;
 
