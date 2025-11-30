@@ -52,9 +52,64 @@ export function getCurrentSelection(): TextSelection | null {
 
   // Get position for button placement (relative to viewport for fixed positioning)
   const rect = range.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const viewportWidth = window.innerWidth;
+  
+  // Account for header/navbar height (typically 60-80px for Docusaurus)
+  const headerHeight = 80; // Safe margin to account for navbar and spacing
+  const buttonHeight = 40; // Approximate button height including padding
+  const minTopMargin = headerHeight + 10; // Header height + small spacing
+  
+  // Calculate button position based on visible portion of selection
+  let x = rect.left + rect.width / 2;
+  let y: number;
+  
+  // Calculate visible portion of selection in viewport
+  const visibleTop = Math.max(0, rect.top);
+  const visibleBottom = Math.min(viewportHeight, rect.bottom);
+  const hasVisibleContent = visibleBottom > visibleTop;
+  
+  if (rect.top < 0) {
+    // Selection starts above viewport - position button below header
+    // This ensures button is visible when user scrolls down with large selection
+    y = minTopMargin;
+  } else if (rect.top > viewportHeight) {
+    // Selection is below viewport - position button at bottom of viewport
+    y = viewportHeight - buttonHeight - 10; // Leave space for button and margin
+  } else if (hasVisibleContent) {
+    // Selection is visible in viewport
+    // Position button above the visible top, but ensure it's below header
+    const preferredY = rect.top - 10; // 10px above selection
+    y = Math.max(minTopMargin, preferredY);
+    
+    // If selection is very large and spans most of viewport, position at top
+    const selectionHeight = rect.bottom - rect.top;
+    if (selectionHeight > viewportHeight * 0.7) {
+      y = minTopMargin;
+    }
+  } else {
+    // Fallback: position below header
+    y = minTopMargin;
+  }
+  
+  // Ensure button doesn't go off-screen horizontally
+  const buttonWidth = 140; // Approximate button width (slightly larger for safety)
+  if (x < buttonWidth / 2) {
+    x = buttonWidth / 2;
+  } else if (x > viewportWidth - buttonWidth / 2) {
+    x = viewportWidth - buttonWidth / 2;
+  }
+  
+  // Ensure button doesn't go off-screen vertically
+  if (y < minTopMargin) {
+    y = minTopMargin;
+  } else if (y > viewportHeight - buttonHeight - 10) {
+    y = viewportHeight - buttonHeight - 10;
+  }
+  
   const position = {
-    x: rect.left + rect.width / 2,
-    y: rect.top - 10, // Position above the selection
+    x,
+    y,
   };
 
   return {

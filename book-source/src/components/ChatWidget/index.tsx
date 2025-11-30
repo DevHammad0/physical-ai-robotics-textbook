@@ -5,7 +5,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './styles.module.css';
 import { sendMessageStream } from './utils/api';
-import { createTextSelectionHandler } from './utils/textSelection';
+import { createTextSelectionHandler, getCurrentSelection } from './utils/textSelection';
 import type { Message, TextSelection } from './types';
 import { 
   FiCopy, 
@@ -37,6 +37,7 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [copiedMessageId, setCopiedMessageId] = useState<number | null>(null);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -200,6 +201,62 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
     };
   }, []);
 
+  // Update button position on scroll/resize when text is selected
+  useEffect(() => {
+    if (!showAskButton) {
+      return;
+    }
+
+    // Function to recalculate and update button position from current selection
+    const updateButtonPosition = () => {
+      const currentSelection = getCurrentSelection();
+      if (currentSelection) {
+        // Only update if the selection text matches (to avoid updating on unrelated selections)
+        if (textSelection && currentSelection.text === textSelection.text) {
+          setAskButtonPosition(currentSelection.position);
+        } else if (!textSelection) {
+          // If we have a selection but no stored textSelection, update anyway
+          setAskButtonPosition(currentSelection.position);
+        }
+      } else {
+        // Selection was cleared, hide button
+        setShowAskButton(false);
+        setTextSelection(null);
+      }
+    };
+
+    // Throttle scroll/resize events for performance
+    let timeoutId: NodeJS.Timeout | null = null;
+    const throttledUpdate = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(updateButtonPosition, 16); // ~60fps
+    };
+
+    // Add event listeners
+    window.addEventListener('scroll', throttledUpdate, true); // Use capture phase to catch all scroll events
+    window.addEventListener('resize', throttledUpdate);
+    
+    // Also listen to scroll on document and body for better coverage
+    document.addEventListener('scroll', throttledUpdate, true);
+    if (document.body) {
+      document.body.addEventListener('scroll', throttledUpdate, true);
+    }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      window.removeEventListener('scroll', throttledUpdate, true);
+      window.removeEventListener('resize', throttledUpdate);
+      document.removeEventListener('scroll', throttledUpdate, true);
+      if (document.body) {
+        document.body.removeEventListener('scroll', throttledUpdate, true);
+      }
+    };
+  }, [showAskButton, textSelection]);
+
   // Handle "Ask with AI" button click
   const handleAskWithAI = useCallback((e: React.MouseEvent) => {
     console.log('🎯 ========================================');
@@ -337,18 +394,25 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
 
   // Clear conversation
   const handleClearConversation = () => {
-    if (confirm('Are you sure you want to clear the conversation?')) {
-      setMessages([]);
-      setConversationId(null);
-      setSelectedText(null);
-      if (sessionId) {
-        try {
-          localStorage.removeItem(`chat_messages_${sessionId}`);
-        } catch (e) {
-          console.warn('Failed to clear conversation history:', e);
-        }
+    setShowClearConfirm(true);
+  };
+
+  const confirmClearConversation = () => {
+    setMessages([]);
+    setConversationId(null);
+    setSelectedText(null);
+    setShowClearConfirm(false);
+    if (sessionId) {
+      try {
+        localStorage.removeItem(`chat_messages_${sessionId}`);
+      } catch (e) {
+        console.warn('Failed to clear conversation history:', e);
       }
     }
+  };
+
+  const cancelClearConversation = () => {
+    setShowClearConfirm(false);
   };
 
   // Copy message to clipboard with toast feedback
@@ -378,6 +442,42 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
         </div>
       )}
 
+      {/* Clear confirmation modal */}
+      {showClearConfirm && (
+        <div className={styles.modalOverlay} onClick={cancelClearConversation}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>Clear Conversation</h3>
+              <button
+                className={styles.modalCloseButton}
+                onClick={cancelClearConversation}
+                aria-label="Close"
+              >
+                <FiX />
+              </button>
+            </div>
+            <div className={styles.modalContent}>
+              <p>Are you sure you want to clear the conversation? This action cannot be undone.</p>
+            </div>
+            <div className={styles.modalActions}>
+              <button
+                className={styles.modalCancelButton}
+                onClick={cancelClearConversation}
+              >
+                Cancel
+              </button>
+              <button
+                className={styles.modalConfirmButton}
+                onClick={confirmClearConversation}
+              >
+                <FiTrash2 />
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Floating "Ask with AI" button for text selection */}
       {showAskButton && textSelection && (
         <div
@@ -400,7 +500,7 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
           <div className={styles.chatWindow}>
             <div className={styles.chatHeader}>
               <div className={styles.chatHeaderLeft}>
-                <h3 className={styles.chatTitle}>AI Assistant</h3>
+                <h3 className={styles.chatTitle}>Teaching Assistant</h3>
                 {selectedText && (
                   <div className={styles.selectedTextBadge}>
                     <span>Context: Selected text</span>
@@ -439,8 +539,8 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
               <div className={styles.messageList}>
                 {messages.length === 0 && (
                   <div className={styles.welcomeMessage}>
-                    <p>Welcome! I'm your Physical AI & Robotics teaching assistant.</p>
-                    <p>How can I help you today?</p>
+                    <p>Welcome! I'm here to help you learn Physical AI & Robotics.</p>
+                    <p>Ask me anything about the textbook content, code examples, or concepts you'd like to explore.</p>
                     {selectedText && (
                       <div className={styles.contextInfo}>
                         <strong>Context:</strong> You've selected text that will be included in your questions.

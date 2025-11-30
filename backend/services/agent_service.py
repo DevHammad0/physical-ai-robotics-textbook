@@ -8,7 +8,6 @@ import json
 import logging
 from agents import Agent, function_tool, Runner, RunContextWrapper, set_tracing_disabled
 from typing import List, Dict, Any, Optional, AsyncIterator, TYPE_CHECKING
-from openai.types.responses import ResponseTextDeltaEvent
 from services.vector_search import VectorSearchService
 from services.llm_service import LLMService
 from config import settings
@@ -361,7 +360,8 @@ class AgentService:
             async for event in result.stream_events():
                 # Stream text deltas
                 if event.type == "raw_response_event":
-                    if isinstance(event.data, ResponseTextDeltaEvent):
+                    # Check if event.data has a delta attribute (duck typing)
+                    if hasattr(event.data, 'delta') and event.data.delta:
                         yield {
                             "type": "text",
                             "data": {"delta": event.data.delta}

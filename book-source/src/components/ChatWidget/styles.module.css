@@ -48,7 +48,7 @@
   height: 600px;
   max-width: calc(100vw - 48px);
   max-height: calc(100vh - 48px);
-  background: var(--ifm-background-color);
+  background: var(--ifm-background-surface-color);
   border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   display: flex;
@@ -195,6 +195,7 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  background: var(--ifm-background-surface-color);
 }
 
 /* Message list */
@@ -205,6 +206,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background: var(--ifm-background-surface-color);
 }
 
 .messageList::-webkit-scrollbar {
@@ -658,7 +660,7 @@
   right: 24px;
   z-index: 1002;
   padding: 12px 20px;
-  background: var(--ifm-color-success);
+  background: #10b981; /* Explicit green background for light mode */
   color: white;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -669,6 +671,12 @@
   font-weight: 500;
   animation: toastSlideIn 0.3s ease;
   max-width: 300px;
+}
+
+/* Light mode - ensure solid background */
+[data-theme='light'] .toast {
+  background: #10b981;
+  color: white;
 }
 
 .toastIcon {
@@ -689,6 +697,7 @@
 
 [data-theme='dark'] .toast {
   background: var(--ifm-color-success-dark);
+  color: white;
 }
 
 /* Mobile responsive for toast */
@@ -698,5 +707,207 @@
     right: 16px;
     left: 16px;
     max-width: none;
+  }
+}
+
+/* Confirmation Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal {
+  background: #ffffff; /* Explicit white background for light mode */
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 400px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  animation: modalSlideIn 0.3s ease;
+  overflow: hidden;
+}
+
+/* Light mode - ensure solid white background */
+[data-theme='light'] .modal {
+  background: #ffffff;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: #ffffff; /* Explicit white background for light mode */
+}
+
+/* Light mode - ensure solid white background */
+[data-theme='light'] .modalHeader {
+  background: #ffffff;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+}
+
+.modalCloseButton {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--ifm-color-content);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.modalCloseButton:hover {
+  background: var(--ifm-color-emphasis-100);
+  transform: scale(1.1);
+}
+
+.modalContent {
+  padding: 24px;
+  color: var(--ifm-color-content);
+  line-height: 1.6;
+  background: #ffffff; /* Explicit white background for light mode */
+}
+
+/* Light mode - ensure solid white background */
+[data-theme='light'] .modalContent {
+  background: #ffffff;
+}
+
+.modalContent p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  background: #ffffff; /* Explicit white background for light mode */
+  justify-content: flex-end;
+}
+
+/* Light mode - ensure solid white background */
+[data-theme='light'] .modalActions {
+  background: #ffffff;
+}
+
+.modalCancelButton {
+  padding: 10px 20px;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  background: transparent;
+  color: var(--ifm-color-content);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.modalCancelButton:hover {
+  background: var(--ifm-color-emphasis-100);
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+.modalConfirmButton {
+  padding: 10px 20px;
+  border: none;
+  background: var(--ifm-color-danger);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modalConfirmButton:hover {
+  background: var(--ifm-color-danger-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modalConfirmButton:active {
+  transform: translateY(0);
+}
+
+/* Dark mode adjustments for modal */
+[data-theme='dark'] .modalOverlay {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme='dark'] .modal {
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .modalHeader {
+  border-bottom-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .modalActions {
+  border-top-color: var(--ifm-color-emphasis-300);
+}
+
+/* Mobile responsive for modal */
+@media (max-width: 768px) {
+  .modal {
+    width: calc(100% - 32px);
+    max-width: none;
+    margin: 16px;
+  }
+
+  .modalHeader,
+  .modalContent,
+  .modalActions {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
