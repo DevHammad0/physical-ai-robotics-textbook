@@ -431,7 +431,7 @@ Claude explains:
 
 Ready to build a real robot? In Lesson 3, you'll create a differential drive mobile robot and spawn it in Gazebo.
 
-[Go to Lesson 3: Building Your First Robot →](./lesson-03-building-robot.md)
+[Go to Lesson 3: Building Your First Robot →](./03-building-robot.md)
 
 ---
 

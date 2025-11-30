@@ -255,7 +255,7 @@ Chapter 2: Simulation & Robot Modeling
 
 Ready to build robots in simulation? Head to **Lesson 1** to launch Gazebo and explore how physics simulation works.
 
-[Go to Lesson 1: Introduction to Gazebo →](./lesson-01-intro-gazebo.md)
+[Go to Lesson 1: Introduction to Gazebo →](./01-intro-gazebo.md)
 
 ---
 

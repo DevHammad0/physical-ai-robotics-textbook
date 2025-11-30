@@ -412,7 +412,7 @@ sudo apt install ros-humble-gazebo-ros-pkgs
 
 In Lesson 6, you'll write ROS 2 nodes to process sensor data and extract meaningful information.
 
-[Go to Lesson 6: Processing Sensor Data →](./lesson-06-processing-sensors.md)
+[Go to Lesson 6: Processing Sensor Data →](./06-processing-sensors.md)
 
 ---
 

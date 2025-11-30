@@ -491,7 +491,7 @@ ros2 topic echo /joint_states
 
 In Lesson 8, you'll coordinate multiple robots, implement collision avoidance, and build a full autonomous system.
 
-[Go to Lesson 8: Multi-Robot Capstone →](./lesson-08-multi-robot-capstone.md)
+[Go to Lesson 8: Multi-Robot Capstone →](./08-multi-robot-capstone.md)
 
 ---
 
