@@ -38,6 +38,10 @@
   transform: scale(0.95);
 }
 
+.chatButton svg {
+  font-size: 24px;
+}
+
 /* Chat window */
 .chatWindow {
   width: 400px;
@@ -106,40 +110,56 @@
 }
 
 .clearContextButton {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border: none;
   background: transparent;
   color: var(--ifm-color-content);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 2px;
+  border-radius: 4px;
   padding: 0;
-  transition: background 0.2s ease;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .clearContextButton:hover {
   background: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+.clearContextButton:active {
+  transform: scale(0.95);
 }
 
 .clearButton {
-  padding: 4px 12px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
   border: 1px solid var(--ifm-color-emphasis-300);
   background: transparent;
   color: var(--ifm-color-content);
-  font-size: 12px;
-  border-radius: 4px;
+  font-size: 16px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .clearButton:hover {
   background: var(--ifm-color-emphasis-100);
   border-color: var(--ifm-color-emphasis-400);
+  transform: scale(1.05);
+}
+
+.clearButton:active {
+  transform: scale(0.95);
 }
 
 .closeButton {
@@ -148,19 +168,24 @@
   border: none;
   background: transparent;
   color: var(--ifm-color-content);
-  font-size: 24px;
+  font-size: 18px;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: background 0.2s ease;
+  border-radius: 6px;
+  transition: all 0.2s ease;
   padding: 0;
 }
 
 .closeButton:hover {
   background: var(--ifm-color-emphasis-100);
+  transform: scale(1.1);
+}
+
+.closeButton:active {
+  transform: scale(0.95);
 }
 
 /* Chat content area */
@@ -284,7 +309,9 @@
 }
 
 .sourceLink {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--ifm-color-primary);
   text-decoration: none;
   margin: 4px 0;
@@ -297,23 +324,49 @@
   text-decoration: underline;
 }
 
+.externalLinkIcon {
+  font-size: 12px;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
 /* Copy button */
 .copyButton {
   align-self: flex-start;
-  padding: 4px 8px;
+  padding: 6px 10px;
   border: 1px solid var(--ifm-color-emphasis-300);
   background: transparent;
   color: var(--ifm-color-content-secondary);
-  font-size: 11px;
-  border-radius: 4px;
+  font-size: 12px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
   margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
 }
 
 .copyButton:hover {
   background: var(--ifm-color-emphasis-100);
   color: var(--ifm-color-content);
+  border-color: var(--ifm-color-emphasis-400);
+  transform: translateY(-1px);
+}
+
+.copyButton:active {
+  transform: translateY(0);
+}
+
+.copyButton.copied {
+  background: var(--ifm-color-success-lightest);
+  border-color: var(--ifm-color-success);
+  color: var(--ifm-color-success-darkest);
+}
+
+.copyButton.copied:hover {
+  background: var(--ifm-color-success-lighter);
 }
 
 /* Loading message */
@@ -374,14 +427,24 @@
   background: var(--ifm-color-danger);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.2s ease;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .retryButton:hover {
   background: var(--ifm-color-danger-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.retryButton:active {
+  transform: translateY(0);
 }
 
 /* Chat input */
@@ -455,16 +518,23 @@
   justify-content: center;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  font-size: 18px;
 }
 
 .sendButton:hover:not(:disabled) {
   background: var(--ifm-color-primary-dark);
   transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sendButton:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 .sendButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* Ask with AI button (floating) */
@@ -484,6 +554,13 @@
   transition: all 0.2s ease;
   animation: askButtonSlideIn 0.2s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.askButtonIcon {
+  font-size: 16px;
 }
 
 @keyframes askButtonSlideIn {
@@ -572,4 +649,54 @@
 
 [data-theme='dark'] .input:focus {
   border-color: var(--ifm-color-primary);
+}
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  z-index: 1002;
+  padding: 12px 20px;
+  background: var(--ifm-color-success);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: toastSlideIn 0.3s ease;
+  max-width: 300px;
+}
+
+.toastIcon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+[data-theme='dark'] .toast {
+  background: var(--ifm-color-success-dark);
+}
+
+/* Mobile responsive for toast */
+@media (max-width: 768px) {
+  .toast {
+    bottom: 80px;
+    right: 16px;
+    left: 16px;
+    max-width: none;
+  }
 }

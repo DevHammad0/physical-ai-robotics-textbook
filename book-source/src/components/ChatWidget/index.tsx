@@ -7,6 +7,16 @@ import styles from './styles.module.css';
 import { sendMessageStream } from './utils/api';
 import { createTextSelectionHandler } from './utils/textSelection';
 import type { Message, TextSelection } from './types';
+import { 
+  FiCopy, 
+  FiTrash2, 
+  FiX, 
+  FiSend, 
+  FiRefreshCw,
+  FiMessageCircle,
+  FiExternalLink,
+  FiCheck
+} from 'react-icons/fi';
 
 interface ChatWidgetProps {
   className?: string;
@@ -24,6 +34,9 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
   const [textSelection, setTextSelection] = useState<TextSelection | null>(null);
   const [showAskButton, setShowAskButton] = useState(false);
   const [askButtonPosition, setAskButtonPosition] = useState({ x: 0, y: 0 });
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [copiedMessageId, setCopiedMessageId] = useState<number | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -338,15 +351,33 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
     }
   };
 
-  // Copy message to clipboard
-  const handleCopyMessage = (content: string) => {
+  // Copy message to clipboard with toast feedback
+  const handleCopyMessage = (content: string, messageIndex: number) => {
     navigator.clipboard.writeText(content).then(() => {
-      // Could show a toast notification here
+      setCopiedMessageId(messageIndex);
+      setToastMessage('Copied to clipboard!');
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+        setTimeout(() => setCopiedMessageId(null), 300);
+      }, 2000);
+    }).catch(() => {
+      setToastMessage('Failed to copy');
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2000);
     });
   };
 
   return (
     <>
+      {/* Toast notification */}
+      {showToast && (
+        <div className={styles.toast}>
+          <FiCheck className={styles.toastIcon} />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* Floating "Ask with AI" button for text selection */}
       {showAskButton && textSelection && (
         <div
@@ -358,6 +389,7 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
           }}
           onMouseDown={handleAskWithAI}
         >
+          <FiMessageCircle className={styles.askButtonIcon} />
           <span>Ask with AI</span>
         </div>
       )}
@@ -376,8 +408,9 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
                       className={styles.clearContextButton}
                       onClick={() => setSelectedText(null)}
                       aria-label="Clear selected text context"
+                      title="Clear context"
                     >
-                      ×
+                      <FiX />
                     </button>
                   </div>
                 )}
@@ -389,14 +422,15 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
                   aria-label="Clear conversation"
                   title="Clear conversation"
                 >
-                  Clear
+                  <FiTrash2 />
                 </button>
                 <button
                   className={styles.closeButton}
                   onClick={() => setIsOpen(false)}
                   aria-label="Close chat"
+                  title="Close chat"
                 >
-                  ×
+                  <FiX />
                 </button>
               </div>
             </div>
@@ -436,20 +470,31 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
                             rel="noopener noreferrer"
                             className={styles.sourceLink}
                           >
-                            {source.chapter_name} - {source.lesson_title}
+                            <span>{source.chapter_name} - {source.lesson_title}</span>
                             {source.section_heading !== 'N/A' && ` (${source.section_heading})`}
+                            <FiExternalLink className={styles.externalLinkIcon} />
                           </a>
                         ))}
                       </div>
                     )}
                     {message.role === 'assistant' && (
                       <button
-                        className={styles.copyButton}
-                        onClick={() => handleCopyMessage(message.content)}
+                        className={`${styles.copyButton} ${copiedMessageId === index ? styles.copied : ''}`}
+                        onClick={() => handleCopyMessage(message.content, index)}
                         aria-label="Copy message"
                         title="Copy message"
                       >
-                        Copy
+                        {copiedMessageId === index ? (
+                          <>
+                            <FiCheck />
+                            <span>Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <FiCopy />
+                            <span>Copy</span>
+                          </>
+                        )}
                       </button>
                     )}
                   </div>
@@ -483,7 +528,8 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
                         }
                       }}
                     >
-                      Retry
+                      <FiRefreshCw />
+                      <span>Retry</span>
                     </button>
                   </div>
                 )}
@@ -499,8 +545,9 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
                       className={styles.clearContextButton}
                       onClick={() => setSelectedText(null)}
                       aria-label="Clear context"
+                      title="Clear context"
                     >
-                      ×
+                      <FiX />
                     </button>
                   </div>
                 )}
@@ -524,20 +571,9 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
                     onClick={handleSendMessage}
                     disabled={!inputValue.trim() || isLoading}
                     aria-label="Send message"
+                    title="Send message (Enter)"
                   >
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <line x1="22" y1="2" x2="11" y2="13"></line>
-                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
+                    <FiSend />
                   </button>
                 </div>
               </div>
@@ -551,19 +587,9 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
               setIsOpen(true);
             }}
             aria-label="Open chat"
+            title="Open AI Assistant"
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            </svg>
+            <FiMessageCircle />
           </button>
         )}
       </div>
