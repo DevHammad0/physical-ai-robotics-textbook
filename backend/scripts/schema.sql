@@ -60,3 +60,22 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+-- Add physical_ai_experience field to users table (for better-auth compatibility)
+ALTER TABLE users ADD COLUMN IF NOT EXISTS physical_ai_experience INTEGER CHECK (physical_ai_experience BETWEEN 0 AND 10);
+
+-- Personalized lessons cache table
+CREATE TABLE IF NOT EXISTS personalized_lessons (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    lesson_path VARCHAR(500) NOT NULL,
+    original_content TEXT NOT NULL,
+    personalized_content TEXT NOT NULL,
+    experience_level INTEGER NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(user_id, lesson_path)
+);
+
+CREATE INDEX IF NOT EXISTS idx_personalized_lessons_user_id ON personalized_lessons(user_id);
+CREATE INDEX IF NOT EXISTS idx_personalized_lessons_lesson_path ON personalized_lessons(lesson_path);

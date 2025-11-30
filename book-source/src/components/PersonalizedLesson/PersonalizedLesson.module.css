@@ -1,0 +1,203 @@
+.container {
+  margin-bottom: 2rem;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--ifm-color-emphasis-200);
+  margin-bottom: 1.5rem;
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ifm-color-content-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: -2px;
+}
+
+.tab:hover {
+  color: var(--ifm-color-content);
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.tab.active {
+  color: var(--ifm-color-primary);
+  border-bottom-color: var(--ifm-color-primary);
+}
+
+.content {
+  min-height: 200px;
+}
+
+.markdownContent {
+  /* Use Docusaurus markdown styles */
+}
+
+.personalizedContent {
+  min-height: 200px;
+}
+
+.signInPrompt {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 8px;
+  border: 2px dashed var(--ifm-color-emphasis-300);
+}
+
+.signInPrompt h3 {
+  margin: 0 0 1rem 0;
+  color: var(--ifm-heading-color);
+}
+
+.signInPrompt p {
+  color: var(--ifm-color-content-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.authActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.primaryButton,
+.secondaryButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.primaryButton {
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+.primaryButton:hover {
+  background-color: var(--ifm-color-primary-dark);
+}
+
+.secondaryButton {
+  background-color: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-content);
+}
+
+.secondaryButton:hover {
+  background-color: var(--ifm-color-emphasis-300);
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--ifm-color-emphasis-200);
+  border-top-color: var(--ifm-color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading p {
+  color: var(--ifm-color-content-secondary);
+}
+
+.error {
+  padding: 2rem;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.error p {
+  color: #d32f2f;
+  margin-bottom: 1rem;
+}
+
+.retryButton {
+  padding: 0.5rem 1rem;
+  background-color: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.retryButton:hover {
+  background-color: var(--ifm-color-primary-dark);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: var(--ifm-background-color);
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--ifm-color-content-secondary);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: var(--ifm-color-emphasis-200);
+}
+

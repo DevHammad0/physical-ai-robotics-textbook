@@ -21,6 +21,10 @@ chapter_objectives:
   - "Understand service-based synchronous communication"
 ---
 
+import PersonalizedLesson from '@site/src/components/PersonalizedLesson';
+
+<PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/00-intro.md">
+
 ## Welcome to Chapter 1: ROS 2 Fundamentals
 
 ### What You'll Learn in This Chapter
@@ -386,3 +390,5 @@ Ready? Let's go!
 **Chapter 1 Introduction Complete**
 
 Next: [Lesson 1 — What is ROS 2?](./01-what-is-ros2.md)
+
+</PersonalizedLesson>
