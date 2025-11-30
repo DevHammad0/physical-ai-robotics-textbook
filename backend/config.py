@@ -2,26 +2,26 @@
 Configuration module using pydantic-settings for type-safe environment variable management.
 """
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import List
+from typing import List, Optional
 
 
 class Settings(BaseSettings):
     """Application settings loaded from environment variables."""
 
     # OpenAI Configuration
-    openai_api_key: str
+    openai_api_key: Optional[str] = None
     openai_model: str = "gpt-5-nano"
     openai_embedding_model: str = "text-embedding-3-small"
     openai_max_tokens: int = 500
     openai_temperature: float = 0.7
 
     # Qdrant Vector Database
-    qdrant_url: str
-    qdrant_api_key: str
+    qdrant_url: Optional[str] = None
+    qdrant_api_key: Optional[str] = None
     qdrant_collection_name: str = "textbook_content"
 
     # Neon Serverless Postgres
-    database_url: str
+    database_url: Optional[str] = None
     db_pool_min_size: int = 2
     db_pool_max_size: int = 10
 
@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     rate_limit_per_minute: int = 30
 
     # CORS Origins
-    cors_origins: str = "https://devhammad0.github.io,https://devhammado.github.io,http://localhost:3000"
+    cors_origins: str = "https://devhammad0.github.io,http://localhost:3000"
 
     # ChatKit Configuration
     chatkit_domain_key: str = "domain_pk_local_dev"
