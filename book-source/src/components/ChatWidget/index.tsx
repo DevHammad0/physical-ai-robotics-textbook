@@ -29,6 +29,7 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const askButtonRef = useRef<HTMLDivElement>(null);
   const pendingSelectedTextRef = useRef<string | null>(null);
+  const hasPastedTextRef = useRef<boolean>(false);
 
   // Initialize session ID from localStorage
   useEffect(() => {
@@ -96,23 +97,35 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
   useEffect(() => {
     console.log('[Auto-Paste Effect] Running...', {
       isOpen,
+      selectedText,
       pendingText: pendingSelectedTextRef.current,
-      hasInputRef: !!inputRef.current
+      hasInputRef: !!inputRef.current,
+      currentInputValue: inputValue,
+      hasPasted: hasPastedTextRef.current
     });
     
-    if (isOpen && pendingSelectedTextRef.current) {
+    // Check both ref and state to ensure we have the text
+    const textToPaste = pendingSelectedTextRef.current || selectedText;
+    
+    // Only paste if chat is open, we have text to paste, input is empty, and we haven't already pasted
+    if (isOpen && textToPaste && !inputValue.trim() && !hasPastedTextRef.current) {
       // Wait for input to be mounted
       const checkAndPaste = () => {
         if (inputRef.current) {
-          const textToSet = pendingSelectedTextRef.current;
-          console.log('[Auto-Paste Effect] Pasting text:', textToSet);
+          console.log('[Auto-Paste Effect] Pasting text:', textToPaste);
           
           // Format the selected text with quotes
-          const formattedText = `"${textToSet}"\n\n`;
+          const formattedText = `"${textToPaste}"\n\n`;
           setInputValue(formattedText);
           console.log('[Auto-Paste Effect] Input value set to:', formattedText);
           
-          pendingSelectedTextRef.current = null; // Clear after using
+          // Mark as pasted
+          hasPastedTextRef.current = true;
+          
+          // Clear ref after using (but keep selectedText state for context)
+          if (pendingSelectedTextRef.current) {
+            pendingSelectedTextRef.current = null;
+          }
           
           // Focus and set cursor position after the text
           setTimeout(() => {
@@ -133,7 +146,12 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
       // Start checking after a small delay to let React render
       setTimeout(checkAndPaste, 100);
     }
-  }, [isOpen]);
+    
+    // Reset paste flag when chat closes or selected text changes
+    if (!isOpen || !selectedText) {
+      hasPastedTextRef.current = false;
+    }
+  }, [isOpen, selectedText]);
 
   // Text selection handler
   useEffect(() => {
@@ -200,6 +218,9 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
       
       // Clear selection
       window.getSelection()?.removeAllRanges();
+      
+      // Reset paste flag so text can be pasted when chat opens
+      hasPastedTextRef.current = false;
     } else {
       console.log('[Ask with AI] No textSelection available');
     }
