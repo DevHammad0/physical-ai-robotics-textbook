@@ -14,8 +14,12 @@
       "config": {
         "includeFiles": [
           "auth/lib/**",
-          "auth/better-auth.ts"
-        ]
+          "auth/better-auth.ts",
+          "auth/package.json",
+          "auth/pnpm-lock.yaml",
+          "auth/tsconfig.json"
+        ],
+        "maxLambdaSize": "50mb"
       }
     }
   ],
