@@ -28,6 +28,7 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const askButtonRef = useRef<HTMLDivElement>(null);
+  const pendingSelectedTextRef = useRef<string | null>(null);
 
   // Initialize session ID from localStorage
   useEffect(() => {
@@ -82,12 +83,55 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  // Focus input when chat opens
+  // Focus input when chat opens (but not if we're setting text from selection)
   useEffect(() => {
-    if (isOpen && inputRef.current) {
+    if (isOpen && inputRef.current && !selectedText) {
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
+    }
+  }, [isOpen, selectedText]);
+  
+  // Auto-paste selected text into input when chat opens
+  useEffect(() => {
+    console.log('[Auto-Paste Effect] Running...', {
+      isOpen,
+      pendingText: pendingSelectedTextRef.current,
+      hasInputRef: !!inputRef.current
+    });
+    
+    if (isOpen && pendingSelectedTextRef.current) {
+      // Wait for input to be mounted
+      const checkAndPaste = () => {
+        if (inputRef.current) {
+          const textToSet = pendingSelectedTextRef.current;
+          console.log('[Auto-Paste Effect] Pasting text:', textToSet);
+          
+          // Format the selected text with quotes
+          const formattedText = `"${textToSet}"\n\n`;
+          setInputValue(formattedText);
+          console.log('[Auto-Paste Effect] Input value set to:', formattedText);
+          
+          pendingSelectedTextRef.current = null; // Clear after using
+          
+          // Focus and set cursor position after the text
+          setTimeout(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
+              const length = inputRef.current.value.length;
+              inputRef.current.setSelectionRange(length, length);
+              console.log('[Auto-Paste Effect] Focused input, cursor at position:', length);
+            }
+          }, 100);
+        } else {
+          // Input not ready yet, try again
+          console.log('[Auto-Paste Effect] Input not ready, retrying in 50ms...');
+          setTimeout(checkAndPaste, 50);
+        }
+      };
+      
+      // Start checking after a small delay to let React render
+      setTimeout(checkAndPaste, 100);
     }
   }, [isOpen]);
 
@@ -126,17 +170,38 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
   }, []);
 
   // Handle "Ask with AI" button click
-  const handleAskWithAI = useCallback(() => {
+  const handleAskWithAI = useCallback((e: React.MouseEvent) => {
+    console.log('🎯 ========================================');
+    console.log('🎯 [Ask with AI] Button clicked!');
+    console.log('🎯 ========================================');
+    
+    // Prevent the click from bubbling up to document click handler
+    e.stopPropagation();
+    e.preventDefault();
+    
     if (textSelection) {
-      setSelectedText(textSelection.text);
+      const selectedTextContent = textSelection.text.trim();
+      console.log('[Ask with AI] Selected text:', selectedTextContent);
+      
+      if (!selectedTextContent) {
+        console.log('[Ask with AI] No text selected, aborting');
+        return;
+      }
+      
+      // Store in ref so useEffect can access it when chat opens
+      pendingSelectedTextRef.current = selectedTextContent;
+      console.log('[Ask with AI] Stored in ref:', pendingSelectedTextRef.current);
+      
+      // Set as context for the agent (will be sent with the message)
+      setSelectedText(selectedTextContent);
       setShowAskButton(false);
       setIsOpen(true);
+      console.log('[Ask with AI] Opening chat...');
+      
       // Clear selection
       window.getSelection()?.removeAllRanges();
-      // Focus input after a short delay
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+    } else {
+      console.log('[Ask with AI] No textSelection available');
     }
   }, [textSelection]);
 
@@ -270,7 +335,7 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
             left: `${askButtonPosition.x}px`,
             top: `${askButtonPosition.y}px`,
           }}
-          onClick={handleAskWithAI}
+          onMouseDown={handleAskWithAI}
         >
           <span>Ask with AI</span>
         </div>
@@ -460,7 +525,10 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
         ) : (
           <button
             className={styles.chatButton}
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              console.log('💬 Regular chat button clicked (no selected text)');
+              setIsOpen(true);
+            }}
             aria-label="Open chat"
           >
             <svg

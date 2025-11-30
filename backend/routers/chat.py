@@ -152,7 +152,25 @@ async def chat_stream(
                 logger.warning(f"Failed to log analytics: {e}")
                 
         except Exception as e:
-            logger.error(f"Streaming endpoint error: {e}", exc_info=True)
+            # Enhanced error logging with diagnostic information
+            logger.error("=== Streaming Endpoint Error Diagnostics ===")
+            logger.error(f"Error type: {type(e).__name__}")
+            logger.error(f"Error message: {str(e)}")
+            logger.error(f"Request query: {request.query[:100] if len(request.query) > 100 else request.query}")
+            logger.error(f"Session ID: {request.session_id}")
+            logger.error(f"Conversation ID: {request.conversation_id}")
+            
+            # Check for connection/DNS errors
+            error_str = str(e)
+            if "getaddrinfo" in error_str or "DNS" in error_str or "connection" in error_str.lower():
+                logger.error("DNS/Connection error detected in router")
+                logger.error("This suggests the OpenAI API endpoint cannot be resolved")
+                logger.error("Check network connectivity and DNS settings")
+            
+            # Log full exception details
+            logger.error(f"Full exception details:", exc_info=True)
+            logger.error("============================================")
+            
             # Send error event
             error_data = {"error": str(e)}
             yield f"event: error\n"

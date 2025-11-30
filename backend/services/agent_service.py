@@ -5,6 +5,7 @@ Defines the teaching assistant agent with search_textbook tool
 
 import os
 import json
+import logging
 from agents import Agent, function_tool, Runner, RunContextWrapper, set_tracing_disabled
 from typing import List, Dict, Any, Optional, AsyncIterator, TYPE_CHECKING
 from openai.types.responses import ResponseTextDeltaEvent
@@ -15,6 +16,9 @@ from config import settings
 if TYPE_CHECKING:
     from services.session_service import PostgresSession
 
+# Initialize logger
+logger = logging.getLogger(__name__)
+
 # Disable tracing
 set_tracing_disabled(True)
 
@@ -22,6 +26,32 @@ set_tracing_disabled(True)
 # Only set if not already set (allows override via environment)
 if not os.getenv("OPENAI_API_KEY"):
     os.environ["OPENAI_API_KEY"] = settings.openai_api_key
+
+# Log OpenAI configuration for diagnostics
+def _log_openai_config():
+    """Log OpenAI configuration details for diagnostic purposes."""
+    api_key = os.getenv("OPENAI_API_KEY") or settings.openai_api_key
+    api_key_display = "Not set"
+    if api_key:
+        # Show first 7 chars and last 4 chars for security
+        if len(api_key) > 11:
+            api_key_display = f"{api_key[:7]}...{api_key[-4:]}"
+        else:
+            api_key_display = "***"
+    
+    base_url = os.getenv("OPENAI_BASE_URL", "Not set (using default)")
+    
+    logger.info("=== OpenAI Configuration Diagnostics ===")
+    logger.info(f"Model: {settings.openai_model}")
+    logger.info(f"API Key: {api_key_display}")
+    logger.info(f"Base URL: {base_url}")
+    logger.info(f"Embedding Model: {settings.openai_embedding_model}")
+    logger.info(f"Environment OPENAI_API_KEY set: {bool(os.getenv('OPENAI_API_KEY'))}")
+    logger.info(f"Environment OPENAI_BASE_URL set: {bool(os.getenv('OPENAI_BASE_URL'))}")
+    logger.info("=========================================")
+
+# Log configuration on module import
+_log_openai_config()
 
 # Global variable to track search results for source extraction
 _last_search_results: List[Any] = []
@@ -105,9 +135,26 @@ Guidelines:
 - Provide practical examples when helpful
 - If information isn't in the textbook, clearly state that
 - Encourage hands-on learning and experimentation""",
-    model=settings.openai_model,
+    # model=settings.openai_model,
     tools=[search_textbook]
 )
+
+# Log agent configuration
+logger.info(f"Agent initialized with model: {teaching_agent.model}")
+try:
+    # Try to access agent's client configuration if available
+    if hasattr(teaching_agent, '_client') or hasattr(teaching_agent, 'client'):
+        client = getattr(teaching_agent, '_client', None) or getattr(teaching_agent, 'client', None)
+        if client:
+            if hasattr(client, 'base_url'):
+                logger.info(f"Agent client base_url: {client.base_url}")
+            if hasattr(client, '_client'):
+                # Check underlying httpx client
+                http_client = getattr(client, '_client', None)
+                if http_client and hasattr(http_client, 'base_url'):
+                    logger.info(f"Agent HTTP client base_url: {http_client.base_url}")
+except Exception as e:
+    logger.debug(f"Could not access agent client configuration: {e}")
 
 
 class AgentService:
@@ -282,23 +329,85 @@ class AgentService:
         # Save user message to session (before running agent)
         await session.save_message("user", query)
 
+        # Pre-execution diagnostic logging
+        logger.info("=== Starting Agent Stream Execution ===")
+        logger.info(f"Model: {teaching_agent.model}")
+        logger.info(f"Input length: {len(full_input)} characters")
+        logger.info(f"Query: {query[:100]}..." if len(query) > 100 else f"Query: {query}")
+        logger.info(f"Session ID: {session.session_id}")
+        logger.info(f"Conversation ID: {session.conversation_id}")
+        
+        # Try to log any accessible client configuration
+        try:
+            # Attempt to get OpenAI client from the agent or runner
+            # The Agents SDK may store client in different locations
+            if hasattr(teaching_agent, '_client'):
+                client = teaching_agent._client
+                if hasattr(client, 'base_url'):
+                    logger.info(f"Agent client base_url: {client.base_url}")
+                if hasattr(client, '_client') and hasattr(client._client, 'base_url'):
+                    logger.info(f"HTTP client base_url: {client._client.base_url}")
+        except Exception as e:
+            logger.debug(f"Could not access client configuration: {e}")
+        
+        logger.info("Attempting to run streamed agent...")
+
         # Run the agent with streaming
         result = Runner.run_streamed(teaching_agent, input=full_input)
 
-        # Stream events from the result
-        async for event in result.stream_events():
-            # Stream text deltas
-            if event.type == "raw_response_event":
-                if isinstance(event.data, ResponseTextDeltaEvent):
-                    yield {
-                        "type": "text",
-                        "data": {"delta": event.data.delta}
-                    }
-            # Track tool calls for source extraction
-            elif event.type == "run_item_stream_event":
-                if hasattr(event, 'item') and event.item.type == "tool_call_output_item":
-                    # Tool was called, results are in _last_search_results
-                    pass
+        # Stream events from the result with enhanced error handling
+        try:
+            logger.info("Starting to stream events from agent result...")
+            async for event in result.stream_events():
+                # Stream text deltas
+                if event.type == "raw_response_event":
+                    if isinstance(event.data, ResponseTextDeltaEvent):
+                        yield {
+                            "type": "text",
+                            "data": {"delta": event.data.delta}
+                        }
+                # Track tool calls for source extraction
+                elif event.type == "run_item_stream_event":
+                    if hasattr(event, 'item') and event.item.type == "tool_call_output_item":
+                        # Tool was called, results are in _last_search_results
+                        pass
+        except Exception as stream_error:
+            # Enhanced error logging for stream events
+            logger.error("=== Agent Stream Error Diagnostics ===")
+            logger.error(f"Error type: {type(stream_error).__name__}")
+            logger.error(f"Error message: {str(stream_error)}")
+            
+            # Try to extract connection/URL information from the error
+            error_str = str(stream_error)
+            if "getaddrinfo" in error_str or "DNS" in error_str or "connection" in error_str.lower():
+                logger.error("DNS/Connection error detected")
+                logger.error(f"Full error: {error_str}")
+            
+            # Check if error has request/URL information
+            if hasattr(stream_error, 'request'):
+                req = stream_error.request
+                if hasattr(req, 'url'):
+                    logger.error(f"Request URL: {req.url}")
+                if hasattr(req, 'headers'):
+                    logger.error(f"Request headers: {dict(req.headers)}")
+            
+            # Check for underlying httpx/connection errors
+            if hasattr(stream_error, '__cause__') and stream_error.__cause__:
+                cause = stream_error.__cause__
+                logger.error(f"Cause error type: {type(cause).__name__}")
+                logger.error(f"Cause error message: {str(cause)}")
+                if hasattr(cause, 'request'):
+                    req = cause.request
+                    if hasattr(req, 'url'):
+                        logger.error(f"Cause request URL: {req.url}")
+            
+            # Log exception traceback
+            import traceback
+            logger.error(f"Traceback:\n{traceback.format_exc()}")
+            logger.error("======================================")
+            
+            # Re-raise the error
+            raise
 
         # Save assistant message to session
         await session.save_message("assistant", result.final_output)
