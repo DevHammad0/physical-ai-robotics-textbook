@@ -7,7 +7,6 @@ const getAllowedOrigins = (): string[] => {
     "http://localhost:3000",
     "http://localhost:8000",
     "https://devhammad0.github.io",
-    "https://devhammado.github.io", // Alternative spelling
   ];
   
   // Add from environment variables
@@ -43,7 +42,7 @@ async function toWebRequest(req: VercelRequest): Promise<Request> {
     }
   });
   
-  const init: RequestInit = {
+  const init: RequestInit & { body?: BodyInit } = {
     method: req.method || "GET",
     headers,
   };
@@ -68,7 +67,7 @@ async function toWebRequest(req: VercelRequest): Promise<Request> {
 }
 
 // Convert Web API Response to Vercel response
-async function sendResponse(res: VercelResponse, response: Response, origin?: string, isAllowedOrigin?: boolean) {
+async function sendResponse(res: VercelResponse, response: globalThis.Response, origin?: string, isAllowedOrigin?: boolean) {
   // Set CORS headers
   if (isAllowedOrigin && origin) {
     res.setHeader("Access-Control-Allow-Origin", origin);
@@ -76,7 +75,7 @@ async function sendResponse(res: VercelResponse, response: Response, origin?: st
   }
   
   // Copy response headers
-  response.headers.forEach((value, key) => {
+  response.headers.forEach((value: string, key: string) => {
     // Don't override CORS headers we set
     if (key.toLowerCase() !== "access-control-allow-origin" && 
         key.toLowerCase() !== "access-control-allow-credentials") {
@@ -128,7 +127,7 @@ export default async function handler(
     const response = await auth.handler(webRequest);
     
     // Convert Web API Response to Vercel response
-    await sendResponse(res, response, origin, isAllowedOrigin);
+    await sendResponse(res, response, origin, !!isAllowedOrigin);
   } catch (error) {
     // Enhanced error logging for debugging
     console.error("=== Auth Handler Error ===");
