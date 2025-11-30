@@ -18,14 +18,19 @@ const getBaseURL = () => {
   return process.env.NEXT_PUBLIC_AUTH_URL || "http://localhost:8000";
 };
 
-export const authClient = createAuthClient({
+// Create auth client and infer the type to avoid TS2742 errors
+const _authClient = createAuthClient({
   baseURL: getBaseURL(),
 });
 
-export const {
-  signIn,
-  signUp,
-  signOut,
-  useSession,
-} = authClient;
+// Use typeof to get the type without complex generic inference
+export type AuthClientType = typeof _authClient;
+
+export const authClient: AuthClientType = _authClient;
+
+// Export functions with explicit types to avoid TS2742 errors
+export const signIn: AuthClientType["signIn"] = authClient.signIn;
+export const signUp: AuthClientType["signUp"] = authClient.signUp;
+export const signOut: AuthClientType["signOut"] = authClient.signOut;
+export const useSession: AuthClientType["useSession"] = authClient.useSession;
 
