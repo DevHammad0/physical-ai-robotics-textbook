@@ -1,3 +1,4 @@
+/// <reference path="../../types/better-auth.d.ts" />
 import React, { useState } from "react";
 import { signUp } from "@site/src/lib/auth-client";
 import styles from "./Auth.module.css";

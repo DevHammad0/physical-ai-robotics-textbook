@@ -7,18 +7,16 @@
  * - type: "number"
  * - required: true
  * - input: true (allows user to provide during signup)
- * 
- * Note: Better Auth should automatically infer these types from the server
- * configuration, but since we're using module augmentation on the client side,
- * we need to manually extend the types.
  */
 
+// Extend better-auth/react module
 declare module "better-auth/react" {
   export interface User {
     physical_ai_experience?: number | null;
   }
 }
 
+// Extend better-auth/client module  
 declare module "better-auth/client" {
   export interface User {
     physical_ai_experience?: number | null;
@@ -27,4 +25,3 @@ declare module "better-auth/client" {
 
 // Ensure this file is treated as a module
 export {};
-

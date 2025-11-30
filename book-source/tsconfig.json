@@ -29,5 +29,5 @@
       "@site/*": ["./*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", "src/types/**/*.d.ts"]
 }

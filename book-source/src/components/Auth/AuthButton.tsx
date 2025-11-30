@@ -1,3 +1,4 @@
+/// <reference path="../../types/better-auth.d.ts" />
 import React, { useState } from "react";
 import { useSession, signOut } from "@site/src/lib/auth-client";
 import SignInForm from "./SignInForm";
