@@ -1,0 +1,385 @@
+/* Auth Form Styles */
+.authForm {
+  padding: 1.5rem;
+  padding-top: 2.5rem; /* Extra top padding to account for close button */
+  max-width: 400px;
+  margin: 0 auto;
+  background: transparent;
+}
+
+/* Ensure form has proper background */
+html[data-theme='light'] .authForm {
+  background: #ffffff;
+}
+
+html[data-theme='dark'] .authForm {
+  background: transparent;
+}
+
+.authForm h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  color: var(--ifm-heading-color);
+}
+
+.subtitle {
+  color: var(--ifm-color-content-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.formGroup {
+  margin-bottom: 1.25rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--ifm-heading-color);
+  font-size: 0.9rem;
+}
+
+.formGroup input[type="text"],
+.formGroup input[type="email"],
+.formGroup input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.formGroup input:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 3px rgba(var(--ifm-color-primary-rgb), 0.1);
+}
+
+.slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--ifm-color-emphasis-200);
+  outline: none;
+  -webkit-appearance: none;
+  margin: 1rem 0 0.5rem 0;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  cursor: pointer;
+  border: none;
+}
+
+.sliderLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--ifm-color-content-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.helpText {
+  font-size: 0.85rem;
+  color: var(--ifm-color-content-secondary);
+  margin: 0.5rem 0 0 0;
+}
+
+.error {
+  padding: 0.75rem;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 4px;
+  color: #d32f2f;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.formActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.submitButton,
+.cancelButton {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submitButton {
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--ifm-color-primary-dark);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancelButton {
+  background-color: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-content);
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: var(--ifm-color-emphasis-300);
+}
+
+.switchForm {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+.linkButton {
+  background: none;
+  border: none;
+  color: var(--ifm-color-primary);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: inherit;
+}
+
+.linkButton:hover {
+  color: var(--ifm-color-primary-dark);
+}
+
+/* Auth Button Styles - Matches Docusaurus navbar button style */
+.authButton {
+  padding: 0.5rem 1.25rem;
+  background-color: var(--ifm-color-primary);
+  color: var(--ifm-color-white);
+  border: 1px solid var(--ifm-color-primary);
+  border-radius: calc(var(--ifm-global-radius) / 2);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  text-decoration: none;
+  margin-left: 0.5rem;
+  min-height: 2rem;
+}
+
+.authButton:hover {
+  background-color: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-primary-dark);
+  color: var(--ifm-color-white);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.authButton:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.authButton:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.authButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Ensure button is visible in navbar */
+#auth-button-container {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+#auth-button-container .authButton {
+  margin-left: 0;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: var(--ifm-background-surface-color);
+  background-color: var(--ifm-background-surface-color);
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.15);
+  position: relative;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Modal content wrapper for scrolling */
+.modalContent {
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(90vh - 20px);
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom scrollbar styling */
+.modalContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 4px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+  background: var(--ifm-color-emphasis-300);
+  border-radius: 4px;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: var(--ifm-color-emphasis-400);
+}
+
+/* Ensure modal has solid background in light mode */
+html[data-theme='light'] .modal {
+  background: #ffffff;
+  background-color: #ffffff;
+}
+
+/* Ensure modal has solid background in dark mode */
+html[data-theme='dark'] .modal {
+  background: var(--ifm-background-color);
+  background-color: var(--ifm-background-color);
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--ifm-color-content-secondary);
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+  z-index: 100;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.closeButton:hover {
+  background-color: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-content);
+}
+
+.closeButton:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.userMenu {
+  position: relative;
+}
+
+.userInfo {
+  padding: 1.5rem;
+  padding-top: 2.5rem; /* Extra top padding to account for close button */
+  background: transparent;
+}
+
+/* Ensure userInfo has proper background */
+html[data-theme='light'] .userInfo {
+  background: #ffffff;
+}
+
+html[data-theme='dark'] .userInfo {
+  background: transparent;
+}
+
+.userInfo h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+}
+
+.userInfo p {
+  margin: 0.5rem 0;
+  color: var(--ifm-color-content);
+}
+
+.signOutButton {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.signOutButton:hover {
+  background-color: #c82333;
+}
+

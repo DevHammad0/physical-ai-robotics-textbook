@@ -15,13 +15,14 @@ logger = logging.getLogger(__name__)
 class PostgresSession:
     """Custom Session implementation using Postgres for conversation persistence."""
 
-    def __init__(self, conversation_id: Optional[str] = None, session_id: str = None):
+    def __init__(self, conversation_id: Optional[str] = None, session_id: str = None, user_id: Optional[str] = None):
         """
         Initialize PostgresSession.
 
         Args:
             conversation_id: Optional existing conversation ID (must be valid UUID string)
             session_id: Session ID for grouping conversations
+            user_id: Optional user ID from better-auth session
         """
         # Validate conversation_id if provided
         if conversation_id:
@@ -38,6 +39,7 @@ class PostgresSession:
             self.conversation_id = str(uuid.uuid4())
         
         self.session_id = session_id
+        self.user_id = user_id  # Store user_id for linking conversations to users
         self._messages: List[Dict[str, Any]] = []
 
     async def load_history(self) -> List[Dict[str, Any]]:
@@ -90,14 +92,23 @@ class PostgresSession:
         pool = get_pool()
         async with pool.acquire() as conn:
             # Ensure conversation exists
+            user_uuid = None
+            if self.user_id:
+                try:
+                    user_uuid = UUID(self.user_id)
+                except (ValueError, TypeError):
+                    logger.warning(f"Invalid user_id format: {self.user_id}")
+            
             await conn.execute(
                 """
-                INSERT INTO conversations (id, session_id, created_at)
-                VALUES ($1, $2, NOW())
-                ON CONFLICT (id) DO NOTHING
+                INSERT INTO conversations (id, session_id, user_id, created_at)
+                VALUES ($1, $2, $3, NOW())
+                ON CONFLICT (id) DO UPDATE SET
+                    user_id = COALESCE(EXCLUDED.user_id, conversations.user_id)
                 """,
                 conversation_uuid,
-                self.session_id
+                self.session_id,
+                user_uuid
             )
 
             # Save message

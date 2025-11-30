@@ -687,7 +687,7 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
               setIsOpen(true);
             }}
             aria-label="Open chat"
-            title="Open AI Assistant"
+            title="Open AI Agent"
           >
             <FiMessageCircle />
           </button>

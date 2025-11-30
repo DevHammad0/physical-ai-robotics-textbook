@@ -22,6 +22,10 @@ learning_objectives:
 primary_layer: "Layer 1 (Manual Foundation)"
 ---
 
+import PersonalizedLesson from '@site/src/components/PersonalizedLesson';
+
+<PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/01-what-is-ros2.md">
+
 ## Introduction
 
 Welcome to ROS 2 Fundamentals! Over the next 7 lessons, you'll learn how to build intelligent robotic systems using the Robot Operating System 2 (ROS 2). But before writing a single line of code, let's understand what ROS 2 is, why it exists, and how it powers everything from autonomous vehicles to humanoid robots.
@@ -426,3 +430,5 @@ A: ROS 2 Humble officially supports Ubuntu Linux. You can use VMware, VirtualBox
 **Chapter 1, Lesson 1 Complete**
 
 Next: Lesson 2 — Setting Up Your ROS 2 Environment (45 min)
+
+</PersonalizedLesson>

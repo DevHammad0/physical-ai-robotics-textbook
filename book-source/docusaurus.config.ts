@@ -15,7 +15,7 @@ const config: Config = {
   url: 'https://devhammad0.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/physical-ai-robotics-textbook/',
+  baseUrl: '/physical-ai-robotics-textbook',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -43,8 +43,8 @@ const config: Config = {
       {
         docs: {
           sidebarPath: './sidebars.ts',
-          editUrl:
-            'https://github.com/devhammad0/physical-ai-robotics-textbook/tree/main/',
+          // editUrl:
+          //   'https://github.com/devhammad0/physical-ai-robotics-textbook/tree/main/',
         },
         blog: false,
         theme: {
@@ -78,12 +78,17 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'tutorialSidebar',
           position: 'left',
-          label: 'Chapters',
+          label: 'Book',
         },
         {
           href: 'https://github.com/devhammad0/physical-ai-robotics-textbook',
           label: 'GitHub',
           position: 'right',
+        },
+        {
+          type: 'html',
+          position: 'right',
+          value: '<div id="auth-button-container"></div>',
         },
       ],
     },

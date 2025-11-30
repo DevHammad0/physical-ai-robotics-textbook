@@ -7,9 +7,23 @@
       "config": {
         "maxLambdaSize": "15mb"
       }
+    },
+    {
+      "src": "auth/api/auth/[...all].ts",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "auth/lib/**",
+          "auth/better-auth.ts"
+        ]
+      }
     }
   ],
   "routes": [
+    {
+      "src": "/api/auth/(.*)",
+      "dest": "auth/api/auth/[...all].ts"
+    },
     {
       "src": "/api/(.*)",
       "dest": "main.py"

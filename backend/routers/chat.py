@@ -1,7 +1,7 @@
 """
 Chat router implementing agent-based RAG pipeline for question answering.
 """
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import StreamingResponse
 import time
 import logging
@@ -12,6 +12,7 @@ from models.schemas import ChatRequest, ChatResponse
 from services.db_service import get_pool, AnalyticsService
 from services.agent_service import AgentService
 from services.session_service import PostgresSession
+from services.auth_service import get_user_id_from_better_auth_session
 from config import settings
 
 router = APIRouter()
@@ -21,6 +22,7 @@ logger = logging.getLogger(__name__)
 @router.post("/chat", response_model=ChatResponse)
 async def chat(
     request: ChatRequest,
+    http_request: Request,
     pool: asyncpg.Pool = Depends(get_pool)
 ):
     """
@@ -29,22 +31,33 @@ async def chat(
     The agent autonomously decides when to search the textbook based on the query.
 
     Steps:
-    1. Create PostgresSession for conversation persistence
-    2. Run agent with query (agent decides tool usage)
-    3. Extract structured sources from tool calls
-    4. Log analytics
-    5. Return response with sources
+    1. Extract user ID from better-auth session (if authenticated)
+    2. Create PostgresSession for conversation persistence
+    3. Run agent with query (agent decides tool usage)
+    4. Extract structured sources from tool calls
+    5. Log analytics
+    6. Return response with sources
     """
     start_time = time.time()
 
     try:
+        # Get user ID from better-auth session (optional - chat works without auth)
+        user_id = None
+        try:
+            cookies = http_request.cookies
+            authorization = http_request.headers.get("authorization")
+            user_id = await get_user_id_from_better_auth_session(cookies, authorization)
+        except Exception as e:
+            logger.debug(f"Could not get user ID from session (chat works without auth): {e}")
+
         # Initialize services
         analytics_service = AnalyticsService(pool)
 
         # Create or load PostgresSession
         session = PostgresSession(
             conversation_id=request.conversation_id,
-            session_id=request.session_id
+            session_id=request.session_id,
+            user_id=user_id  # Pass user_id if available
         )
 
         # Run agent with session
@@ -102,6 +115,7 @@ async def chat(
 @router.post("/chat/stream")
 async def chat_stream(
     request: ChatRequest,
+    http_request: Request,
     pool: asyncpg.Pool = Depends(get_pool)
 ):
     """
@@ -115,10 +129,20 @@ async def chat_stream(
     
     async def generate_stream():
         try:
+            # Get user ID from better-auth session (optional - chat works without auth)
+            user_id = None
+            try:
+                cookies = http_request.cookies
+                authorization = http_request.headers.get("authorization")
+                user_id = await get_user_id_from_better_auth_session(cookies, authorization)
+            except Exception as e:
+                logger.debug(f"Could not get user ID from session (chat works without auth): {e}")
+
             # Create or load PostgresSession
             session = PostgresSession(
                 conversation_id=request.conversation_id,
-                session_id=request.session_id
+                session_id=request.session_id,
+                user_id=user_id  # Pass user_id if available
             )
             
             # Stream agent responses

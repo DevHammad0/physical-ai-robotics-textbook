@@ -1,6 +1,0 @@
-TaskPlan plan
-RobotState current_state
----
-bool is_valid
-string[] constraint_violations
-string validation_notes

@@ -1,9 +1,0 @@
-float32[] target_position
-float32[] target_orientation
-float32 max_velocity
----
-bool success
-string error_message
----
-float32 progress_percent
-float32[] current_position
