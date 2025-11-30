@@ -19,7 +19,7 @@
     "@vercel/node": "^3.0.7",
     "better-auth": "^1.4.3",
     "dotenv": "^16.4.5",
-    "kysely": "^0.27.2",
+    "kysely": "^0.28.5",
     "pg": "^8.11.3"
   },
   "devDependencies": {
