@@ -5,6 +5,7 @@
       "src": "main.py",
       "use": "@vercel/python",
       "config": {
+        "includeFiles": ["book-source/**"],
         "maxLambdaSize": "15mb"
       }
     },

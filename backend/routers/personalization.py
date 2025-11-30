@@ -15,6 +15,11 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
+# Base directory for lesson files
+# personalization.py is in backend/routers/, so parent.parent gets us to backend/
+BASE_DIR = Path(__file__).resolve().parent.parent
+LESSON_BASE_DIR = BASE_DIR / "book-source" / "docs"
+
 
 class PersonalizeRequest(BaseModel):
     lesson_path: str
@@ -108,18 +113,31 @@ def read_lesson_content(lesson_path: str) -> Optional[str]:
         Markdown content or None if file not found
     """
     try:
-        # Construct path relative to book-source/docs
+        # Construct path relative to backend/book-source/docs
         # lesson_path might be like "01-chapter-1-ros2-fundamentals/00-intro.md"
-        docs_dir = Path(__file__).parent.parent.parent / "book-source" / "docs"
-        lesson_file = docs_dir / lesson_path
+        lesson_file = LESSON_BASE_DIR / lesson_path
+        resolved_path = lesson_file.resolve()
         
         if lesson_file.exists() and lesson_file.is_file():
+            logger.debug(f"Reading lesson file: {resolved_path}")
             return lesson_file.read_text(encoding='utf-8')
         else:
-            logger.warning(f"Lesson file not found: {lesson_file}")
+            logger.warning(
+                f"Lesson file not found. "
+                f"Requested path: {lesson_path}, "
+                f"Resolved path: {resolved_path}, "
+                f"Base directory: {LESSON_BASE_DIR.resolve()}, "
+                f"Base exists: {LESSON_BASE_DIR.exists()}"
+            )
             return None
     except Exception as e:
-        logger.error(f"Error reading lesson file: {e}")
+        logger.error(
+            f"Error reading lesson file. "
+            f"Requested path: {lesson_path}, "
+            f"Resolved path: {LESSON_BASE_DIR / lesson_path}, "
+            f"Error: {e}",
+            exc_info=True
+        )
         return None
 
 
