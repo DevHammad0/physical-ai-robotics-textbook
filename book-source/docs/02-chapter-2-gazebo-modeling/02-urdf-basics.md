@@ -4,6 +4,8 @@ title: "Lesson 2: URDF Robot Modeling Basics"
 description: "Learn URDF structure, create robot models with links and joints, and visualize in RViz"
 ---
 
+<PersonalizedLesson lessonPath="02-chapter-2-gazebo-modeling/02-urdf-basics.md">
+
 # Lesson 2: URDF Robot Modeling Basics (60 minutes)
 
 ## Learning Outcomes
@@ -444,3 +446,6 @@ Ready to build a real robot? In Lesson 3, you'll create a differential drive mob
 - `examples/chapter-2-gazebo/lesson-02/multi-link-arm.urdf` (optional advanced example)
 
 **Concepts Covered**: 7 (URDF format, links, joints, inertia, collision vs visual, joint types, frame naming)
+
+
+</PersonalizedLesson>

@@ -1,3 +1,24 @@
+---
+title: "Lesson 1: Navigation and Localization Overview"
+chapter: 3
+lesson: 1
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-3-autonomous-navigation/01-navigation-and-localization-overview.md">
+
 # Lesson 1: Navigation and Localization Overview
 
 **Duration**: 2.5 hours | **Level**: CEFR B1-C2 | **Priority**: P1
@@ -404,3 +425,6 @@ Now that you understand SLAM fundamentals and localization:
 - **→ [Lesson 2: Visual SLAM Systems](02-visual-slam-systems.md)** (detailed SLAM algorithms)
 - **→ [Lesson 4: Nav2 Path Planning](04-nav2-path-planning-stack.md)** (core curriculum)
 - **→ [Lesson 3: Isaac Sim](03-introduction-to-isaac-sim.md)** (advanced simulation)
+
+
+</PersonalizedLesson>

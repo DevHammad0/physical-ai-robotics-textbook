@@ -1,3 +1,24 @@
+---
+title: "Lesson 7: Safety Protocols & Deployment"
+chapter: 4
+lesson: 7
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-4-ai-integration/07-lesson-7-safety.md">
+
 # Lesson 7: Safety Protocols & Deployment
 
 ## Learning Objectives
@@ -558,3 +579,6 @@ In **Lesson 8 (Capstone)**, you'll bring everything together:
 This is where you become an **autonomous robotics engineer**!
 
 See you in Lesson 8! 🚀
+
+
+</PersonalizedLesson>

@@ -1,3 +1,24 @@
+---
+title: "Lesson 4: LLM-Driven Planning & Task Decomposition"
+chapter: 4
+lesson: 4
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-4-ai-integration/04-lesson-4-llm-planning.md">
+
 # Lesson 4: LLM-Driven Planning & Task Decomposition
 
 ## Learning Objectives
@@ -644,3 +665,6 @@ In **Lesson 5**, you'll implement the **manipulation pipeline**:
 Combining planning (Lesson 4) + manipulation (Lesson 5) = autonomous grasping!
 
 See you in Lesson 5! 🤖✋
+
+
+</PersonalizedLesson>

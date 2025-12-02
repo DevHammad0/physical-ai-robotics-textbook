@@ -583,6 +583,8 @@ You've completed Chapter 3! Congratulations on mastering autonomous navigation.
 
 ---
 
+<PersonalizedLesson lessonPath="03-chapter-3-autonomous-navigation/08-capstone-mission.md">
+
 **Chapter 3 Complete**
 
 You've learned:
@@ -601,3 +603,6 @@ You've learned:
 **Robot platforms**: Differential drive + Humanoid
 
 Ready for Chapter 4? Let's add intelligence with LLMs and AI!
+
+
+</PersonalizedLesson>

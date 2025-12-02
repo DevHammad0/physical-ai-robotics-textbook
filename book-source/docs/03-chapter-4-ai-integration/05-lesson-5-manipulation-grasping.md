@@ -1,3 +1,24 @@
+---
+title: "Lesson 5: Manipulation, Grasping & Motion Planning"
+chapter: 4
+lesson: 5
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-4-ai-integration/05-lesson-5-manipulation-grasping.md">
+
 # Lesson 5: Manipulation, Grasping & Motion Planning
 
 ## Learning Objectives
@@ -633,3 +654,6 @@ def execute_grasp_with_recovery(grasp_candidates):
 In **Lesson 6**, you'll integrate grasp planning + motion planning + LLM planning into a **unified orchestration system** that ties everything together.
 
 See you in Lesson 6! 🎯
+
+
+</PersonalizedLesson>

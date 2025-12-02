@@ -2,6 +2,8 @@
 sidebar_position: 1
 ---
 
+<PersonalizedLesson lessonPath="00-intro.md">
+
 # Physical AI & Humanoid Robotics Textbook
 
 Welcome to the comprehensive textbook on **Physical AI and Humanoid Robotics**. This interactive textbook teaches embodied intelligence through practical examples, simulations, and vision-language models.
@@ -70,3 +72,6 @@ Use the integrated chatbot (bottom-right corner) to:
 ---
 
 **Last Updated**: November 2025
+
+
+</PersonalizedLesson>

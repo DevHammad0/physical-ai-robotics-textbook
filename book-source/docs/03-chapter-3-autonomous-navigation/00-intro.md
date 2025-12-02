@@ -246,8 +246,13 @@ Let's start with **Lesson 1: Navigation and Localization Overview**. You'll lear
 
 ---
 
+<PersonalizedLesson lessonPath="03-chapter-3-autonomous-navigation/00-intro.md">
+
 **Chapter 3 Structure**: Introduction → 7 Lessons + Capstone
 **Total Duration**: 18-20 hours
 **Status**: Ready to learn!
 
 Welcome to the future of autonomous robotics! 🤖
+
+
+</PersonalizedLesson>

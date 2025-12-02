@@ -4,6 +4,8 @@ title: "Lesson 7: Gazebo-ROS 2 Integration"
 description: "Command robot joints via ROS 2 topics and implement feedback control"
 ---
 
+<PersonalizedLesson lessonPath="02-chapter-2-gazebo-modeling/07-gazebo-ros2-integration.md">
+
 # Lesson 7: Gazebo-ROS 2 Integration (75 minutes)
 
 ## Learning Outcomes
@@ -505,3 +507,6 @@ In Lesson 8, you'll coordinate multiple robots, implement collision avoidance, a
 - `examples/chapter-2-gazebo/lesson-07/pid_control_demo.py`
 
 **Concepts Covered**: 8 (joint command interface, joint state feedback, Twist messages, differential drive kinematics, JointTrajectory, proportional control, state publishing, closed-loop systems)
+
+
+</PersonalizedLesson>

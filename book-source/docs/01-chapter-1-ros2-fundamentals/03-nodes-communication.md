@@ -22,6 +22,8 @@ learning_objectives:
 primary_layer: "Layer 1 (Manual Foundation) + Layer 2 (AI Collaboration Hints)"
 ---
 
+<PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/03-nodes-communication.md">
+
 ## Introduction
 
 Now that your ROS 2 environment is working, it's time to understand the architecture that makes robotics possible. This lesson explores the fundamental building blocks: **nodes**, **topics**, **messages**, and **communication patterns**.
@@ -760,3 +762,6 @@ In **Lesson 4: Your First ROS 2 Publisher**, you'll:
 **Chapter 1, Lesson 3 Complete**
 
 Next: Lesson 4 — Your First ROS 2 Publisher (60 min)
+
+
+</PersonalizedLesson>

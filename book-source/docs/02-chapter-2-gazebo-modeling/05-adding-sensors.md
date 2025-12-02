@@ -4,6 +4,8 @@ title: "Lesson 5: Adding Sensors"
 description: "Equip robots with cameras, LiDAR, and IMU sensors for perception"
 ---
 
+<PersonalizedLesson lessonPath="02-chapter-2-gazebo-modeling/05-adding-sensors.md">
+
 # Lesson 5: Adding Sensors (75 minutes)
 
 ## Learning Outcomes
@@ -427,3 +429,6 @@ In Lesson 6, you'll write ROS 2 nodes to process sensor data and extract meaning
 - `examples/chapter-2-gazebo/lesson-05/robot-with-all-sensors.urdf`
 
 **Concepts Covered**: 8 (sensor plugins, camera intrinsics, LiDAR beam model, IMU, sensor placement, ROS 2 topic mapping, noise models, update rates)
+
+
+</PersonalizedLesson>

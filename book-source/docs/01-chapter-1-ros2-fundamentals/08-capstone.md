@@ -23,6 +23,8 @@ learning_objectives:
 primary_layer: "Layer 1 (Manual Foundation) + Layer 2 (Integration)"
 ---
 
+<PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/08-capstone.md">
+
 ## Capstone Overview
 
 Congratulations! You've completed all 7 lessons of Chapter 1. Now it's time to put everything together.
@@ -847,3 +849,6 @@ You now have the foundation to build any ROS 2-based robotics system. Well done!
 ---
 
 **End of Capstone Project**
+
+
+</PersonalizedLesson>

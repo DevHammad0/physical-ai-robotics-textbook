@@ -4,6 +4,8 @@ title: "Lesson 6: Processing Sensor Data"
 description: "Write ROS 2 subscribers to process camera, LiDAR, and IMU data in real-time"
 ---
 
+<PersonalizedLesson lessonPath="02-chapter-2-gazebo-modeling/06-processing-sensors.md">
+
 # Lesson 6: Processing Sensor Data (75 minutes)
 
 ## Learning Outcomes
@@ -536,3 +538,6 @@ In Lesson 7, you'll close the loop by commanding robot motion based on processed
 - `examples/chapter-2-gazebo/lesson-06/sensor_fusion_node.py`
 
 **Concepts Covered**: 8 (Image subscribers, LaserScan subscribers, IMU subscribers, cv_bridge, message filtering, obstacle detection, edge detection, RViz visualization)
+
+
+</PersonalizedLesson>

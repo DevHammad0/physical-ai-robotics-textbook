@@ -4,6 +4,8 @@ title: "Lesson 3: Building Your First Robot"
 description: "Design and build a differential drive mobile robot, spawn in Gazebo, and command motion"
 ---
 
+<PersonalizedLesson lessonPath="02-chapter-2-gazebo-modeling/03-building-robot.md">
+
 # Lesson 3: Building Your First Robot (75 minutes)
 
 ## Learning Outcomes
@@ -454,3 +456,6 @@ In Lesson 4, you'll fine-tune physics parameters to make your robot behave exact
 - `examples/chapter-2-gazebo/lesson-03/spawn_robot.py`
 
 **Concepts Covered**: 8 (mobile base design, differential drive kinematics, wheel configuration, base link positioning, caster wheels, joint controllers, physics for mobile robots, spawning in Gazebo)
+
+
+</PersonalizedLesson>

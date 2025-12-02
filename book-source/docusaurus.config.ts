@@ -34,7 +34,19 @@ const config: Config = {
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'ur'],
+    localeConfigs: {
+      en: {
+        label: 'English',
+        direction: 'ltr',
+        htmlLang: 'en-US',
+      },
+      ur: {
+        label: 'اردو',
+        direction: 'rtl',
+        htmlLang: 'ur-PK',
+      },
+    },
   },  presets: [
     [
       'classic',
@@ -79,6 +91,10 @@ const config: Config = {
           label: 'Book',
         },
         {
+          type: 'localeDropdown',
+          position: 'right',
+        },
+        {
           href: 'https://github.com/devhammad0/physical-ai-robotics-textbook',
           label: 'GitHub',
           position: 'right',
@@ -118,7 +134,9 @@ const config: Config = {
         hashed: true,
         indexDocs: true,
         indexPages: false,
-        language: 'en',
+        language: ['en'],
+        docsRouteBasePath: '/docs',
+        ignoreFiles: /i18n\/ur/,
       },
     ],
   ],

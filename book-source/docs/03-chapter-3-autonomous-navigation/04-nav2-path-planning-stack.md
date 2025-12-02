@@ -1,3 +1,24 @@
+---
+title: "Lesson 4: Nav2 Path Planning Stack"
+chapter: 3
+lesson: 4
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-3-autonomous-navigation/04-nav2-path-planning-stack.md">
+
 # Lesson 4: Nav2 Path Planning Stack
 
 **Duration**: 3 hours | **Level**: Unlimited | **Priority**: P1 | **Prerequisite**: Lesson 1
@@ -486,3 +507,6 @@ You now understand Nav2 path planning architecture and configuration. Choose you
 ---
 
 **Lesson 4 Summary**: Nav2 provides a mature, ROS 2-native framework for autonomous navigation using multi-level planning (global + local). Understanding costmaps, planner algorithms, and parameter tuning enables you to deploy robust navigation in diverse environments.
+
+
+</PersonalizedLesson>

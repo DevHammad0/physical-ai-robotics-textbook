@@ -1,3 +1,24 @@
+---
+title: "Lesson 6: Full-Stack Integration & Orchestration"
+chapter: 4
+lesson: 6
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-4-ai-integration/06-lesson-6-full-integration.md">
+
 # Lesson 6: Full-Stack Integration & Orchestration
 
 ## Learning Objectives
@@ -649,3 +670,6 @@ In **Lesson 7**, you'll implement **safety protocols**:
 These are **non-negotiable** for real robot deployment!
 
 See you in Lesson 7! 🛡️
+
+
+</PersonalizedLesson>

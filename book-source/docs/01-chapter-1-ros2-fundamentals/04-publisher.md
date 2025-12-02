@@ -23,6 +23,8 @@ learning_objectives:
 primary_layer: "Layer 1 (Manual Foundation) + Layer 2 (AI Collaboration)"
 ---
 
+<PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/04-publisher.md">
+
 ## Introduction
 
 Now it's time to write your first ROS 2 code! In this lesson, you'll create a Python node that publishes velocity commands to Turtlesim, making the turtle move.
@@ -915,3 +917,6 @@ You'll learn:
 You've successfully written your first ROS 2 publisher!
 
 Next: Lesson 5 — Your First ROS 2 Subscriber (Part of Chapter 1)
+
+
+</PersonalizedLesson>

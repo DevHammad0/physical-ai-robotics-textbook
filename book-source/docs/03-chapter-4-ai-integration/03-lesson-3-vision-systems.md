@@ -1,3 +1,24 @@
+---
+title: "Lesson 3: Vision Systems for Robotics"
+chapter: 4
+lesson: 3
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-4-ai-integration/03-lesson-3-vision-systems.md">
+
 # Lesson 3: Vision Systems for Robotics
 
 ## Learning Objectives
@@ -555,3 +576,6 @@ In **Lesson 4**, you'll integrate vision with **LLM-based planning**:
 - Voice + Vision + Planning together
 
 See you in Lesson 4! 🧠🎬
+
+
+</PersonalizedLesson>

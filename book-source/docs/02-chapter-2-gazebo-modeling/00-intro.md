@@ -4,6 +4,8 @@ title: "Chapter 2: Simulation & Robot Modeling with Gazebo"
 description: "Master Gazebo physics simulation and URDF robot modeling for ROS 2 - the foundation for autonomous robotics"
 ---
 
+<PersonalizedLesson lessonPath="02-chapter-2-gazebo-modeling/00-intro.md">
+
 # Chapter 2: Simulation & Robot Modeling
 
 ## Welcome to Robot Simulation!
@@ -262,3 +264,6 @@ Ready to build robots in simulation? Head to **Lesson 1** to launch Gazebo and e
 **Chapter 2 Status**: Complete with 8 lessons, 25+ URDF examples, 12+ Python control nodes, and comprehensive troubleshooting guides.
 
 **Last Updated**: 2025-11-29
+
+
+</PersonalizedLesson>

@@ -155,3 +155,175 @@ html[data-theme='dark'] table th {
     padding: 8px;
   }
 }
+
+/* ============================================
+   RTL (Right-to-Left) Support for Urdu Locale
+   ============================================ */
+
+/* Urdu Web Font for better rendering */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
+
+html[lang="ur"] {
+  font-family: 'Noto Nastaliq Urdu', 'Noto Sans Arabic', Arial, sans-serif;
+}
+
+/* Base RTL Direction */
+html[lang="ur"] {
+  direction: rtl;
+}
+
+html[lang="ur"] body {
+  text-align: right;
+}
+
+/* Navbar RTL */
+html[lang="ur"] .navbar {
+  direction: rtl;
+}
+
+html[lang="ur"] .navbar__items {
+  flex-direction: row-reverse;
+}
+
+html[lang="ur"] .navbar__brand {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+/* Sidebar RTL - Move to Right Side */
+html[lang="ur"] .theme-doc-sidebar-container {
+  order: 2;
+}
+
+html[lang="ur"] .main-wrapper {
+  flex-direction: row-reverse;
+}
+
+html[lang="ur"] .menu__link {
+  text-align: right;
+  padding-left: 0;
+  padding-right: var(--ifm-menu-link-padding-horizontal);
+}
+
+html[lang="ur"] .menu__link--sublist-caret:after {
+  transform: rotate(180deg);
+  margin-left: 0;
+  margin-right: auto;
+}
+
+html[lang="ur"] .menu__list .menu__list {
+  padding-right: var(--ifm-menu-link-padding-horizontal);
+  padding-left: 0;
+}
+
+/* Content RTL */
+html[lang="ur"] .theme-doc-markdown {
+  text-align: right;
+  direction: rtl;
+}
+
+html[lang="ur"] .markdown h1,
+html[lang="ur"] .markdown h2,
+html[lang="ur"] .markdown h3,
+html[lang="ur"] .markdown h4 {
+  text-align: right;
+}
+
+html[lang="ur"] .markdown p,
+html[lang="ur"] .markdown li {
+  text-align: right;
+}
+
+html[lang="ur"] .markdown ul,
+html[lang="ur"] .markdown ol {
+  padding-right: 2rem;
+  padding-left: 0;
+}
+
+/* CRITICAL: Code Blocks Must Stay LTR */
+html[lang="ur"] pre,
+html[lang="ur"] code {
+  direction: ltr;
+  text-align: left;
+}
+
+html[lang="ur"] .markdown p code,
+html[lang="ur"] .markdown li code {
+  display: inline-block;
+  direction: ltr;
+}
+
+/* Admonitions RTL */
+html[lang="ur"] .admonition {
+  text-align: right;
+  border-left: none;
+  border-right: 4px solid var(--ifm-color-warning);
+}
+
+html[lang="ur"] .module-card {
+  border-left: none;
+  border-right: 4px solid var(--ifm-color-primary);
+}
+
+/* Tables RTL */
+html[lang="ur"] table {
+  direction: rtl;
+}
+
+html[lang="ur"] table th,
+html[lang="ur"] table td {
+  text-align: right;
+}
+
+html[lang="ur"] table code {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Pagination RTL */
+html[lang="ur"] .pagination-nav {
+  direction: rtl;
+}
+
+html[lang="ur"] .pagination-nav__label::before,
+html[lang="ur"] .pagination-nav__label::after {
+  transform: scaleX(-1);
+}
+
+/* Breadcrumbs RTL */
+html[lang="ur"] .breadcrumbs {
+  direction: rtl;
+}
+
+html[lang="ur"] .breadcrumbs__item:not(:last-child):after {
+  content: '\\';
+  transform: scaleX(-1);
+}
+
+/* TOC (Table of Contents) RTL */
+html[lang="ur"] .table-of-contents {
+  text-align: right;
+}
+
+/* Footer RTL */
+html[lang="ur"] .footer {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Mobile Responsive RTL */
+@media (max-width: 996px) {
+  html[lang="ur"] .navbar-sidebar {
+    direction: rtl;
+  }
+
+  html[lang="ur"] .navbar-sidebar__item {
+    text-align: right;
+  }
+}
+
+/* Dark Mode RTL Compatibility */
+html[lang="ur"][data-theme='dark'] .navbar,
+html[lang="ur"][data-theme='dark'] .footer {
+  direction: rtl;
+}

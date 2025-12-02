@@ -1,3 +1,24 @@
+---
+title: "Chapter 4: AI Integration & Vision-Language-Action Pipelines"
+chapter: 4
+lesson: 0
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-4-ai-integration/00-intro.md">
+
 # Chapter 4: AI Integration & Vision-Language-Action Pipelines
 
 Welcome to the final chapter of the Physical AI & Robotics Textbook!
@@ -263,3 +284,6 @@ Now it's time to give robots **intelligence**. Let's begin!
 **Ready to push to real robots?** See REAL_HARDWARE_APPENDIX.md when you reach Lesson 7.
 
 Happy building! 🚀
+
+
+</PersonalizedLesson>

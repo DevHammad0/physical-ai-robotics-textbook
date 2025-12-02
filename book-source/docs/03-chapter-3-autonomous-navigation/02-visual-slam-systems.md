@@ -1,3 +1,24 @@
+---
+title: "Lesson 2: Visual SLAM Systems"
+chapter: 3
+lesson: 2
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-3-autonomous-navigation/02-visual-slam-systems.md">
+
 # Lesson 2: Visual SLAM Systems
 
 **Duration**: 3 hours | **Level**: CEFR B1-C2 | **Priority**: P1 | **Prerequisite**: Lesson 1
@@ -443,3 +464,6 @@ You now understand the architecture and tuning of ORB-SLAM3. Choose your next le
 ---
 
 **Lesson 2 Summary**: ORB-SLAM3 provides complete visual SLAM using ORB features, keyframe tracking, and loop closure detection. Understanding feature detection, matching, pose estimation, and loop closure enables you to configure and debug VSLAM systems in diverse scenarios.
+
+
+</PersonalizedLesson>

@@ -1,3 +1,24 @@
+---
+title: "Lesson 8: Capstone Project - Your VLA System Design"
+chapter: 4
+lesson: 8
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-4-ai-integration/08-lesson-8-capstone.md">
+
 # Lesson 8: Capstone Project - Your VLA System Design
 
 ## Learning Objectives
@@ -433,3 +454,6 @@ You now understand how to build complete autonomous systems. Whether you pursue 
 See Appendix: Real Hardware Deployment for safety checklist and hardware considerations.
 
 See you in the next chapter! 👋
+
+
+</PersonalizedLesson>

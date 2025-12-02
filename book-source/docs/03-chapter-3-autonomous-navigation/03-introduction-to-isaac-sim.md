@@ -1,3 +1,24 @@
+---
+title: "Lesson 3: Introduction to Isaac Sim"
+chapter: 3
+lesson: 3
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-3-autonomous-navigation/03-introduction-to-isaac-sim.md">
+
 # Lesson 3: Introduction to Isaac Sim
 
 **Duration**: 2.5 hours | **Level**: CEFR B1-C2 | **Priority**: P1 | **Optional**: Can skip for Gazebo-only path
@@ -419,3 +440,6 @@ You now understand Isaac Sim's advantages for perception-focused autonomous navi
 ---
 
 **Lesson 3 Summary**: Isaac Sim provides photorealistic simulation with photorealistic rendering, automated domain randomization, and advanced sensor simulation. The ROS 2 bridge enables seamless integration with autonomous navigation systems. Use Isaac Sim when perception quality and sim-to-real transfer are critical goals.
+
+
+</PersonalizedLesson>

@@ -1,3 +1,24 @@
+---
+title: "Lesson 2: Voice Input with OpenAI Whisper"
+chapter: 4
+lesson: 2
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-4-ai-integration/02-lesson-2-voice-whisper.md">
+
 # Lesson 2: Voice Input with OpenAI Whisper
 
 ## Learning Objectives
@@ -459,3 +480,6 @@ In **Lesson 3**, you'll add **vision perception** to complement voice input:
 - Combining voice + vision for powerful perception
 
 See you in Lesson 3! 👁️🎤
+
+
+</PersonalizedLesson>

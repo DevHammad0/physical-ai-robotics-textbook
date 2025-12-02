@@ -1,3 +1,24 @@
+---
+title: "Lesson 7: Multi-Sensor Perception and Fusion"
+chapter: 3
+lesson: 7
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-3-autonomous-navigation/07-multi-sensor-perception-and-fusion.md">
+
 # Lesson 7: Multi-Sensor Perception and Fusion
 
 **Duration**: 3 hours | **Level**: Unlimited | **Priority**: P3 | **Prerequisite**: Lesson 1 or 3
@@ -457,3 +478,6 @@ You now understand multi-sensor fusion for robust perception. Choose your path:
 ---
 
 **Lesson 7 Summary**: Multi-sensor fusion combines visual, range, and inertial information for >20% accuracy improvement. Temporal synchronization, covariance weighting, and failure handling enable robust autonomous navigation in diverse conditions.
+
+
+</PersonalizedLesson>

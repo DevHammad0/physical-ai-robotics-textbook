@@ -4,6 +4,8 @@ title: "Lesson 1: Introduction to Gazebo"
 description: "Learn Gazebo physics simulation fundamentals and explore the physics engine landscape"
 ---
 
+<PersonalizedLesson lessonPath="02-chapter-2-gazebo-modeling/01-intro-gazebo.md">
+
 # Lesson 1: Introduction to Gazebo (45 minutes)
 
 ## Learning Outcomes
@@ -450,3 +452,6 @@ Ready to build robots? In Lesson 2, you'll create your first URDF robot model an
 - `examples/chapter-2-gazebo/lesson-01/physics-engines.txt` (reference table)
 
 **Concepts Covered**: 7 (Gazebo ecosystem, physics engines, world structure, simulation loop, plugins, geometry types, SDF vs URDF)
+
+
+</PersonalizedLesson>

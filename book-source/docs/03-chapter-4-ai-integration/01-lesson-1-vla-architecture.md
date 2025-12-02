@@ -1,3 +1,24 @@
+---
+title: "Lesson 1: Vision-Language-Action Architecture Overview"
+chapter: 4
+lesson: 1
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-4-ai-integration/01-lesson-1-vla-architecture.md">
+
 # Lesson 1: Vision-Language-Action Architecture Overview
 
 ## Learning Objectives
@@ -219,3 +240,6 @@ You'll set up a ROS 2 node that:
 - Handles errors gracefully
 
 See you in Lesson 2! 🎤🤖
+
+
+</PersonalizedLesson>

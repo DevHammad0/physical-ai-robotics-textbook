@@ -24,6 +24,8 @@ learning_objectives:
 primary_layer: "Layer 1 (Manual Foundation) + Layer 2 (AI Collaboration)"
 ---
 
+<PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/07-launch-files.md">
+
 ## Introduction
 
 So far, you've written individual nodes (publishers, subscribers). Real robotics systems consist of **many coordinated nodes** working together:
@@ -726,3 +728,6 @@ Node(
 ---
 
 **End of Lesson 7: Multi-Node Systems & Launch Files**
+
+
+</PersonalizedLesson>

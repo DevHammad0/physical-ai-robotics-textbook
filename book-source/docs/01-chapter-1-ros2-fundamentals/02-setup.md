@@ -22,6 +22,8 @@ learning_objectives:
 primary_layer: "Layer 1 (Manual Foundation)"
 ---
 
+<PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/02-setup.md">
+
 ## Introduction
 
 Before you can write ROS 2 code, you need a working development environment. This lesson walks you through installing ROS 2 Humble—the current long-term support (LTS) version—and launching Turtlesim, your first robot simulator.
@@ -614,3 +616,6 @@ In **Lesson 3: Nodes and Communication Patterns**, you'll:
 **Chapter 1, Lesson 2 Complete**
 
 Next: Lesson 3 — Nodes and Communication Patterns (60 min)
+
+
+</PersonalizedLesson>

@@ -1,3 +1,24 @@
+---
+title: "Lesson 6: Autonomous Humanoid Navigation"
+chapter: 3
+lesson: 6
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-3-autonomous-navigation/06-autonomous-humanoid-navigation.md">
+
 # Lesson 6: Autonomous Humanoid Navigation
 
 **Duration**: 3 hours | **Level**: Unlimited | **Priority**: P3 | **Prerequisite**: Lesson 4, Optional advanced track
@@ -453,3 +474,6 @@ You now understand humanoid-specific navigation constraints. Choose your path:
 ---
 
 **Lesson 6 Summary**: Humanoid navigation adds balance constraints not present in wheeled robots. Understanding biped kinematics, stability constraints, and footstep planning enables you to safely navigate humanoid robots in human environments.
+
+
+</PersonalizedLesson>

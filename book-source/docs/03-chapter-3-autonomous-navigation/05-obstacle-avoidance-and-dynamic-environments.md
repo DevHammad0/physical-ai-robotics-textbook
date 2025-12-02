@@ -1,3 +1,24 @@
+---
+title: "Lesson 5: Obstacle Avoidance and Dynamic Environments"
+chapter: 3
+lesson: 5
+
+# Robotics-Specific Metadata
+simulation_required: []
+safety_level: "simulation_only"
+cefr_level: "B1"
+hardware_prerequisites: []
+
+# Learning Objectives
+learning_objectives:
+  - "Complete this lesson"
+
+# Pedagogical Layer
+primary_layer: "Layer 1 (Manual Foundation)"
+---
+
+<PersonalizedLesson lessonPath="03-chapter-3-autonomous-navigation/05-obstacle-avoidance-and-dynamic-environments.md">
+
 # Lesson 5: Obstacle Avoidance and Dynamic Environments
 
 **Duration**: 3 hours | **Level**: Unlimited | **Priority**: P2 | **Prerequisite**: Lesson 4
@@ -444,3 +465,6 @@ You now understand obstacle avoidance in dynamic environments. Choose your path:
 ---
 
 **Lesson 5 Summary**: Obstacle avoidance combines costmap inflation for safety, dynamic window approach for trajectory evaluation, and recovery behaviors for stuck detection. Proper tuning enables robots to navigate safely through dynamic environments with people and moving objects.
+
+
+</PersonalizedLesson>

@@ -4,6 +4,8 @@ title: "Lesson 4: Physics Simulation Tuning"
 description: "Understand and fine-tune physics parameters for realistic robot behavior"
 ---
 
+<PersonalizedLesson lessonPath="02-chapter-2-gazebo-modeling/04-physics-simulation.md">
+
 # Lesson 4: Physics Simulation Tuning (75 minutes)
 
 ## Learning Outcomes
@@ -416,3 +418,6 @@ In Lesson 5, you'll add sensors to your robot so it can perceive its environment
 - `examples/chapter-2-gazebo/lesson-04/physics-parameter-ranges.txt`
 
 **Concepts Covered**: 8 (gravity, static friction, dynamic friction, linear damping, angular damping, restitution, contact margin, physics engine selection)
+
+
+</PersonalizedLesson>

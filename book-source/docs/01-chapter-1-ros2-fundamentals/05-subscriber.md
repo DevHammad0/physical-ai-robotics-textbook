@@ -24,6 +24,8 @@ learning_objectives:
 primary_layer: "Layer 1 (Manual Foundation) + Layer 2 (AI Collaboration)"
 ---
 
+<PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/05-subscriber.md">
+
 ## Introduction
 
 In Lesson 4, you created a publisher that **sends** messages. Now it's time to create a subscriber that **receives** messages.
@@ -735,3 +737,6 @@ After completing this lesson, verify:
 ---
 
 **End of Lesson 5: Your First ROS 2 Subscriber**
+
+
+</PersonalizedLesson>

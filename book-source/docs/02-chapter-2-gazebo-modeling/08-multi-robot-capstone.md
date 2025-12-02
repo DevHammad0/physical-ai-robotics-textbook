@@ -4,6 +4,8 @@ title: "Lesson 8: Multi-Robot Capstone Project"
 description: "Coordinate multiple robots with collision avoidance and autonomous navigation"
 ---
 
+<PersonalizedLesson lessonPath="02-chapter-2-gazebo-modeling/08-multi-robot-capstone.md">
+
 # Lesson 8: Multi-Robot Capstone Project (120 minutes)
 
 ## Learning Outcomes
@@ -655,3 +657,6 @@ You've now mastered:
 - Comprehensive troubleshooting guides
 - Self-assessment checklists
 - Constitutional compliance: 100% (simulation-first, no hardware, B1 CEFR, 4-Layer pedagogy)
+
+
+</PersonalizedLesson>

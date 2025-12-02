@@ -24,6 +24,8 @@ learning_objectives:
 primary_layer: "Layer 1 (Manual Foundation) + Layer 2 (AI Collaboration)"
 ---
 
+<PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/06-services-actions.md">
+
 ## Introduction
 
 So far, you've learned about **publishers and subscribers** (asynchronous, one-way communication). But some robot tasks require **synchronous request-response** patterns:
@@ -746,3 +748,6 @@ future.add_done_callback(callback)  # Async: no timeout
 ---
 
 **End of Lesson 6: Services and Actions**
+
+
+</PersonalizedLesson>

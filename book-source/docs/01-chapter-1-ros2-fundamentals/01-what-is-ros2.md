@@ -22,8 +22,6 @@ learning_objectives:
 primary_layer: "Layer 1 (Manual Foundation)"
 ---
 
-import PersonalizedLesson from '@site/src/components/PersonalizedLesson';
-
 <PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/01-what-is-ros2.md">
 
 ## Introduction

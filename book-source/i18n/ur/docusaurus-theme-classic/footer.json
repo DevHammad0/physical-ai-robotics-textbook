@@ -1,0 +1,14 @@
+{
+  "link.title.Community": {
+    "message": "کمیونٹی",
+    "description": "The title of the footer links column with title=Community in the footer"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/devhammad0/physical-ai-robotics-textbook"
+  },
+  "copyright": {
+    "message": "کاپی رائٹ © 2025 Physical AI Robotics Textbook. Docusaurus کے ساتھ بنایا گیا۔",
+    "description": "The footer copyright"
+  }
+}
