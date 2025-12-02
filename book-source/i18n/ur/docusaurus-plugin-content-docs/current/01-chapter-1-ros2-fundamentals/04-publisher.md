@@ -3,23 +3,17 @@ title: "آپ کا پہلا ROS 2 Publisher"
 chapter: 1
 lesson: 4
 duration_minutes: 60
-
-# Robotics-Specific Metadata
 simulation_required: ["turtlesim"]
 safety_level: "simulation_only"
 cefr_level: "B1"
 hardware_prerequisites: []
-
-# Learning Objectives (Measured, SMART)
 learning_objectives:
-  - "rclpy.Node کا استعمال کرتے ہوئے ایک ROS 2 node class بنائیں"
-  - "ایک publisher نافذ کریں اور topic پر پیغامات publish کریں"
-  - "وقتاً فوقتاً پیغامات کی اشاعت (publishing) کو متحرک کرنے کے لیے timer callbacks کا استعمال کریں"
-  - "Python میں ایک مکمل، چلنے کے قابل ROS 2 node لکھیں"
-  - "ROS 2 CLI tools کا استعمال کرتے ہوئے publisher کے مسائل کو debug کریں"
-  - "ROS 2 nodes میں error handling اور logging کا اطلاق کریں"
-
-# Pedagogical Layer
+  - "rclpy.Node کا استعمال کرتے ہوئے ایک ROS 2 node class بنائیں"
+  - "ایک publisher نافذ کریں اور topic پر پیغامات publish کریں"
+  - "وقتاً فوقتاً پیغامات کی اشاعت (publishing) کو متحرک کرنے کے لیے timer callbacks کا استعمال کریں"
+  - "Python میں ایک مکمل، چلنے کے قابل ROS 2 node لکھیں"
+  - "ROS 2 CLI tools کا استعمال کرتے ہوئے publisher کے مسائل کو debug کریں"
+  - "ROS 2 nodes میں error handling اور logging کا اطلاق کریں"
 primary_layer: "Layer 1 (Manual Foundation) + Layer 2 (AI Collaboration)"
 ---
 
