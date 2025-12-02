@@ -1,0 +1,59 @@
+/* Floating "Ask with AI" button */
+.askButton {
+  position: fixed;
+  z-index: 9999;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transform: translate(-50%, -100%) translateY(-10px);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  user-select: none;
+}
+
+.askButton:hover {
+  transform: translate(-50%, -100%) translateY(-10px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.askButton:active {
+  transform: translate(-50%, -100%) translateY(-10px) scale(0.98);
+}
+
+.askButton:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .askButton {
+    font-size: 13px;
+    padding: 7px 14px;
+  }
+
+  .icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Dark mode support */
+html[data-theme='dark'] .askButton {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+}

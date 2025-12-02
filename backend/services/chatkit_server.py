@@ -89,6 +89,13 @@ class PhysicalAIChatKitServer(ChatKitServer):
             logger.info(f"[ChatKit] Extracted user_text: '{user_text}'")
             logger.info(f"[ChatKit] user_text length: {len(user_text)}")
 
+            # Prepend selected text if available in context
+            selected_text = context.get("selected_text")
+            if selected_text:
+                logger.info(f"[ChatKit] Prepending selected text: '{selected_text[:100]}...'")
+                user_text = f'Selected text: "{selected_text}"\n\n{user_text}'
+                logger.info(f"[ChatKit] Updated user_text with selected text context")
+
             # Convert ChatKit thread ID to conversation_id for PostgresSession
             # This allows us to reuse AgentService's history loading logic
             if is_chatkit_thread_id(thread.id):

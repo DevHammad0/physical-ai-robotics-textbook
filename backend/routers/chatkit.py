@@ -50,12 +50,16 @@ async def chatkit_endpoint(request: Request):
         except:
             logger.info(f"[ChatKit] Body (raw): {body[:500]}")
 
-        # Optional: Extract context from headers (user ID, session info, etc.)
+        # Optional: Extract context from headers and query params (user ID, session info, selected text, etc.)
+        selected_text = request.headers.get("X-Selected-Text") or request.query_params.get("selected_text")
         context = {
             "user_id": request.headers.get("X-User-ID"),
             "session_id": request.headers.get("X-Session-ID"),
+            "selected_text": selected_text,
         }
         logger.info(f"[ChatKit] Context: {context}")
+        if selected_text:
+            logger.info(f"[ChatKit] Selected text detected (length: {len(selected_text)}): {selected_text[:100]}...")
 
         # Process request through ChatKit server
         logger.info("[ChatKit] Calling chatkit_server.process()...")

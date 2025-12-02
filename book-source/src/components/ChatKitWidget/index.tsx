@@ -2,7 +2,7 @@
  * ChatKitWidget - Chatkit built-in UI component for Docusaurus site
  * Uses OpenAI Chatkit with custom server endpoint
  */
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useChatKit, ChatKit } from '@openai/chatkit-react';
 import { FiMessageCircle } from 'react-icons/fi';
 import styles from './styles.module.css';
@@ -17,29 +17,50 @@ const getBackendUrl = (): string => {
 
 interface ChatKitWidgetProps {
   className?: string;
+  isOpen?: boolean;              // External control of open state
+  onOpenChange?: (isOpen: boolean) => void;  // Notify parent
+  prefillText?: string | null;   // Text to prefill
+  onPrefillComplete?: () => void; // Callback when done
 }
 
-export default function ChatKitWidget({ className }: ChatKitWidgetProps): React.JSX.Element {
+export default function ChatKitWidget({
+  className,
+  isOpen: isOpenProp,
+  onOpenChange,
+  prefillText,
+  onPrefillComplete
+}: ChatKitWidgetProps): React.JSX.Element {
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const selectedTextRef = useRef<string | null>(null);
+
+  // Store selected text in ref
+  useEffect(() => {
+    selectedTextRef.current = prefillText;
+  }, [prefillText]);
+
+  // Controlled/uncontrolled pattern for isOpen state
+  const isOpen = isOpenProp ?? internalIsOpen;
+  const setIsOpen = (value: boolean) => {
+    if (isOpenProp === undefined) {
+      setInternalIsOpen(value);
+    }
+    onOpenChange?.(value);
+  };
   const backendUrl = getBackendUrl();
   const chatkitEndpoint = `${backendUrl}/api/chatkit`;
 
-  // Initialize Chatkit with custom server endpoint
-  // For custom backends, use CustomApiConfig with 'url' and 'domainKey' properties
-  // Note: useChatKit must be called unconditionally (React hook rules)
+  // Initialize Chatkit with custom server endpoint (stable config - never changes)
   const { control } = useChatKit({
     api: {
-      url: chatkitEndpoint, // CustomApiConfig requires 'url', not 'endpoint'
-      domainKey: 'domain_pk_local_dev', // Domain key for custom backend (matches backend config)
+      url: chatkitEndpoint,
+      domainKey: 'domain_pk_local_dev',
     },
-    // Optional: Add theming to match Docusaurus
     theme: {
       colorScheme: 'light' as const,
     },
-    // Optional: Configure header with minimize button
     header: {
       title: {
         text: 'Teaching Assistant',
@@ -49,7 +70,6 @@ export default function ChatKitWidget({ className }: ChatKitWidgetProps): React.
         onClick: () => setIsOpen(false),
       },
     },
-    // Optional: Configure composer (input area)
     composer: {
       placeholder: 'Ask anything about Physical AI & Robotics...',
     },
@@ -64,9 +84,9 @@ export default function ChatKitWidget({ className }: ChatKitWidgetProps): React.
     return () => clearTimeout(timer);
   }, []);
 
-  // Log for debugging
+  // Log only errors in production
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
       console.log('[ChatKitWidget] Initializing...', {
         endpoint: chatkitEndpoint,
         backendUrl,
@@ -123,14 +143,11 @@ export default function ChatKitWidget({ className }: ChatKitWidgetProps): React.
     };
   }, [isOpen]);
 
-  // Debug: Show container even if Chatkit isn't ready
-  if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-    console.log('[ChatKitWidget] Render state:', {
-      isReady,
-      hasControl: !!control,
-      endpoint: chatkitEndpoint,
-    });
-  }
+  // Note: We display the selected text in a context banner instead of trying to prefill
+  // the composer, because ChatKit uses a cross-origin iframe which cannot be accessed
+  // due to browser security restrictions (Same-Origin Policy)
+
+  // Debug logging removed - only errors are logged now
 
   // Render floating bubble button when closed
   if (!isOpen) {
@@ -151,31 +168,90 @@ export default function ChatKitWidget({ className }: ChatKitWidgetProps): React.
   return (
     <>
       {/* Backdrop overlay */}
-      <div 
+      <div
         className={`${styles.backdrop} ${styles.backdropOpen}`}
         onClick={() => setIsOpen(false)}
         aria-hidden="true"
       />
-      
+
       {/* Chat container */}
-      <div 
+      <div
         ref={chatContainerRef}
-        className={`${styles.chatkitContainer} ${className || ''} ${isOpen ? styles.open : ''}`}
+        className={`${styles.chatkitContainer} ${className || ''} ${isOpen ? styles.open : ''} ${prefillText ? styles.hasContext : ''}`}
         data-testid="chatkit-widget"
       >
-        {!isReady && (
-          <div style={{ padding: '20px', background: '#f0f0f0' }}>
-            <p>Initializing Chatkit...</p>
-            <p style={{ fontSize: '12px' }}>Endpoint: {chatkitEndpoint}</p>
+        {/* Show selected text context if available */}
+        {prefillText && (
+          <div className={styles.contextBanner}>
+            <div className={styles.contextHeader}>
+              <span className={styles.contextLabel}>Selected text:</span>
+              <button
+                className={styles.contextClose}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onPrefillComplete?.();
+                }}
+                aria-label="Clear context"
+              >
+                ×
+              </button>
+            </div>
+            <div className={styles.contextText}>"{prefillText}"</div>
+            <div className={styles.contextActions}>
+              <button
+                className={styles.copyButton}
+                onClick={async (e) => {
+                  e.stopPropagation();
+                  // Store button reference BEFORE async operation
+                  const btn = e.currentTarget as HTMLButtonElement;
+                  const originalText = btn.textContent;
+                  const formattedText = `Selected text: "${prefillText}"\n\nPlease explain this.`;
+                  try {
+                    await navigator.clipboard.writeText(formattedText);
+                    // Button reference is still valid because we stored it before await
+                    if (btn) {
+                      btn.textContent = '✓ Copied!';
+                      setTimeout(() => {
+                        if (btn) {
+                          btn.textContent = originalText;
+                        }
+                      }, 2000);
+                    }
+                  } catch (err) {
+                    console.error('Failed to copy:', err);
+                    if (btn) {
+                      btn.textContent = '❌ Copy failed';
+                      setTimeout(() => {
+                        if (btn) {
+                          btn.textContent = originalText;
+                        }
+                      }, 2000);
+                    }
+                  }
+                }}
+              >
+                📋 Copy message template
+              </button>
+              <span className={styles.contextHint}>Then paste in chat below</span>
+            </div>
           </div>
         )}
-        {isReady && control && <ChatKit control={control} />}
-        {isReady && !control && (
-          <div style={{ padding: '20px', background: '#fff3cd' }}>
-            <p>Chatkit control not available</p>
-            <p style={{ fontSize: '12px' }}>Check browser console for errors</p>
-          </div>
-        )}
+
+        <div className={styles.chatkitWrapper}>
+          {!isReady && (
+            <div style={{ padding: '20px', background: '#f0f0f0' }}>
+              <p>Initializing Chatkit...</p>
+              <p style={{ fontSize: '12px' }}>Endpoint: {chatkitEndpoint}</p>
+            </div>
+          )}
+          {isReady && control && <ChatKit control={control} />}
+          {isReady && !control && (
+            <div style={{ padding: '20px', background: '#fff3cd' }}>
+              <p>Chatkit control not available</p>
+              <p style={{ fontSize: '12px' }}>Check browser console for errors</p>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

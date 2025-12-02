@@ -2,9 +2,11 @@
  * Root component for Docusaurus theme
  * This component wraps all pages and allows us to add global components
  */
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 // Using Chatkit built-in UI
 import ChatKitWidget from '@site/src/components/ChatKitWidget';
+import TextSelectionHandler from '@site/src/components/TextSelectionHandler';
+import { ChatKitContext } from '@site/src/components/ChatKitWidget/ChatKitContext';
 // Keep old ChatWidget for safety (commented out)
 // import ChatWidget from '@site/src/components/ChatWidget';
 
@@ -19,13 +21,37 @@ export default function Root({ children }: { children: React.ReactNode }): React
     }
   }
 
+  // State for managing ChatKit with text selection
+  const [isOpen, setIsOpen] = useState(false);
+  const [prefillText, setPrefillText] = useState<string | null>(null);
+
+  // Context value for TextSelectionHandler to communicate with ChatKitWidget
+  const contextValue = useMemo(() => ({
+    openWithText: (text: string) => {
+      setPrefillText(text);
+      setIsOpen(true);
+    },
+    isOpen,
+  }), [isOpen]);
+
+  // Clear prefill after it's used
+  const handlePrefillComplete = () => {
+    setPrefillText(null);
+  };
+
   return (
-    <>
+    <ChatKitContext.Provider value={contextValue}>
       {children}
-      <ChatKitWidget />
+      <TextSelectionHandler />
+      <ChatKitWidget
+        isOpen={isOpen}
+        onOpenChange={setIsOpen}
+        prefillText={prefillText}
+        onPrefillComplete={handlePrefillComplete}
+      />
       {/* Old ChatWidget kept for safety - uncomment to rollback */}
       {/* <ChatWidget /> */}
-    </>
+    </ChatKitContext.Provider>
   );
 }
 
