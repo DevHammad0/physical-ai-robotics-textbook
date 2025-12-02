@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 AUTH_SERVER_URL = os.getenv("AUTH_SERVER_URL", "http://localhost:8001")
 
 
-@router.api_route("/auth/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"])
+@router.api_route("/auth/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "HEAD"])
 async def proxy_auth(request: Request, path: str):
     """
     Proxy all /api/auth/* requests to the better-auth server.

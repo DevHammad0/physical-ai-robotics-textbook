@@ -16,7 +16,7 @@
     "postinstall": "node patch-package.js"
   },
   "dependencies": {
-    "@vercel/node": "^3.0.7",
+    "@vercel/node": "^2.3.0",
     "better-auth": "^1.4.3",
     "dotenv": "^16.4.5",
     "kysely": "^0.28.5",
@@ -29,4 +29,3 @@
     "typescript": "^5.3.3"
   }
 }
-

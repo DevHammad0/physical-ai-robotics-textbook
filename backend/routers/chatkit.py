@@ -7,37 +7,30 @@ from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse, Response
 
 from services.chatkit_server import PhysicalAIChatKitServer
-from services.chatkit_store import InMemoryStore
+from services.chatkit_store import PostgresStore, InMemoryStore
 from chatkit.server import StreamingResult
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
-# Initialize ChatKit server with in-memory store
-# For production, replace with database-backed store
-chatkit_store = InMemoryStore()
+# Initialize ChatKit server with PostgreSQL-backed store
+# Fallback to in-memory store if database not available
+try:
+    chatkit_store = PostgresStore()
+    logger.info("[ChatKit] Using PostgreSQL-backed store")
+except Exception as e:
+    logger.warning(f"[ChatKit] Failed to initialize PostgreSQL store, using in-memory: {e}")
+    chatkit_store = InMemoryStore()
+
 chatkit_server = PhysicalAIChatKitServer(data_store=chatkit_store)
-
-
-@router.options("/chatkit")
-async def chatkit_options():
-    """Handle CORS preflight requests."""
-    logger.info("[ChatKit] OPTIONS request received (CORS preflight)")
-    return Response(
-        status_code=200,
-        headers={
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "POST, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, X-User-ID, X-Session-ID",
-        }
-    )
 
 
 @router.post("/chatkit")
 async def chatkit_endpoint(request: Request):
     """
-    Main ChatKit endpoint for handling chat communication.
-    Accepts ChatKit protocol messages and streams responses.
+    Handle POST requests for ChatKit endpoint.
+    OPTIONS preflight requests are handled automatically by FastAPI's CORS middleware
+    with wildcard headers (allow_credentials=False allows this).
     """
     try:
         # Log everything about the request
@@ -71,6 +64,7 @@ async def chatkit_endpoint(request: Request):
         logger.info(f"[ChatKit] Is StreamingResult: {isinstance(result, StreamingResult)}")
 
         # Return appropriate response based on result type
+        # CORS headers are handled automatically by FastAPI's CORSMiddleware
         if isinstance(result, StreamingResult):
             logger.info("[ChatKit] Returning StreamingResponse")
             return StreamingResponse(
@@ -93,6 +87,8 @@ async def chatkit_endpoint(request: Request):
         logger.error(f"[ChatKit] Error type: {type(e).__name__}")
         logger.error(f"[ChatKit] Error message: {str(e)}")
         logger.error(f"[ChatKit] Traceback:", exc_info=True)
+
+        # CORS headers are handled automatically by FastAPI's CORSMiddleware
         return Response(
             content=f'{{"error": "{str(e)}"}}',
             media_type="application/json",

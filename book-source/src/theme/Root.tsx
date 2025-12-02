@@ -3,7 +3,10 @@
  * This component wraps all pages and allows us to add global components
  */
 import React from 'react';
-import ChatWidget from '@site/src/components/ChatWidget';
+// Using Chatkit built-in UI
+import ChatKitWidget from '@site/src/components/ChatKitWidget';
+// Keep old ChatWidget for safety (commented out)
+// import ChatWidget from '@site/src/components/ChatWidget';
 
 export default function Root({ children }: { children: React.ReactNode }): React.ReactElement {
   // Set backend URL for production (GitHub Pages)
@@ -19,7 +22,9 @@ export default function Root({ children }: { children: React.ReactNode }): React
   return (
     <>
       {children}
-      <ChatWidget />
+      <ChatKitWidget />
+      {/* Old ChatWidget kept for safety - uncomment to rollback */}
+      {/* <ChatWidget /> */}
     </>
   );
 }

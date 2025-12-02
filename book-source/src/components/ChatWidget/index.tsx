@@ -1,10 +1,9 @@
 /**
- * ChatWidget - Custom chat widget for Docusaurus site
- * Integrates with RAG agent backend and supports text selection
+ * ChatWidget - Chatkit-integrated chat widget for Docusaurus site
+ * Uses OpenAI Chatkit with custom server endpoint
  */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './styles.module.css';
-import { sendMessageStream } from './utils/api';
 import { createTextSelectionHandler, getCurrentSelection } from './utils/textSelection';
 import type { Message, TextSelection } from './types';
 import { 
@@ -18,6 +17,14 @@ import {
   FiCheck
 } from 'react-icons/fi';
 
+// Declare ChatKit global type
+declare global {
+  interface Window {
+    ChatKit?: any;
+    __BACKEND_URL__?: string;
+  }
+}
+
 interface ChatWidgetProps {
   className?: string;
 }
@@ -28,8 +35,7 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const [sessionId, setSessionId] = useState<string>('');
+  const [threadId, setThreadId] = useState<string | null>(null);
   const [selectedText, setSelectedText] = useState<string | null>(null);
   const [textSelection, setTextSelection] = useState<TextSelection | null>(null);
   const [showAskButton, setShowAskButton] = useState(false);
@@ -38,67 +44,159 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
   const [toastMessage, setToastMessage] = useState('');
   const [copiedMessageId, setCopiedMessageId] = useState<number | null>(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [chatkitInstance, setChatkitInstance] = useState<any>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const askButtonRef = useRef<HTMLDivElement>(null);
+  const chatkitContainerRef = useRef<HTMLDivElement>(null);
   const pendingSelectedTextRef = useRef<string | null>(null);
-  const hasPastedTextRef = useRef<boolean>(false);
 
-  // Initialize session ID from localStorage
+  // Get backend URL
+  const getBackendUrl = () => {
+    if (typeof window !== 'undefined') {
+      return (window as any).__BACKEND_URL__ || 'http://localhost:8000';
+    }
+    return 'http://localhost:8000';
+  };
+
+  // Initialize Chatkit
   useEffect(() => {
-    try {
-      let storedSessionId = localStorage.getItem('chat_session_id');
-      if (!storedSessionId) {
-        storedSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        localStorage.setItem('chat_session_id', storedSessionId);
-      }
-      setSessionId(storedSessionId);
-    } catch (e) {
-      console.warn('Failed to access localStorage:', e);
-      setSessionId(`session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
+    if (typeof window === 'undefined' || !window.ChatKit) {
+      // Wait for Chatkit script to load
+      const checkChatkit = setInterval(() => {
+        if (window.ChatKit) {
+          clearInterval(checkChatkit);
+          initializeChatkit();
+        }
+      }, 100);
+
+      // Timeout after 10 seconds
+      setTimeout(() => {
+        clearInterval(checkChatkit);
+        if (!window.ChatKit) {
+          console.error('ChatKit script failed to load');
+          setError('Failed to load chat interface. Please refresh the page.');
+        }
+      }, 10000);
+
+      return () => clearInterval(checkChatkit);
+    } else {
+      initializeChatkit();
+      return undefined; // Explicit return for TypeScript
     }
   }, []);
 
-  // Load conversation history from localStorage
-  useEffect(() => {
-    if (sessionId) {
-      try {
-        const stored = localStorage.getItem(`chat_messages_${sessionId}`);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          setMessages(parsed.messages || []);
-          setConversationId(parsed.conversationId || null);
-        }
-      } catch (e) {
-        console.warn('Failed to load conversation history:', e);
-      }
-    }
-  }, [sessionId]);
+  const initializeChatkit = () => {
+    try {
+      const backendUrl = getBackendUrl();
+      const chatkitEndpoint = `${backendUrl}/api/chatkit`;
 
-  // Save conversation history to localStorage
-  useEffect(() => {
-    if (sessionId && messages.length > 0) {
-      try {
-        localStorage.setItem(
-          `chat_messages_${sessionId}`,
-          JSON.stringify({
-            messages,
-            conversationId,
-          })
-        );
-      } catch (e) {
-        console.warn('Failed to save conversation history:', e);
+      // Initialize Chatkit with custom server
+      const chatkit = new window.ChatKit({
+        api: {
+          endpoint: chatkitEndpoint
+        },
+        // Use headless mode - we'll handle UI ourselves
+        container: chatkitContainerRef.current || undefined,
+        // Disable default UI
+        ui: false,
+      });
+
+      setChatkitInstance(chatkit);
+
+      // Listen for thread updates
+      if (chatkit.onThreadUpdate) {
+        chatkit.onThreadUpdate((thread: any) => {
+          if (thread?.id) {
+            setThreadId(thread.id);
+          }
+        });
+      }
+
+      // Listen for message updates
+      if (chatkit.onMessageUpdate) {
+        chatkit.onMessageUpdate((message: any) => {
+          // Handle incoming messages
+          handleChatkitMessage(message);
+        });
+      }
+
+      // Load existing thread or create new one
+      loadOrCreateThread(chatkit);
+    } catch (err) {
+      console.error('Failed to initialize Chatkit:', err);
+      setError('Failed to initialize chat. Please refresh the page.');
+    }
+  };
+
+  const loadOrCreateThread = async (chatkit: any) => {
+    try {
+      // Try to load existing thread from localStorage
+      const storedThreadId = localStorage.getItem('chatkit_thread_id');
+      if (storedThreadId && chatkit.loadThread) {
+        await chatkit.loadThread(storedThreadId);
+        setThreadId(storedThreadId);
+      } else if (chatkit.createThread) {
+        // Create new thread
+        const thread = await chatkit.createThread();
+        if (thread?.id) {
+          setThreadId(thread.id);
+          localStorage.setItem('chatkit_thread_id', thread.id);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load/create thread:', err);
+    }
+  };
+
+  const handleChatkitMessage = (message: any) => {
+    // Convert Chatkit message to our Message format
+    const role = message.role || 'assistant';
+    let content = '';
+    
+    // Extract content from Chatkit message format
+    if (message.content) {
+      if (Array.isArray(message.content)) {
+        content = message.content
+          .filter((part: any) => part.type === 'text')
+          .map((part: any) => part.text)
+          .join('\n');
+      } else if (typeof message.content === 'string') {
+        content = message.content;
       }
     }
-  }, [messages, conversationId, sessionId]);
+
+    // Extract sources from metadata if available
+    const sources = message.metadata?.sources || message.sources || [];
+
+    if (content) {
+      setMessages((prev) => {
+        // Check if message already exists
+        const exists = prev.some((m, idx) => 
+          idx === prev.length - 1 && m.role === role && m.content === content
+        );
+        if (exists) {
+          // Update existing message
+          return prev.map((m, idx) => 
+            idx === prev.length - 1 && m.role === role
+              ? { ...m, content, sources }
+              : m
+          );
+        } else {
+          // Add new message
+          return [...prev, { role, content, sources, timestamp: new Date() }];
+        }
+      });
+    }
+  };
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
-  // Focus input when chat opens (but not if we're setting text from selection)
+  // Focus input when chat opens
   useEffect(() => {
     if (isOpen && inputRef.current && !selectedText) {
       setTimeout(() => {
@@ -106,66 +204,33 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
       }, 100);
     }
   }, [isOpen, selectedText]);
-  
+
   // Auto-paste selected text into input when chat opens
   useEffect(() => {
-    console.log('[Auto-Paste Effect] Running...', {
-      isOpen,
-      selectedText,
-      pendingText: pendingSelectedTextRef.current,
-      hasInputRef: !!inputRef.current,
-      currentInputValue: inputValue,
-      hasPasted: hasPastedTextRef.current
-    });
-    
-    // Check both ref and state to ensure we have the text
     const textToPaste = pendingSelectedTextRef.current || selectedText;
     
-    // Only paste if chat is open, we have text to paste, input is empty, and we haven't already pasted
-    if (isOpen && textToPaste && !inputValue.trim() && !hasPastedTextRef.current) {
-      // Wait for input to be mounted
+    if (isOpen && textToPaste && !inputValue.trim() && pendingSelectedTextRef.current) {
       const checkAndPaste = () => {
         if (inputRef.current) {
-          console.log('[Auto-Paste Effect] Pasting text:', textToPaste);
-          
-          // Format the selected text with quotes
           const formattedText = `"${textToPaste}"\n\n`;
           setInputValue(formattedText);
-          console.log('[Auto-Paste Effect] Input value set to:', formattedText);
+          pendingSelectedTextRef.current = null;
           
-          // Mark as pasted
-          hasPastedTextRef.current = true;
-          
-          // Clear ref after using (but keep selectedText state for context)
-          if (pendingSelectedTextRef.current) {
-            pendingSelectedTextRef.current = null;
-          }
-          
-          // Focus and set cursor position after the text
           setTimeout(() => {
             if (inputRef.current) {
               inputRef.current.focus();
               const length = inputRef.current.value.length;
               inputRef.current.setSelectionRange(length, length);
-              console.log('[Auto-Paste Effect] Focused input, cursor at position:', length);
             }
           }, 100);
         } else {
-          // Input not ready yet, try again
-          console.log('[Auto-Paste Effect] Input not ready, retrying in 50ms...');
           setTimeout(checkAndPaste, 50);
         }
       };
       
-      // Start checking after a small delay to let React render
       setTimeout(checkAndPaste, 100);
     }
-    
-    // Reset paste flag when chat closes or selected text changes
-    if (!isOpen || !selectedText) {
-      hasPastedTextRef.current = false;
-    }
-  }, [isOpen, selectedText]);
+  }, [isOpen, selectedText, inputValue]);
 
   // Text selection handler
   useEffect(() => {
@@ -182,7 +247,6 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
       }
     });
 
-    // Handle clicks outside to hide button
     const handleClick = (e: MouseEvent) => {
       if (
         askButtonRef.current &&
@@ -201,44 +265,36 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
     };
   }, []);
 
-  // Update button position on scroll/resize when text is selected
+  // Update button position on scroll/resize
   useEffect(() => {
     if (!showAskButton) {
       return;
     }
 
-    // Function to recalculate and update button position from current selection
     const updateButtonPosition = () => {
       const currentSelection = getCurrentSelection();
       if (currentSelection) {
-        // Only update if the selection text matches (to avoid updating on unrelated selections)
         if (textSelection && currentSelection.text === textSelection.text) {
           setAskButtonPosition(currentSelection.position);
         } else if (!textSelection) {
-          // If we have a selection but no stored textSelection, update anyway
           setAskButtonPosition(currentSelection.position);
         }
       } else {
-        // Selection was cleared, hide button
         setShowAskButton(false);
         setTextSelection(null);
       }
     };
 
-    // Throttle scroll/resize events for performance
     let timeoutId: NodeJS.Timeout | null = null;
     const throttledUpdate = () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
-      timeoutId = setTimeout(updateButtonPosition, 16); // ~60fps
+      timeoutId = setTimeout(updateButtonPosition, 16);
     };
 
-    // Add event listeners
-    window.addEventListener('scroll', throttledUpdate, true); // Use capture phase to catch all scroll events
+    window.addEventListener('scroll', throttledUpdate, true);
     window.addEventListener('resize', throttledUpdate);
-    
-    // Also listen to scroll on document and body for better coverage
     document.addEventListener('scroll', throttledUpdate, true);
     if (document.body) {
       document.body.addEventListener('scroll', throttledUpdate, true);
@@ -259,54 +315,42 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
 
   // Handle "Ask with AI" button click
   const handleAskWithAI = useCallback((e: React.MouseEvent) => {
-    console.log('🎯 ========================================');
-    console.log('🎯 [Ask with AI] Button clicked!');
-    console.log('🎯 ========================================');
-    
-    // Prevent the click from bubbling up to document click handler
     e.stopPropagation();
     e.preventDefault();
     
     if (textSelection) {
       const selectedTextContent = textSelection.text.trim();
-      console.log('[Ask with AI] Selected text:', selectedTextContent);
       
       if (!selectedTextContent) {
-        console.log('[Ask with AI] No text selected, aborting');
         return;
       }
       
-      // Store in ref so useEffect can access it when chat opens
       pendingSelectedTextRef.current = selectedTextContent;
-      console.log('[Ask with AI] Stored in ref:', pendingSelectedTextRef.current);
-      
-      // Set as context for the agent (will be sent with the message)
       setSelectedText(selectedTextContent);
       setShowAskButton(false);
       setIsOpen(true);
-      console.log('[Ask with AI] Opening chat...');
       
-      // Clear selection
       window.getSelection()?.removeAllRanges();
-      
-      // Reset paste flag so text can be pasted when chat opens
-      hasPastedTextRef.current = false;
-    } else {
-      console.log('[Ask with AI] No textSelection available');
     }
   }, [textSelection]);
 
-  // Send message with streaming
+  // Send message with Chatkit
   const handleSendMessage = async () => {
     const query = inputValue.trim();
-    if (!query || isLoading || !sessionId) {
+    if (!query || isLoading || !chatkitInstance) {
       return;
+    }
+
+    // Format message with selected text if available
+    let messageContent = query;
+    if (selectedText) {
+      messageContent = `"${selectedText}"\n\n${query}`;
     }
 
     // Add user message to UI immediately
     const userMessage: Message = {
       role: 'user',
-      content: query,
+      content: query, // Show original query, not the formatted one
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMessage]);
@@ -314,77 +358,122 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
     setError(null);
     setIsLoading(true);
 
-    // Clear selected text after sending (it's now in the message)
+    // Clear selected text after sending
     const textToSend = selectedText;
     if (selectedText) {
       setSelectedText(null);
     }
 
-    // Create a placeholder assistant message that we'll update as we stream
-    let accumulatedText = '';
+    // Create placeholder assistant message
+    const placeholderMessage: Message = {
+      role: 'assistant',
+      content: '',
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, placeholderMessage]);
 
     try {
-      // Add placeholder assistant message
-      const placeholderMessage: Message = {
-        role: 'assistant',
-        content: '',
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, placeholderMessage]);
-
-      // Stream responses
-      for await (const event of sendMessageStream(
-        query,
-        sessionId,
-        conversationId,
-        textToSend
-      )) {
-        if (event.type === 'text') {
-          // Accumulate text deltas
-          accumulatedText += event.data.delta;
-          
-          // Update the last message (which should be the assistant message) in real-time
-          setMessages((prev) => {
-            const updated = [...prev];
-            const lastIndex = updated.length - 1;
-            if (lastIndex >= 0 && updated[lastIndex].role === 'assistant') {
-              updated[lastIndex] = {
-                ...updated[lastIndex],
-                content: accumulatedText,
-              };
-            }
-            return updated;
-          });
-        } else if (event.type === 'done') {
-          // Finalize the message with sources and conversation ID
-          setMessages((prev) => {
-            const updated = [...prev];
-            const lastIndex = updated.length - 1;
-            if (lastIndex >= 0 && updated[lastIndex].role === 'assistant') {
-              updated[lastIndex] = {
-                ...updated[lastIndex],
-                content: event.data.message,
-                sources: event.data.sources,
-              };
-            }
-            return updated;
-          });
-          setConversationId(event.data.conversation_id);
-        } else if (event.type === 'error') {
-          throw new Error(event.data.error);
-        }
+      // Send message through Chatkit
+      if (chatkitInstance.sendMessage) {
+        await chatkitInstance.sendMessage({
+          content: messageContent,
+          threadId: threadId || undefined,
+        });
+      } else {
+        // Fallback: use fetch API directly
+        await sendMessageViaAPI(messageContent);
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to send message';
       setError(errorMessage);
-      // Remove both user and placeholder assistant messages on error
-      setMessages((prev) => prev.slice(0, -2));
+      setMessages((prev) => prev.slice(0, -2)); // Remove user and placeholder messages
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle Enter key (with Shift for new line)
+  // Fallback: Send message via API if Chatkit methods not available
+  const sendMessageViaAPI = async (content: string) => {
+    const backendUrl = getBackendUrl();
+    const response = await fetch(`${backendUrl}/api/chatkit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        type: 'thread.message.create',
+        thread_id: threadId,
+        content: [{ type: 'text', text: content }],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to send message');
+    }
+
+    // Handle streaming response
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error('No response body');
+    }
+
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let accumulatedText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            const data = JSON.parse(line.substring(6));
+            if (data.type === 'thread.message.delta' && data.delta?.content) {
+              const textDelta = data.delta.content.find((c: any) => c.type === 'text');
+              if (textDelta?.text) {
+                accumulatedText += textDelta.text;
+                setMessages((prev) => {
+                  const updated = [...prev];
+                  const lastIndex = updated.length - 1;
+                  if (lastIndex >= 0 && updated[lastIndex].role === 'assistant') {
+                    updated[lastIndex] = {
+                      ...updated[lastIndex],
+                      content: accumulatedText,
+                    };
+                  }
+                  return updated;
+                });
+              }
+            } else if (data.type === 'thread.message.complete') {
+              // Message complete, extract sources if available
+              const sources = data.message?.metadata?.sources || [];
+              setMessages((prev) => {
+                const updated = [...prev];
+                const lastIndex = updated.length - 1;
+                if (lastIndex >= 0 && updated[lastIndex].role === 'assistant') {
+                  updated[lastIndex] = {
+                    ...updated[lastIndex],
+                    content: data.message?.content?.[0]?.text || accumulatedText,
+                    sources,
+                  };
+                }
+                return updated;
+              });
+            }
+          } catch (e) {
+            console.error('Failed to parse SSE data:', e);
+          }
+        }
+      }
+    }
+  };
+
+  // Handle Enter key
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -397,16 +486,25 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
     setShowClearConfirm(true);
   };
 
-  const confirmClearConversation = () => {
+  const confirmClearConversation = async () => {
     setMessages([]);
-    setConversationId(null);
+    setThreadId(null);
     setSelectedText(null);
     setShowClearConfirm(false);
-    if (sessionId) {
+    
+    // Clear from localStorage
+    localStorage.removeItem('chatkit_thread_id');
+    
+    // Create new thread
+    if (chatkitInstance && chatkitInstance.createThread) {
       try {
-        localStorage.removeItem(`chat_messages_${sessionId}`);
-      } catch (e) {
-        console.warn('Failed to clear conversation history:', e);
+        const thread = await chatkitInstance.createThread();
+        if (thread?.id) {
+          setThreadId(thread.id);
+          localStorage.setItem('chatkit_thread_id', thread.id);
+        }
+      } catch (err) {
+        console.error('Failed to create new thread:', err);
       }
     }
   };
@@ -415,7 +513,7 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
     setShowClearConfirm(false);
   };
 
-  // Copy message to clipboard with toast feedback
+  // Copy message to clipboard
   const handleCopyMessage = (content: string, messageIndex: number) => {
     navigator.clipboard.writeText(content).then(() => {
       setCopiedMessageId(messageIndex);
@@ -434,6 +532,9 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
 
   return (
     <>
+      {/* Hidden Chatkit container */}
+      <div ref={chatkitContainerRef} style={{ display: 'none' }} />
+
       {/* Toast notification */}
       {showToast && (
         <div className={styles.toast}>
@@ -683,7 +784,6 @@ export default function ChatWidget({ className }: ChatWidgetProps): React.JSX.El
           <button
             className={styles.chatButton}
             onClick={() => {
-              console.log('💬 Regular chat button clicked (no selected text)');
               setIsOpen(true);
             }}
             aria-label="Open chat"

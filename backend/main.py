@@ -50,12 +50,15 @@ app = FastAPI(
 )
 
 # CORS middleware
+# Matches working reference: https://github.com/ahmad2b/learn-openai-chatkit-self-hosted
+# ChatKit doesn't require credentials, so we can use wildcards for simplicity
+# Ref: https://fastapi.tiangolo.com/tutorial/cors/
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization", "X-Session-ID"],
+    allow_origins=settings.cors_origins_list,  # ["http://localhost:3000", "https://devhammad0.github.io"]
+    allow_credentials=False,  # ChatKit doesn't need cookies/sessions
+    allow_methods=["*"],      # Allow all methods
+    allow_headers=["*"],      # Allow all headers (wildcard works with credentials=False)
 )
 
 # Include routers

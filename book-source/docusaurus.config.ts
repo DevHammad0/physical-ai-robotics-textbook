@@ -124,6 +124,13 @@ const config: Config = {
       },
     ],
   ],
+
+  scripts: [
+    {
+      src: 'https://cdn.platform.openai.com/deployments/chatkit/chatkit.js',
+      async: true,
+    },
+  ],
 };
 
 export default config;
