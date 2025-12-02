@@ -56,7 +56,7 @@ export default function ChatKitWidget({
   const { control } = useChatKit({
     api: {
       url: chatkitEndpoint,
-      domainKey: 'domain_pk_local_dev',
+      domainKey: process.env.CHATKIT_DOMAIN_KEY ?? 'domain_pk_local_dev',
     },
     theme: {
       colorScheme: 'light' as const,

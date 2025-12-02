@@ -20,6 +20,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      CHATKIT_DOMAIN_KEY: ${{ secrets.CHATKIT_DOMAIN_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
