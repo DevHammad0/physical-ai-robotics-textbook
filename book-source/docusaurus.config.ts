@@ -139,6 +139,23 @@ const config: Config = {
         ignoreFiles: /i18n\/ur/,
       },
     ],
+    // Custom plugin to inject environment variables into the browser bundle
+    function injectEnvVarsPlugin() {
+      return {
+        name: 'inject-env-vars',
+        configureWebpack() {
+          return {
+            plugins: [
+              new (require('webpack')).DefinePlugin({
+                'process.env.CHATKIT_DOMAIN_KEY': JSON.stringify(
+                  process.env.CHATKIT_DOMAIN_KEY || 'domain_pk_local_dev'
+                ),
+              }),
+            ],
+          };
+        },
+      };
+    },
   ],
 
   scripts: [
