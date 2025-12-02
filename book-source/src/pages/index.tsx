@@ -16,25 +16,25 @@ const chapters = [
   {
     title: 'Chapter 1: ROS 2 Fundamentals',
     description: 'Robot Operating System 2 core concepts, publisher-subscriber messaging, services and actions, ROS tools and debugging',
-    link: '/docs/01-chapter-1-ros2-fundamentals/00-intro',
+    link: '/docs/chapter-1-ros2-fundamentals/intro',
     icon: <FiCode />,
   },
   {
     title: 'Chapter 2: Gazebo & Digital Twins',
     description: 'Gazebo simulation environment, physics simulation and dynamics, creating digital twins, sensor simulation',
-    link: '/docs/02-chapter-2-gazebo-modeling/00-intro',
+    link: '/docs/chapter-2-gazebo-modeling/intro',
     icon: <FiZap />,
   },
   {
     title: 'Chapter 3: Autonomous Navigation & SLAM',
     description: 'Simultaneous Localization and Mapping (SLAM), path planning, Nav2 stack, multi-sensor fusion',
-    link: '/docs/03-chapter-3-autonomous-navigation/00-intro',
+    link: '/docs/chapter-3-autonomous-navigation/intro',
     icon: <FiTarget />,
   },
   {
     title: 'Chapter 4: Vision-Language-Action Models',
     description: 'Voice input with Whisper, vision systems (YOLO-v8), LLM-driven planning, manipulation and grasping',
-    link: '/docs/03-chapter-4-ai-integration/00-intro',
+    link: '/docs/chapter-4-ai-integration/intro',
     icon: <FiMessageCircle />,
   },
 ];
