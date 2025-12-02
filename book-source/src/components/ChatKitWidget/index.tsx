@@ -62,11 +62,17 @@ export default function ChatKitWidget({
       domainKey: CHATKIT_DOMAIN_KEY,
     },
     theme: {
-      colorScheme: 'light' as const,
+      colorScheme: 'dark' as const,
+      color: {
+        accent: {
+          primary: '#1677ff', // Match hero section primary blue
+          level: 2,
+        },
+      },
     },
     header: {
       title: {
-        text: 'Teaching Assistant',
+        text: 'Textbook Companion',
       },
       rightAction: {
         icon: 'close',
@@ -163,8 +169,8 @@ export default function ChatKitWidget({
       <button
         className={styles.chatBubble}
         onClick={() => setIsOpen(true)}
-        aria-label="Open chat"
-        title="Open Teaching Assistant"
+        aria-label="Open Textbook Companion"
+        title="Open Textbook Companion"
         data-testid="chatkit-bubble"
       >
         <FiMessageCircle className={styles.bubbleIcon} />

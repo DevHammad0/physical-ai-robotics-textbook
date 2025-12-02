@@ -2,7 +2,7 @@
 .askButton {
   position: fixed;
   z-index: 9999;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1677ff 0%, #0066ff 50%, #0041ff 100%);
   color: white;
   border: none;
   border-radius: 20px;
@@ -13,7 +13,7 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2);
   transform: translate(-50%, -100%) translateY(-10px);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
@@ -22,7 +22,8 @@
 
 .askButton:hover {
   transform: translate(-50%, -100%) translateY(-10px) scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 50%, #0033cc 100%);
+  box-shadow: 0 6px 20px rgba(22, 119, 255, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .askButton:active {
@@ -53,7 +54,11 @@
   }
 }
 
-/* Dark mode support */
+/* Dark mode support - keep blue gradient */
 html[data-theme='dark'] .askButton {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  background: linear-gradient(135deg, #1677ff 0%, #0066ff 50%, #0041ff 100%);
+}
+
+html[data-theme='dark'] .askButton:hover {
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 50%, #0033cc 100%);
 }

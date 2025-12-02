@@ -11,6 +11,8 @@ import {
   FiArrowRight,
 } from 'react-icons/fi';
 import styles from './index.module.css';
+import SplineScene from '@site/src/components/SplineScene';
+import { AceternitySpotlight } from '@site/src/components/Spotlight';
 
 const chapters = [
   {
@@ -79,31 +81,61 @@ export default function Home(): React.JSX.Element {
       description={siteConfig.tagline}
     >
       <main className={styles.homePage}>
-        {/* Hero Section */}
-        <section className={styles.hero}>
-          <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>
-              Physical AI & Humanoid Robotics Textbook
-            </h1>
-            <p className={styles.heroTagline}>
-              {siteConfig.tagline}
-            </p>
-            <div className={styles.heroButtons}>
-              <Link
-                className={styles.buttonPrimary}
-                to="/docs/chapter-1-ros2-fundamentals/intro"
-              >
-                Start Reading
-                <FiArrowRight className={styles.buttonIcon} />
-              </Link>
-              <Link
-                className={styles.buttonSecondary}
-                to="/docs/intro"
-              >
-                Explore Chapters
-                <FiBook className={styles.buttonIcon} />
-              </Link>
+        {/* Hero Section with Spline 3D Scene */}
+        <section className={styles.heroSpline}>
+          {/* 3D Robot Scene */}
+          <SplineScene
+            splineUrl="https://my.spline.design/nexbotrobotcharacterconcept-bnOE8NOThydBXxNaWmPvUDqY/"
+            height="100vh"
+            className={styles.splineSceneWrapper}
+            showOverlay={true}
+            useIframe={true}
+          />
+
+          {/* Split-screen overlay content */}
+          <div className={styles.heroOverlay}>
+            <div className={styles.heroLayout}>
+              {/* Content side (text ~60%) */}
+              <div className={styles.heroContent}>
+                <h1 className={styles.heroTitle}>
+                  Build the Next Generation of Humanoid Robots
+                </h1>
+                <p className={styles.heroTagline}>
+                  A hands-on guide to mastering Embodied Intelligence, ROS 2, Sim-to-Real transfer, and Vision-Language Models.
+                </p>
+                <div className={styles.heroButtons}>
+                  <Link
+                    className={styles.buttonPrimary}
+                    to="/docs/chapter-1-ros2-fundamentals/intro"
+                  >
+                    Start Reading
+                    <FiArrowRight className={styles.buttonIcon} />
+                  </Link>
+                  <Link
+                    className={styles.buttonSecondary}
+                    to="/docs/intro"
+                  >
+                    Explore Chapters
+                    <FiBook className={styles.buttonIcon} />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Visual balancing column (~40%) to align with robot */}
+              <div className={styles.heroVisualColumn} aria-hidden="true" />
             </div>
+          </div>
+
+          <AceternitySpotlight
+            className={styles.spotlightAccent}
+            fill="white"
+            opacity={0.3}
+          />
+
+          {/* Scroll Indicator */}
+          <div className={styles.scrollIndicator}>
+            <span>Scroll to explore</span>
+            <FiArrowRight className={styles.scrollArrow} style={{ transform: 'rotate(90deg)' }} />
           </div>
         </section>
 

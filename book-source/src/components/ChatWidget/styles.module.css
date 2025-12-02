@@ -545,14 +545,14 @@
   z-index: 1001;
   transform: translate(-50%, -100%);
   padding: 8px 16px;
-  background: var(--ifm-color-primary);
+  background: linear-gradient(135deg, #1677ff 0%, #0066ff 50%, #0041ff 100%);
   color: white;
   border: none;
   border-radius: 20px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
   animation: askButtonSlideIn 0.2s ease;
   white-space: nowrap;
@@ -577,9 +577,9 @@
 }
 
 .askButton:hover {
-  background: var(--ifm-color-primary-dark);
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 50%, #0033cc 100%);
   transform: translate(-50%, -100%) scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 6px 20px rgba(22, 119, 255, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .askButton:active {

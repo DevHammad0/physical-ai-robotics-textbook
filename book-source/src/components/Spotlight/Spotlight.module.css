@@ -1,0 +1,23 @@
+.aceternitySpotlight {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  height: 150%;
+  width: 120%;
+  animation: spotlight 10s ease-in-out infinite;
+}
+
+@keyframes spotlight {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 768px) {
+  .aceternitySpotlight {
+    display: none;
+  }
+}

@@ -12,9 +12,9 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1677ff 0%, #0066ff 50%, #0041ff 100%);
   border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -27,7 +27,8 @@
 
 .chatBubble:hover {
   transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 50%, #0033cc 100%);
+  box-shadow: 0 6px 20px rgba(22, 119, 255, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .chatBubble:active {
@@ -116,8 +117,8 @@
 
 /* Context banner for selected text */
 .contextBanner {
-  background: linear-gradient(135deg, #f8f9ff 0%, #f3f4ff 100%);
-  border-bottom: 2px solid #e0e7ff;
+  background: rgba(18, 18, 18, 0.95);
+  border-bottom: 2px solid rgba(22, 119, 255, 0.3);
   padding: 12px 16px;
   margin: 0;
   animation: slideDown 0.3s ease-out;
@@ -134,7 +135,7 @@
 .contextLabel {
   font-size: 12px;
   font-weight: 600;
-  color: #6366f1;
+  color: #1677ff;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -143,7 +144,7 @@
   background: none;
   border: none;
   font-size: 24px;
-  color: #9ca3af;
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   padding: 0;
   width: 24px;
@@ -156,13 +157,13 @@
 }
 
 .contextClose:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #4b5563;
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 1);
 }
 
 .contextText {
   font-size: 14px;
-  color: #1f2937;
+  color: rgba(255, 255, 255, 0.9);
   line-height: 1.5;
   font-style: italic;
   margin-bottom: 6px;
@@ -179,7 +180,7 @@
 }
 
 .copyButton {
-  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  background: linear-gradient(135deg, #1677ff 0%, #0041ff 100%);
   color: white;
   border: none;
   padding: 6px 12px;
@@ -188,12 +189,13 @@
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 2px 4px rgba(22, 119, 255, 0.3);
 }
 
 .copyButton:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(99, 102, 241, 0.3);
+  background: linear-gradient(135deg, #0066ff 0%, #0033cc 100%);
+  box-shadow: 0 4px 8px rgba(22, 119, 255, 0.4);
 }
 
 .copyButton:active {
@@ -202,7 +204,7 @@
 
 .contextHint {
   font-size: 11px;
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 @keyframes slideDown {

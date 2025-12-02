@@ -105,22 +105,41 @@ async def get_user_experience_level(
 def read_lesson_content(lesson_path: str) -> Optional[str]:
     """
     Read lesson markdown content from file system.
-    
+    Strips YAML frontmatter to return only the content.
+
     Args:
         lesson_path: Path to lesson file (e.g., "01-chapter-1-ros2-fundamentals/00-intro.md")
-    
+
     Returns:
-        Markdown content or None if file not found
+        Markdown content without frontmatter or None if file not found
     """
     try:
         # Construct path relative to backend/book-source/docs
         # lesson_path might be like "01-chapter-1-ros2-fundamentals/00-intro.md"
         lesson_file = LESSON_BASE_DIR / lesson_path
         resolved_path = lesson_file.resolve()
-        
+
         if lesson_file.exists() and lesson_file.is_file():
             logger.debug(f"Reading lesson file: {resolved_path}")
-            return lesson_file.read_text(encoding='utf-8')
+            content = lesson_file.read_text(encoding='utf-8')
+
+            # Strip YAML frontmatter if present
+            # YAML frontmatter starts with --- and ends with ---
+            if content.startswith('---'):
+                # Find the end of frontmatter
+                lines = content.split('\n')
+                end_idx = None
+                for i, line in enumerate(lines[1:], 1):
+                    if line.strip() == '---':
+                        end_idx = i
+                        break
+
+                if end_idx is not None:
+                    # Return content after the closing ---
+                    content = '\n'.join(lines[end_idx + 1:])
+                    logger.debug(f"Stripped frontmatter from {lesson_path}")
+
+            return content.strip()
         else:
             logger.warning(
                 f"Lesson file not found. "
