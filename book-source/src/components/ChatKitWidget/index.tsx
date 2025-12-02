@@ -7,6 +7,12 @@ import { useChatKit, ChatKit } from '@openai/chatkit-react';
 import { FiMessageCircle } from 'react-icons/fi';
 import styles from './styles.module.css';
 
+// Safely read env vars without assuming `process` exists in the browser
+const CHATKIT_DOMAIN_KEY: string =
+  typeof process !== 'undefined' && process.env && process.env.CHATKIT_DOMAIN_KEY
+    ? process.env.CHATKIT_DOMAIN_KEY
+    : 'domain_pk_local_dev';
+
 // Get backend URL helper
 const getBackendUrl = (): string => {
   if (typeof window !== 'undefined') {
@@ -56,7 +62,7 @@ export default function ChatKitWidget({
   const { control } = useChatKit({
     api: {
       url: chatkitEndpoint,
-      domainKey: process.env.CHATKIT_DOMAIN_KEY ?? 'domain_pk_local_dev',
+      domainKey: CHATKIT_DOMAIN_KEY,
     },
     theme: {
       colorScheme: 'light' as const,
@@ -84,9 +90,14 @@ export default function ChatKitWidget({
     return () => clearTimeout(timer);
   }, []);
 
-  // Log only errors in production
+  // Log only errors in development (guard against missing `process` in browser)
   useEffect(() => {
-    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+    const isDev =
+      typeof process !== 'undefined' &&
+      process.env &&
+      process.env.NODE_ENV === 'development';
+
+    if (typeof window !== 'undefined' && isDev) {
       console.log('[ChatKitWidget] Initializing...', {
         endpoint: chatkitEndpoint,
         backendUrl,
