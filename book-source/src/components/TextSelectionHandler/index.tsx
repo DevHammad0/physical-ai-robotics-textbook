@@ -98,6 +98,9 @@ export default function TextSelectionHandler(): React.JSX.Element | null {
       document.addEventListener('click', handleClickOutside);
       return () => document.removeEventListener('click', handleClickOutside);
     }
+
+    // Explicitly return to satisfy type checking on all code paths
+    return;
   }, [showButton]);
 
   // ESC to dismiss
@@ -114,6 +117,9 @@ export default function TextSelectionHandler(): React.JSX.Element | null {
       document.addEventListener('keydown', handleEscKey);
       return () => document.removeEventListener('keydown', handleEscKey);
     }
+
+    // Explicitly return to satisfy type checking on all code paths
+    return;
   }, [showButton]);
 
   if (!showButton || !textSelection) return null;

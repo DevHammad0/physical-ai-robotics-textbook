@@ -36,9 +36,9 @@ export default function ChatKitWidget({
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const selectedTextRef = useRef<string | null>(null);
 
-  // Store selected text in ref
+  // Store selected text in ref (ensure undefined becomes null)
   useEffect(() => {
-    selectedTextRef.current = prefillText;
+    selectedTextRef.current = prefillText ?? null;
   }, [prefillText]);
 
   // Controlled/uncontrolled pattern for isOpen state
