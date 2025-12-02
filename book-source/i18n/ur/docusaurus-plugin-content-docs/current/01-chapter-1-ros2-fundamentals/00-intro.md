@@ -1,24 +1,20 @@
 ---
 title: "باب 1: ROS 2 کے بنیادی اصول اور کمیونیکیشن"
 chapter: 1
-
-# Chapter Metadata
 total_lessons: 7
 completed_lessons: 4
 target_hours: 5.5
 cefr_entry_level: "A2"
 cefr_exit_level: "B1"
 simulation_environment: "Turtlesim"
-
-# Learning Outcomes for Full Chapter
 chapter_objectives:
-  - "ROS 2 architecture کو سمجھنا (nodes, topics, messages)"
-  - "ROS 2 development environment سیٹ اپ کرنا"
-  - "Python میں publisher اور subscriber nodes بنانا"
-  - "Publish-subscribe communication patterns کو نافذ کرنا"
-  - "System inspection اور debugging کے لیے ROS 2 CLI tools کا استعمال کرنا"
-  - "Asynchronously پیغامات کو سنبھالنا اور data flows ڈیزائن کرنا"
-  - "Service-based synchronous communication کو سمجھنا"
+  - "ROS 2 architecture کو سمجھنا (nodes, topics, messages)"
+  - "ROS 2 development environment سیٹ اپ کرنا"
+  - "Python میں publisher اور subscriber nodes بنانا"
+  - "Publish-subscribe communication patterns کو نافذ کرنا"
+  - "System inspection اور debugging کے لیے ROS 2 CLI tools کا استعمال کرنا"
+  - "Asynchronously پیغامات کو سنبھالنا اور data flows ڈیزائن کرنا"
+  - "Service-based synchronous communication کو سمجھنا"
 ---
 
 <PersonalizedLesson lessonPath="01-chapter-1-ros2-fundamentals/00-intro.md">

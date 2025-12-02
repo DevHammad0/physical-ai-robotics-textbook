@@ -3,14 +3,10 @@ title: "Your First ROS 2 Publisher"
 chapter: 1
 lesson: 4
 duration_minutes: 60
-
-# Robotics-Specific Metadata
 simulation_required: ["turtlesim"]
 safety_level: "simulation_only"
 cefr_level: "B1"
 hardware_prerequisites: []
-
-# Learning Objectives (Measured, SMART)
 learning_objectives:
   - "Create a ROS 2 node class using rclpy.Node"
   - "Implement a publisher and publish messages to a topic"
@@ -19,7 +15,6 @@ learning_objectives:
   - "Debug publisher issues using ROS 2 CLI tools"
   - "Apply error handling and logging in ROS 2 nodes"
 
-# Pedagogical Layer
 primary_layer: "Layer 1 (Manual Foundation) + Layer 2 (AI Collaboration)"
 ---
 
