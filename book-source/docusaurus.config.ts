@@ -99,11 +99,6 @@ const config: Config = {
           label: 'GitHub',
           position: 'right',
         },
-        {
-          type: 'html',
-          position: 'right',
-          value: '<div id="auth-button-container"></div>',
-        },
       ],
     },
     footer: {

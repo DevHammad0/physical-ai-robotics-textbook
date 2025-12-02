@@ -239,7 +239,7 @@ html[data-theme='dark'] .authForm {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
   padding: 1rem;
 }
 
@@ -340,6 +340,70 @@ html[data-theme='dark'] .modal {
   position: relative;
 }
 
+/* User Avatar Button Styles */
+.userAvatarButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  border: none;
+  border-radius: 20px;
+  background: var(--ifm-color-emphasis-100);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  margin-left: 0.5rem;
+}
+
+.userAvatarButton:hover {
+  background: var(--ifm-color-emphasis-200);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.userAvatarButton:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+/* User Avatar Styles */
+.userAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  background: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.dropdownArrow {
+  transition: transform 0.2s ease-in-out;
+  color: var(--ifm-color-content-secondary);
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatarInitials {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ifm-color-white);
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-dark) 100%);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
 .userInfo {
   padding: 1.5rem;
   padding-top: 2.5rem; /* Extra top padding to account for close button */
@@ -381,5 +445,143 @@ html[data-theme='dark'] .userInfo {
 
 .signOutButton:hover {
   background-color: #c82333;
+}
+
+/* Profile Dropdown Styles */
+.profileDropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  width: 320px;
+  background: var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 9998;
+  overflow: hidden;
+}
+
+html[data-theme='light'] .profileDropdown {
+  background: #ffffff;
+}
+
+html[data-theme='dark'] .profileDropdown {
+  background: var(--ifm-background-color);
+}
+
+.dropdownBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9997;
+  background: transparent;
+}
+
+.profileHeader {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.profileAvatarLarge {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--ifm-color-emphasis-300);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-dark) 100%);
+}
+
+.profileHeaderInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.profileName {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profileEmail {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  color: var(--ifm-color-content-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.profileStats {
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.profileStat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ifm-color-content-secondary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.statValue {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--ifm-heading-color);
+}
+
+.profileActions {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.profileActionButton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--ifm-color-content);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-align: left;
+}
+
+.profileActionButton:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.profileActionButton svg {
+  flex-shrink: 0;
+  color: var(--ifm-color-content-secondary);
 }
 

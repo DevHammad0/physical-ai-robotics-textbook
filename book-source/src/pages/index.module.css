@@ -19,6 +19,8 @@
   width: 100%;
   height: 100vh;
   min-height: 700px;
+  margin-top: calc(-1 * var(--ifm-navbar-height));
+  padding-top: var(--ifm-navbar-height);
   overflow: hidden;
   display: flex;
   align-items: center;

@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import logging
 
-from routers import chat, health, chatkit, personalization, auth_proxy
+from routers import chat, health, chatkit, personalization, auth_proxy, profile
 from services.db_service import init_db_pool, close_db_pool
 from config import settings
 
@@ -63,7 +63,9 @@ app.add_middleware(
 )
 
 # Include routers
-# Auth proxy - must be included first to catch /api/auth/* before other routes
+# Profile router - must be included before auth_proxy to catch /api/auth/update-profile
+app.include_router(profile.router, prefix="/api", tags=["profile"])
+# Auth proxy - catches all other /api/auth/* routes and proxies to better-auth
 app.include_router(auth_proxy.router, prefix="/api", tags=["auth"])
 app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(chat.router, prefix="/api", tags=["chat"])
