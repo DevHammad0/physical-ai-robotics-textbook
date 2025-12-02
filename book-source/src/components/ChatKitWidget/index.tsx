@@ -187,7 +187,7 @@ export default function ChatKitWidget({
               <span className={styles.contextLabel}>Selected text:</span>
               <button
                 className={styles.contextClose}
-                onClick={(e) => {
+                onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation();
                   onPrefillComplete?.();
                 }}
@@ -200,7 +200,7 @@ export default function ChatKitWidget({
             <div className={styles.contextActions}>
               <button
                 className={styles.copyButton}
-                onClick={async (e) => {
+                onClick={async (e: React.MouseEvent<HTMLButtonElement>) => {
                   e.stopPropagation();
                   // Store button reference BEFORE async operation
                   const btn = e.currentTarget as HTMLButtonElement;
