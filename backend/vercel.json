@@ -5,8 +5,15 @@
       "src": "main.py",
       "use": "@vercel/python",
       "config": {
-        "includeFiles": ["book-source/**"],
-        "maxLambdaSize": "15mb"
+        "runtime": "python3.12",
+        "includeFiles": [
+          "book-source/**",
+          "routers/**",
+          "services/**",
+          "models/**",
+          "config.py"
+        ],
+        "maxLambdaSize": "50mb"
       }
     },
     {
