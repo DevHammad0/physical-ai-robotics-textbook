@@ -48,6 +48,19 @@ export default function AuthButton() {
     };
   }, [showDropdown]);
 
+  // Listen for custom event to open auth modal (from ChatKitWidget)
+  React.useEffect(() => {
+    const handleOpenAuthModal = () => {
+      setAuthMode("signin");
+      setShowModal(true);
+    };
+
+    window.addEventListener('open-auth-modal', handleOpenAuthModal);
+    return () => {
+      window.removeEventListener('open-auth-modal', handleOpenAuthModal);
+    };
+  }, []);
+
   if (isPending) {
     return (
       <button className={styles.authButton} disabled>

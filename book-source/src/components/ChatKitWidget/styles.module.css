@@ -235,3 +235,155 @@
   flex: 1;
 }
 
+/* Sign-in prompt styles - matches website theme */
+.signInPrompt {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #0b0b11;
+}
+
+.signInHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.signInHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.signInHeaderIcon {
+  color: #1677ff;
+}
+
+.signInHeaderTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: #f5f5f5;
+}
+
+.signInCloseButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 22px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  line-height: 1;
+}
+
+.signInCloseButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.signInContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.signInIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(22, 119, 255, 0.15) 0%, rgba(0, 65, 255, 0.1) 100%);
+  border: 2px solid rgba(22, 119, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #1677ff;
+}
+
+.signInTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #f5f5f5;
+  margin: 0 0 12px 0;
+}
+
+.signInDescription {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+  margin: 0 0 28px 0;
+  max-width: 280px;
+}
+
+.signInButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #1677ff 0%, #0041ff 100%);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.3);
+}
+
+.signInButton:hover {
+  background: linear-gradient(135deg, #0066ff 0%, #0033cc 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(22, 119, 255, 0.4);
+}
+
+.signInButton:active {
+  transform: translateY(0);
+}
+
+.signInFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.signInDisabledInput {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.3);
+  outline: none;
+  cursor: not-allowed;
+}
+
+.signInDisabledInput::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.signInDisabledSend {
+  background: rgba(22, 119, 255, 0.3);
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

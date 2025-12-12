@@ -4,7 +4,8 @@
  */
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { useChatKit, ChatKit } from '@openai/chatkit-react';
-import { FiMessageCircle } from 'react-icons/fi';
+import { FiMessageCircle, FiLock } from 'react-icons/fi';
+import { useSession } from '@site/src/lib/auth-client';
 import styles from './styles.module.css';
 
 // Read domain key from environment variable (injected by Webpack DefinePlugin)
@@ -36,8 +37,13 @@ export default function ChatKitWidget({
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const selectedTextRef = useRef<string | null>(null);
+
+  // Auth state
+  const { data: session, isPending: isAuthPending } = useSession();
+  const isAuthenticated = !!session?.user;
 
   // Store selected text in ref (ensure undefined becomes null)
   useEffect(() => {
@@ -65,9 +71,18 @@ export default function ChatKitWidget({
       colorScheme: 'dark' as const,
       color: {
         accent: {
-          primary: '#1677ff', // Match hero section primary blue
+          primary: '#1677ff', // Match website primary blue
           level: 2,
         },
+        surface: {
+          background: '#181818',
+          foreground: '#303030'
+        },
+      },
+      radius: 'pill',
+      density: 'normal',
+      typography: {
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       },
     },
     header: {
@@ -194,8 +209,8 @@ export default function ChatKitWidget({
         className={`${styles.chatkitContainer} ${className || ''} ${isOpen ? styles.open : ''} ${prefillText ? styles.hasContext : ''}`}
         data-testid="chatkit-widget"
       >
-        {/* Show selected text context if available */}
-        {prefillText && (
+        {/* Show selected text context if available (only for authenticated users) */}
+        {prefillText && isAuthenticated && (
           <div className={styles.contextBanner}>
             <div className={styles.contextHeader}>
               <span className={styles.contextLabel}>Selected text:</span>
@@ -251,21 +266,75 @@ export default function ChatKitWidget({
           </div>
         )}
 
-        <div className={styles.chatkitWrapper}>
-          {!isReady && (
-            <div style={{ padding: '20px', background: '#f0f0f0' }}>
-              <p>Initializing Chatkit...</p>
-              <p style={{ fontSize: '12px' }}>Endpoint: {chatkitEndpoint}</p>
+        {/* Show sign-in prompt for unauthenticated users */}
+        {!isAuthenticated ? (
+          <div className={styles.signInPrompt}>
+            {/* Header matching ChatKit style */}
+            <div className={styles.signInHeader}>
+              <div className={styles.signInHeaderLeft}>
+                <FiMessageCircle size={20} className={styles.signInHeaderIcon} />
+                <span className={styles.signInHeaderTitle}>Textbook Companion</span>
+              </div>
+              <button
+                className={styles.signInCloseButton}
+                onClick={() => setIsOpen(false)}
+                aria-label="Close"
+              >
+                ×
+              </button>
             </div>
-          )}
-          {isReady && control && <ChatKit control={control} />}
-          {isReady && !control && (
-            <div style={{ padding: '20px', background: '#fff3cd' }}>
-              <p>Chatkit control not available</p>
-              <p style={{ fontSize: '12px' }}>Check browser console for errors</p>
+
+            <div className={styles.signInContent}>
+              <div className={styles.signInIcon}>
+                <FiLock size={40} />
+              </div>
+              <h3 className={styles.signInTitle}>Sign In Required</h3>
+              <p className={styles.signInDescription}>
+                Sign in to chat with the AI assistant and get personalized help with Physical AI & Robotics.
+              </p>
+              <button
+                className={styles.signInButton}
+                onClick={() => {
+                  // Trigger sign-in modal by dispatching custom event
+                  window.dispatchEvent(new CustomEvent('open-auth-modal'));
+                  setIsOpen(false);
+                }}
+              >
+                <FiLock size={16} />
+                Sign In to Chat
+              </button>
             </div>
-          )}
-        </div>
+            <div className={styles.signInFooter}>
+              <input
+                type="text"
+                className={styles.signInDisabledInput}
+                placeholder="Sign in to ask questions..."
+                disabled
+              />
+              <button className={styles.signInDisabledSend} disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.chatkitWrapper}>
+            {!isReady && (
+              <div style={{ padding: '20px', background: '#f0f0f0' }}>
+                <p>Initializing Chatkit...</p>
+                <p style={{ fontSize: '12px' }}>Endpoint: {chatkitEndpoint}</p>
+              </div>
+            )}
+            {isReady && control && <ChatKit control={control} />}
+            {isReady && !control && (
+              <div style={{ padding: '20px', background: '#fff3cd' }}>
+                <p>Chatkit control not available</p>
+                <p style={{ fontSize: '12px' }}>Check browser console for errors</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </>
   );
