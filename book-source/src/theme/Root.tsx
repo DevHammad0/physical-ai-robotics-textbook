@@ -2,7 +2,9 @@
  * Root component for Docusaurus theme
  * This component wraps all pages and allows us to add global components
  */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useLocation } from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 // Using Chatkit built-in UI
 import ChatKitWidget from '@site/src/components/ChatKitWidget';
 import TextSelectionHandler from '@site/src/components/TextSelectionHandler';
@@ -11,6 +13,19 @@ import { ChatKitContext } from '@site/src/components/ChatKitWidget/ChatKitContex
 // import ChatWidget from '@site/src/components/ChatWidget';
 
 export default function Root({ children }: { children: React.ReactNode }): React.ReactElement {
+  const location = useLocation();
+  const { siteConfig } = useDocusaurusContext();
+  const baseUrl = siteConfig.baseUrl;
+
+  // Check if we're on the homepage (accounting for baseUrl)
+  // Homepage paths: "/", "/physical-ai-robotics-textbook", "/physical-ai-robotics-textbook/"
+  const isHomePage =
+    location.pathname === '/' ||
+    location.pathname === '' ||
+    location.pathname === baseUrl ||
+    location.pathname === baseUrl.replace(/\/$/, '') ||
+    location.pathname === baseUrl + '/';
+
   // Set backend URL for production (GitHub Pages)
   // This ensures the backend URL is available before any components try to use it
   if (typeof window !== 'undefined' && !(window as any).__BACKEND_URL__) {
@@ -39,16 +54,28 @@ export default function Root({ children }: { children: React.ReactNode }): React
     setPrefillText(null);
   };
 
+  // Close chat when navigating to homepage
+  useEffect(() => {
+    if (isHomePage && isOpen) {
+      setIsOpen(false);
+    }
+  }, [isHomePage]);
+
   return (
     <ChatKitContext.Provider value={contextValue}>
       {children}
-      <TextSelectionHandler />
-      <ChatKitWidget
-        isOpen={isOpen}
-        onOpenChange={setIsOpen}
-        prefillText={prefillText}
-        onPrefillComplete={handlePrefillComplete}
-      />
+      {/* Hide chatbot on homepage only */}
+      {!isHomePage && (
+        <>
+          <TextSelectionHandler />
+          <ChatKitWidget
+            isOpen={isOpen}
+            onOpenChange={setIsOpen}
+            prefillText={prefillText}
+            onPrefillComplete={handlePrefillComplete}
+          />
+        </>
+      )}
       {/* Old ChatWidget kept for safety - uncomment to rollback */}
       {/* <ChatWidget /> */}
     </ChatKitContext.Provider>
