@@ -1,146 +1,93 @@
-# RAG Chatbot Backend
+# Physical AI & Robotics Textbook - Backend API
 
-FastAPI backend for the Physical AI & Robotics Textbook RAG chatbot.
+FastAPI backend providing RAG-powered AI chatbot for the Physical AI & Robotics interactive textbook.
 
-## Architecture
+## Tech Stack
 
-- **FastAPI**: Modern async Python web framework
-- **OpenAI Agents SDK**: Agentic AI framework with autonomous tool usage
-- **OpenAI API**: GPT-3.5-turbo for generation, text-embedding-3-small for embeddings
-- **Qdrant**: Vector database for semantic search
-- **Neon Postgres**: Serverless PostgreSQL for conversation storage
-- **Vercel**: Serverless deployment platform
-- **uv**: Fast Python package installer and project manager
+- **FastAPI** - Async Python web framework
+- **OpenAI Agents SDK** - Autonomous RAG agent with tool calling
+- **Qdrant Cloud** - Vector database for semantic search
+- **Neon Postgres** - Serverless conversation storage
+- **Vercel** - Serverless deployment
+- **uv** - Fast Python package manager
 
-### Agent-Based RAG Pipeline
+## Quick Start
 
-The chatbot uses the **OpenAI Agents SDK** to create an intelligent teaching assistant that autonomously decides when to search the textbook:
+### Prerequisites
 
-1. **Agent**: `teaching_agent` in `services/agent_service.py`
-   - Configured with textbook-specific instructions
-   - Has access to `search_textbook` function tool
-   - Autonomously decides when to search vs. use prior knowledge
-
-2. **Custom Session**: `PostgresSession` in `services/session_service.py`
-   - Integrates conversation history with Postgres
-   - Loads/saves messages automatically
-   - Enables multi-turn conversations with context
-
-3. **Function Tool**: `search_textbook`
-   - Generates embeddings for search queries
-   - Performs vector search in Qdrant
-   - Returns formatted results to agent
-   - Tracks results for structured source extraction
-
-## Prerequisites
-
-- **Python 3.10+**
-- **uv** - Install from https://docs.astral.sh/uv/getting-started/installation/
-  ```bash
-  # Windows (PowerShell)
-  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-
-  # macOS/Linux
-  curl -LsSf https://astral.sh/uv/install.sh | sh
-  ```
-
-## Setup
-
-### 1. Install Dependencies
+- Python 3.10+
+- [uv package manager](https://docs.astral.sh/uv/getting-started/installation/)
 
 ```bash
-cd backend
-uv sync
+# Install uv (Windows)
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Install uv (macOS/Linux)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-This automatically creates a virtual environment and installs all dependencies from `pyproject.toml`.
+### Setup
 
-### 2. Configure Environment Variables
+1. **Install dependencies**
+   ```bash
+   cd backend
+   uv sync
+   ```
 
-Create `.env` file from `.env.example`:
+2. **Configure environment**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your API keys (see Configuration section)
+   ```
 
-```bash
-cp .env.example .env
+3. **Initialize database**
+   ```bash
+   uv run python scripts/init_db.py
+   ```
+
+4. **Index textbook content**
+   ```bash
+   uv run python scripts/index_content.py --docs-dir ../book-source/docs
+   ```
+   Creates ~524 searchable content chunks from markdown files.
+
+5. **Start development server**
+   ```bash
+   uv run uvicorn main:app --reload
+   ```
+   API docs available at http://localhost:8000/docs
+
+## Configuration
+
+Required environment variables in `.env`:
+
+```env
+# OpenAI Configuration
+OPENAI_API_KEY=sk-proj-...              # Get from https://platform.openai.com
+OPENAI_MODEL=gpt-3.5-turbo              # Model for chat responses
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+OPENAI_MAX_TOKENS=500
+OPENAI_TEMPERATURE=0.7
+
+# Qdrant Vector Database
+QDRANT_URL=https://xxx.qdrant.io       # Get from https://cloud.qdrant.io
+QDRANT_API_KEY=your-api-key
+QDRANT_COLLECTION_NAME=textbook_content
+
+# Neon Postgres
+DATABASE_URL=postgresql://user:pass@host/db?sslmode=require  # Get from https://neon.tech
+DB_POOL_MIN_SIZE=2
+DB_POOL_MAX_SIZE=10
+
+# API Configuration
+RATE_LIMIT_PER_MINUTE=30
+CORS_ORIGINS=https://yourdomain.com,http://localhost:3000
 ```
-
-Update `.env` with your API keys:
-- Get OpenAI API key from https://platform.openai.com
-- Create Qdrant Cloud cluster at https://cloud.qdrant.io
-- Create Neon Postgres database at https://neon.tech
-
-### 3. Initialize Database
-
-```bash
-uv run python scripts/init_db.py
-```
-
-### 4. Index Textbook Content
-
-```bash
-uv run python scripts/index_content.py --docs-dir ../book-source/docs
-```
-
-This will:
-- Parse all markdown files in `book-source/docs/`
-- Create ~600 content chunks
-- Generate embeddings using OpenAI
-- Upload to Qdrant vector database
-
-### 5. Run Development Server
-
-```bash
-uv run uvicorn main:app --reload
-```
-
-Visit http://localhost:8000/docs for interactive API documentation.
-
-## Deployment to Vercel
-
-### 1. Install Vercel CLI
-
-```bash
-npm install -g vercel
-```
-
-### 2. Set Environment Variables
-
-```bash
-vercel env add OPENAI_API_KEY production
-vercel env add OPENAI_MODEL production
-vercel env add OPENAI_EMBEDDING_MODEL production
-vercel env add OPENAI_MAX_TOKENS production
-vercel env add OPENAI_TEMPERATURE production
-vercel env add QDRANT_URL production
-vercel env add QDRANT_API_KEY production
-vercel env add QDRANT_COLLECTION_NAME production
-vercel env add DATABASE_URL production
-vercel env add DB_POOL_MIN_SIZE production
-vercel env add DB_POOL_MAX_SIZE production
-vercel env add RATE_LIMIT_PER_MINUTE production
-vercel env add CORS_ORIGINS production
-```
-
-### 3. Create `requirements.txt` for Vercel
-
-Vercel doesn't support `pyproject.toml` directly, so generate a requirements.txt:
-
-```bash
-uv pip compile pyproject.toml -o requirements.txt
-```
-
-### 4. Deploy
-
-```bash
-vercel --prod
-```
-
-After deployment, your API will be available at `https://your-project.vercel.app`
 
 ## API Endpoints
 
-### POST /api/chat
-
-Process chat query with RAG pipeline.
+### `POST /api/chat`
+Chat with AI teaching assistant using RAG.
 
 **Request:**
 ```json
@@ -170,9 +117,8 @@ Process chat query with RAG pipeline.
 }
 ```
 
-### GET /api/health
-
-Check backend services health.
+### `GET /api/health`
+Health check for all services.
 
 **Response:**
 ```json
@@ -180,200 +126,156 @@ Check backend services health.
   "status": "healthy",
   "database": "connected",
   "vector_db": "connected",
-  "llm_api": "configured",
-  "timestamp": "2025-11-29T..."
+  "llm_api": "configured"
 }
 ```
 
-## Project Structure
+Full API documentation available at `/docs` endpoint.
+
+## Architecture
+
+### RAG Agent Flow
+
+```
+User Query → Agent (teaching_agent)
+              ↓
+         Evaluates question
+              ↓
+    Calls search_textbook tool
+              ↓
+    Qdrant vector search (524 chunks)
+              ↓
+    Returns top-5 relevant chunks
+              ↓
+    Agent synthesizes response
+              ↓
+    Response + Source citations
+```
+
+### Agent Guardrails
+
+- **Scope limitation**: Only answers robotics/ROS 2/AI topics
+- **RAG enforcement**: Always searches textbook for technical questions
+- **Off-topic handling**: Politely declines non-robotics questions
+
+### Project Structure
 
 ```
 backend/
-├── main.py              # FastAPI app with CORS and lifespan
-├── config.py            # Pydantic settings
-├── pyproject.toml       # uv project configuration
-├── uv.lock              # Locked dependencies
-├── vercel.json          # Vercel deployment config
-├── .venv/               # Virtual environment (auto-created by uv)
-├── routers/
-│   ├── chat.py         # Chat endpoint with agent-based RAG
-│   └── health.py       # Health check endpoint
+├── main.py                  # FastAPI app entry point
+├── config.py                # Environment configuration
+├── routers/                 # API endpoints
+│   ├── chat.py             # RAG chat endpoint
+│   └── health.py           # Health check
 ├── services/
-│   ├── agent_service.py    # OpenAI Agents SDK integration
-│   ├── session_service.py  # PostgresSession for conversation history
-│   ├── db_service.py       # AsyncPG connection pooling
-│   ├── vector_search.py    # Qdrant client (used by search_textbook tool)
-│   └── llm_service.py      # OpenAI client (used for embeddings)
+│   ├── agent_service.py    # OpenAI Agent with RAG tool
+│   ├── session_service.py  # Conversation persistence
+│   ├── vector_search.py    # Qdrant integration
+│   └── llm_service.py      # OpenAI embeddings
 ├── models/
-│   └── schemas.py      # Pydantic request/response models
+│   └── schemas.py          # API request/response models
 └── scripts/
-    ├── init_db.py      # Database initialization
-    ├── index_content.py # Content indexing script
-    └── schema.sql      # PostgreSQL schema
+    ├── init_db.py          # Database setup
+    └── index_content.py    # Content indexing
 ```
+
+## Deployment
+
+### Deploy to Vercel
+
+1. **Install Vercel CLI**
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Set environment variables via dashboard**
+   - Go to https://vercel.com/dashboard
+   - Select project → Settings → Environment Variables
+   - Add all variables from `.env` file
+   - Set for **Production** environment
+
+3. **Deploy**
+   ```bash
+   vercel --prod
+   ```
+
+### Update Qdrant Cluster
+
+If you created a new Qdrant cluster:
+
+1. Update `.env` locally with new credentials
+2. Reindex content: `uv run python scripts/index_content.py --docs-dir ../book-source/docs`
+3. Update Vercel environment variables
+4. Redeploy: `vercel --prod`
 
 ## Testing
 
-### Start Development Server
-
 ```bash
+# Start server
 uv run uvicorn main:app --reload
-```
 
-### Health Check
-
-```bash
+# Health check
 curl http://localhost:8000/api/health
-```
 
-### Chat Request
-
-```bash
+# Test chat (should use RAG)
 curl -X POST http://localhost:8000/api/chat \
   -H "Content-Type: application/json" \
-  -d '{
-    "query": "What is ROS 2 Humble?",
-    "session_id": "test-session"
-  }'
-```
+  -d '{"query": "What is ROS 2?", "session_id": "test"}'
 
-**What Happens:**
-1. Agent receives the query
-2. Agent autonomously decides to call `search_textbook` tool
-3. Tool searches Qdrant for relevant textbook content
-4. Agent synthesizes answer from search results
-5. Structured sources extracted and returned
-
-**Agent Decision-Making:**
-- Simple questions: Agent may answer without searching (uses prior knowledge)
-- Specific textbook questions: Agent searches for accurate information
-- Multi-turn conversations: Agent maintains context from previous messages
-
-### Run Python Scripts
-
-```bash
-# Initialize database
-uv run python scripts/init_db.py
-
-# Index content
-uv run python scripts/index_content.py --docs-dir ../book-source/docs
-
-# Test with custom arguments
-uv run python scripts/index_content.py --docs-dir ../book-source/docs --collection my_collection
+# Test off-topic (should decline)
+curl -X POST http://localhost:8000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"query": "What is the weather?", "session_id": "test"}'
 ```
 
 ## Troubleshooting
 
-### uv Command Not Found
+| Issue | Solution |
+|-------|----------|
+| **uv command not found** | Reinstall: `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
+| **Virtual env issues** | Reset: `rm -rf .venv && uv sync` |
+| **Database connection error** | Check `DATABASE_URL` in Neon dashboard; ensure DB not paused |
+| **Qdrant 404 error** | Verify `QDRANT_URL` and `QDRANT_API_KEY`; rerun indexing script |
+| **OpenAI API error** | Verify key starts with `sk-`; check usage limits at platform.openai.com |
+| **Module import errors** | Always use `uv run python script.py`, not `python script.py` |
+| **Agent not using RAG** | Check Vercel env vars updated; redeploy after changes |
+| **Agent answers off-topic** | Latest code has guardrails; ensure deployed version is current |
 
-Ensure uv is installed and in your PATH:
+### Verify Services
+
 ```bash
-# Check installation
-uv --version
+# Check all services
+curl http://localhost:8000/api/health
 
-# Reinstall if needed
-curl -LsSf https://astral.sh/uv/install.sh | sh  # Unix
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"  # Windows
+# Expected: {"status":"healthy","database":"connected","vector_db":"connected","llm_api":"configured"}
 ```
 
-### Virtual Environment Issues
+### Test Qdrant Connection
 
 ```bash
-# Remove and recreate virtual environment
-rm -rf .venv
-uv sync
+uv run python scripts/test_qdrant.py
 ```
 
-### Database Connection Errors
+## Performance Metrics
 
-- Verify `DATABASE_URL` in `.env`
-- Check Neon dashboard for connection details
-- Ensure database is not paused (free tier)
-- Test connection: `uv run python scripts/init_db.py`
+- **Chat response**: <3s p90 (includes agent reasoning + RAG)
+- **Vector search**: <200ms for top-5 results
+- **Indexed content**: 524 chunks from 4 chapters
+- **Concurrent requests**: 50+ simultaneous users
 
-### Qdrant Connection Errors
+## Key Features
 
-- Verify `QDRANT_URL` and `QDRANT_API_KEY` in `.env`
-- Check Qdrant Cloud dashboard
-- Ensure collection exists: `uv run python scripts/index_content.py`
-
-### OpenAI API Errors
-
-- Verify `OPENAI_API_KEY` is valid (starts with `sk-`)
-- Check usage limits in OpenAI dashboard
-- Monitor rate limiting (429 errors)
-- Test: `uv run python -c "from config import settings; print(settings.openai_api_key[:10])"`
-
-### Import Errors
-
-If you get module import errors, ensure you're using `uv run`:
-```bash
-# ✓ Correct
-uv run python scripts/init_db.py
-
-# ✗ Wrong (won't find modules)
-python scripts/init_db.py
-```
-
-## Performance
-
-- **Target Latency**: <3s p90 for chat responses (includes agent reasoning time)
-- **Vector Search**: <200ms for top-5 retrieval
-- **Agent Iterations**: Typically 1-2 tool calls per query
-- **Concurrent Users**: Handles 50+ simultaneous requests
-- **Database Pool**: 2-10 connections (configurable)
-
-## How Agent-Based RAG Works
-
-### Traditional RAG vs. Agent-Based RAG
-
-**Traditional RAG (Manual Pipeline):**
-```
-User Query → Always Embed → Always Search → Always Generate → Response
-```
-- Every query triggers vector search (even for simple questions)
-- No reasoning about whether search is needed
-- Fixed pipeline execution
-
-**Agent-Based RAG (Current Implementation):**
-```
-User Query → Agent Reasoning → [Conditionally] search_textbook Tool → Generate → Response
-```
-- Agent decides when to search based on query complexity
-- Can answer simple questions without retrieval
-- Multiple tool calls possible for complex queries
-- Better multi-turn conversation handling
-
-### Example Scenarios
-
-**Scenario 1: Simple Question (No Search)**
-```
-Query: "What does ROS stand for?"
-Agent Decision: Answer directly (common knowledge)
-Tool Calls: None
-Response: "ROS stands for Robot Operating System..."
-```
-
-**Scenario 2: Textbook-Specific Question (Searches)**
-```
-Query: "How do I configure Nav2 stack parameters?"
-Agent Decision: Search textbook for specific Nav2 configuration
-Tool Calls: search_textbook("Nav2 stack parameters configuration")
-Response: [Synthesized answer with textbook sources]
-```
-
-**Scenario 3: Multi-Turn Conversation**
-```
-Turn 1:
-  Query: "Tell me about ROS 2 Humble"
-  Agent: Searches textbook, provides overview
-
-Turn 2:
-  Query: "How do I install it?"
-  Agent: Maintains context, searches for installation instructions
-  Response: "To install ROS 2 Humble (from previous context)..."
-```
+✅ **Autonomous RAG Agent** - Decides when to search textbook vs. use general knowledge
+✅ **Scope Guardrails** - Only answers robotics/ROS 2/AI questions
+✅ **Source Citations** - All responses include textbook references
+✅ **Multi-turn Context** - Maintains conversation history
+✅ **Text Selection Support** - Prioritizes user-highlighted content
+✅ **Serverless Deployment** - Scales automatically on Vercel
 
 ## License
 
-See root LICENSE file.
+MIT License - See root LICENSE file
+
+---
+
+**Questions?** Check `/api/docs` for interactive API documentation or review the [troubleshooting](#troubleshooting) section.
